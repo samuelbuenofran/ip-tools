@@ -18,8 +18,8 @@
 		<i class="fa-solid fa-circle-half-stroke"></i> Theme
 		</button>
 		</li>
-        <li class="nav-item"><a class="nav-link" href="../ip-tools/geologger/create.php"><i class="fa-solid fa-map-pin"></i> Geolocation Tracker</a></li>
-        <li class="nav-item"><a class="nav-link" href="../ip-tools/network-tools/logs.php"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="../geologger/create.php"><i class="fa-solid fa-map-pin"></i> Geolocation Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="../network-tools/logs.php"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" href="../ip-tools/phone-tracker/send_sms.php"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="../ip-tools/utils/speedtest.php"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
       </ul>
