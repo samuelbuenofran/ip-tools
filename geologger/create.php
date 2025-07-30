@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("INSERT INTO geo_links (original_url, short_code) VALUES (?, ?)");
         $stmt->execute([$original_url, $short_code]);
 
-        $tracking_link = "https://tech-eletric.com.br/ip-tools/geologger/precise_track.php?code=" . $short_code;
+        $tracking_link = "https://keizai-tech.com/ip-tools/geologger/precise_track.php?code=" . $short_code;
 
         $qr_folder = '../assets/qrcodes/';
         if (!file_exists($qr_folder)) {
