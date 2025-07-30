@@ -3,7 +3,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/ip-tools/index.php">IP Tools Suite</a>
+    <a class="navbar-brand" href="/projects/ip-tools/index.php">IP Tools Suite</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -20,8 +20,8 @@
 		</li>
         <li class="nav-item"><a class="nav-link" href="../geologger/create.php"><i class="fa-solid fa-map-pin"></i> Geolocation Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="../network-tools/logs.php"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="../ip-tools/phone-tracker/send_sms.php"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
-        <li class="nav-item"><a class="nav-link" href="../ip-tools/utils/speedtest.php"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="../phone-tracker/send_sms.php"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="../utils/speedtest.php"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
       </ul>
     </div>
   </div>
