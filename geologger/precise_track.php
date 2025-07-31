@@ -108,6 +108,11 @@ $original_url = $link['original_url'];
         // Store tracking code for AJAX call
         const trackingCode = '<?= $code ?>';
         const originalUrl = '<?= htmlspecialchars($original_url) ?>';
+        
+        // Debug logging
+        console.log('Script loaded successfully');
+        console.log('Tracking code:', trackingCode);
+        console.log('Original URL:', originalUrl);
 
         function updateStatus(message, type) {
             const statusDiv = document.getElementById('locationStatus');
@@ -169,17 +174,23 @@ $original_url = $link['original_url'];
         }
 
         function saveIPBasedLocation() {
+            console.log('Saving IP-based location...');
             const formData = new FormData();
             formData.append('code', trackingCode);
             formData.append('ip_only', 'true');
             formData.append('timestamp', new Date().toISOString());
 
+            console.log('Sending request to save_precise_location.php');
             fetch('save_precise_location.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response received:', response);
+                return response.json();
+            })
             .then(data => {
+                console.log('Data received:', data);
                 if (data.success) {
                     console.log('IP-based location saved successfully');
                 } else {
@@ -192,7 +203,9 @@ $original_url = $link['original_url'];
         }
 
         function skipLocation() {
+            console.log('Skip location clicked');
             clearTimeout(locationTimeout); // Clear any existing timeout
+            clearTimeout(quickFallback); // Clear the quick fallback
             updateStatus('Location tracking skipped. Proceeding with IP-based tracking...', 'error');
             saveIPBasedLocation();
             document.getElementById('redirectButton').style.display = 'inline-block';
@@ -211,21 +224,25 @@ $original_url = $link['original_url'];
 
         // Set a timeout to prevent infinite waiting
         let locationTimeout = setTimeout(() => {
+            console.log('Location timeout triggered');
             updateStatus('Location request timed out. Proceeding with IP-based tracking...', 'error');
             saveIPBasedLocation();
             document.getElementById('redirectButton').style.display = 'inline-block';
-        }, 8000); // 8 second timeout - more aggressive
+        }, 5000); // 5 second timeout - even more aggressive
 
-        // Additional quick fallback after 3 seconds if no response
+        // Additional quick fallback after 2 seconds if no response
         let quickFallback = setTimeout(() => {
+            console.log('Quick fallback triggered');
             if (document.getElementById('redirectButton').style.display === 'none') {
                 updateStatus('Still waiting for location... You can skip or wait a bit more.', 'error');
             }
-        }, 3000); // 3 second warning
+        }, 2000); // 2 second warning
 
         // Get precise location
+        console.log('Starting geolocation request...');
         navigator.geolocation.getCurrentPosition(
             function(position) {
+                console.log('Geolocation success:', position);
                 clearTimeout(locationTimeout); // Clear the timeout
                 clearTimeout(quickFallback); // Clear the quick fallback
                 
@@ -245,6 +262,7 @@ $original_url = $link['original_url'];
                 updateStatus('Precise location captured successfully!', 'success');
             },
             function(error) {
+                console.log('Geolocation error:', error);
                 clearTimeout(locationTimeout); // Clear the timeout
                 clearTimeout(quickFallback); // Clear the quick fallback
                 
