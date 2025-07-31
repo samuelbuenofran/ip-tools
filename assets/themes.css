@@ -573,6 +573,30 @@ footer a:hover {
   color: var(--text-secondary) !important;
 }
 
+/* Liquid Glass footer specific styling */
+[data-theme="liquid-glass"] footer {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="liquid-glass"] footer p,
+[data-theme="liquid-glass"] footer small,
+[data-theme="liquid-glass"] footer span {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="liquid-glass"] footer a {
+  color: #00d4ff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="liquid-glass"] footer a:hover {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 footer img {
   transition: var(--transition);
   filter: brightness(1);
