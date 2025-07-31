@@ -65,6 +65,11 @@ $original_url = $link['original_url'];
                                 </div>
                                 <h5 class="mt-3">Getting Your Precise Location...</h5>
                                 <p class="text-muted">Please allow location access when prompted by your browser.</p>
+                                <div class="mt-3">
+                                    <button id="skipLocationBtn" class="btn btn-outline-secondary btn-sm" onclick="skipLocation()">
+                                        <i class="fa-solid fa-forward"></i> Skip Location & Continue
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -186,6 +191,14 @@ $original_url = $link['original_url'];
             });
         }
 
+        function skipLocation() {
+            clearTimeout(locationTimeout); // Clear any existing timeout
+            updateStatus('Location tracking skipped. Proceeding with IP-based tracking...', 'error');
+            saveIPBasedLocation();
+            document.getElementById('redirectButton').style.display = 'inline-block';
+            document.getElementById('skipLocationBtn').style.display = 'none'; // Hide the skip button
+        }
+
         // Check if geolocation is supported
         if (!navigator.geolocation) {
             updateStatus('Geolocation is not supported by this browser. Proceeding with IP-based tracking...', 'error');
@@ -201,12 +214,20 @@ $original_url = $link['original_url'];
             updateStatus('Location request timed out. Proceeding with IP-based tracking...', 'error');
             saveIPBasedLocation();
             document.getElementById('redirectButton').style.display = 'inline-block';
-        }, 15000); // 15 second timeout
+        }, 8000); // 8 second timeout - more aggressive
+
+        // Additional quick fallback after 3 seconds if no response
+        let quickFallback = setTimeout(() => {
+            if (document.getElementById('redirectButton').style.display === 'none') {
+                updateStatus('Still waiting for location... You can skip or wait a bit more.', 'error');
+            }
+        }, 3000); // 3 second warning
 
         // Get precise location
         navigator.geolocation.getCurrentPosition(
             function(position) {
                 clearTimeout(locationTimeout); // Clear the timeout
+                clearTimeout(quickFallback); // Clear the quick fallback
                 
                 const location = {
                     latitude: position.coords.latitude,
@@ -225,6 +246,7 @@ $original_url = $link['original_url'];
             },
             function(error) {
                 clearTimeout(locationTimeout); // Clear the timeout
+                clearTimeout(quickFallback); // Clear the quick fallback
                 
                 let errorMessage = 'Unable to retrieve your location.';
                 
