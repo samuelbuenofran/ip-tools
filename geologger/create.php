@@ -79,12 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php include('../header.php'); ?>
 
   <div class="container py-4">
-    <h2 class="mb-4"><i class="fa-solid fa-map-pin text-primary"></i> Geolocation Tracker</h2>
+    <h2 class="mb-4" data-translate="create_tracking_link"><i class="fa-solid fa-map-pin text-primary"></i> Geolocation Tracker</h2>
 
     <form method="POST" class="mb-4">
       <div class="input-group mb-3 justify-content-center">
-        <input type="text" name="original_url" class="form-control w-50" placeholder="e.g. https://example.com" required>
-        <button type="submit" class="btn btn-success">Generate Link</button>
+        <input type="text" name="original_url" class="form-control w-50" data-translate-placeholder="enter_url_placeholder" placeholder="e.g. https://example.com" required>
+        <button type="submit" class="btn btn-success" data-translate="generate_link">Generate Link</button>
       </div>
     </form>
 
@@ -92,22 +92,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="alert alert-danger"><?= $error ?></div>
     <?php elseif ($tracking_link): ?>
       <div class="card p-4 shadow-sm">
-        <h5><i class="fa-solid fa-link"></i> Link Generated:</h5>
+        <h5 data-translate="link_generated"><i class="fa-solid fa-link"></i> Link Generated:</h5>
         <p class="fw-bold text-break"><?= $tracking_link ?></p>
-        <button class="btn btn-secondary mb-3" onclick="copyLink()">
+        <button class="btn btn-secondary mb-3" onclick="copyLink()" data-translate="copy_to_clipboard">
           <i class="fa-solid fa-copy"></i> Copy to Clipboard
         </button>
-        <button class="btn btn-info mb-3" onclick="downloadQR()">
+        <button class="btn btn-info mb-3" onclick="downloadQR()" data-translate="download_qr">
           <i class="fa-solid fa-download"></i> Download QR Code
         </button>
-        <h6><i class="fa-solid fa-qrcode"></i> QR Code:</h6>
+        <h6 data-translate="qr_code"><i class="fa-solid fa-qrcode"></i> QR Code:</h6>
         <div class="qr-code-container">
           <?= $qr_img_tag ?>
         </div>
       </div>
     <?php endif; ?>
 
-    <a href="/projects/ip-tools/network-tools/logs.php" class="btn btn-outline-primary mt-4">
+    <a href="/projects/ip-tools/network-tools/logs.php" class="btn btn-outline-primary mt-4" data-translate="tracking_logs">
       <i class="fa-solid fa-chart-bar"></i> View Tracking Logs
     </a>
   </div>
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function copyLink() {
       const link = document.querySelector('.fw-bold').textContent;
       navigator.clipboard.writeText(link);
-      alert("✅ Link copied to clipboard!");
+      alert(getText('link_copied'));
     }
     
     function downloadQR() {

@@ -61,15 +61,15 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
   </div>
 </div>
 
-    <h2 class="text-center mb-4"><i class="fa-solid fa-toolbox"></i> Welcome to the IP Tools Suite</h2>
+    <h2 class="text-center mb-4" data-translate="welcome_title"><i class="fa-solid fa-toolbox"></i> IP Tools Suite</h2>
     <div class="row g-4">
 
       <div class="col-md-4">
         <a href="/projects/ip-tools/geologger/create.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-map-pin"></i></div>
-            <h5 class="card-title">Geolocation Tracker</h5>
-            <p>Create location-aware links that log visitor activity.</p>
+            <h5 class="card-title" data-translate="geologger_title">Geolocation Tracker</h5>
+            <p data-translate="geologger_desc">Create location-aware links that log visitor activity.</p>
           </div>
         </a>
       </div>
@@ -78,8 +78,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/network-tools/logs.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-chart-bar"></i></div>
-            <h5 class="card-title">Logs Dashboard</h5>
-            <p>View logs and heatmaps of tracked clicks.</p>
+            <h5 class="card-title" data-translate="tracking_logs">Logs Dashboard</h5>
+            <p data-translate="view_logs">View logs and heatmaps of tracked clicks.</p>
           </div>
         </a>
       </div>
@@ -88,8 +88,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/phone-tracker/send_sms.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-            <h5 class="card-title">Phone Tracker</h5>
-            <p>Send SMS links and capture click activity.</p>
+            <h5 class="card-title" data-translate="phone_tracker_title">Phone Tracker</h5>
+            <p data-translate="phone_tracker_desc">Send SMS links and capture click activity.</p>
           </div>
         </a>
       </div>
@@ -118,8 +118,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/utils/speedtest.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-gauge-high"></i></div>
-            <h5 class="card-title">Speed Test</h5>
-            <p>Measure your internet speed with quick diagnostics.</p>
+            <h5 class="card-title" data-translate="speed_test_title">Speed Test</h5>
+            <p data-translate="speed_test_desc">Measure your internet speed with quick diagnostics.</p>
           </div>
         </a>
       </div>
@@ -128,8 +128,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/theme-demo.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-palette"></i></div>
-            <h5 class="card-title">Theme Demo</h5>
-            <p>Explore the four different themes available in the suite.</p>
+            <h5 class="card-title" data-translate="theme_demo_title">Theme Demo</h5>
+            <p data-translate="theme_demo_desc">Explore the four different themes available in the suite.</p>
           </div>
         </a>
       </div>

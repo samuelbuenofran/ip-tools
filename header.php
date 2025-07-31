@@ -4,6 +4,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="/projects/ip-tools/assets/themes.css" rel="stylesheet">
 <script src="/projects/ip-tools/assets/theme-switcher.js" defer></script>
+<script src="/projects/ip-tools/assets/translations.js" defer></script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
   <div class="container-fluid">
@@ -20,10 +21,10 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
 		<ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/geologger/create.php"><i class="fa-solid fa-map-pin"></i> Geolocation Tracker</a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/network-tools/logs.php"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker/send_sms.php"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/utils/speedtest.php"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/geologger/create.php" data-translate="nav_geologger"><i class="fa-solid fa-map-pin"></i> Geolocation Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/network-tools/logs.php" data-translate="nav_logs"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker/send_sms.php" data-translate="nav_phone_tracker"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/utils/speedtest.php" data-translate="nav_speed_test"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
       </ul>
     </div>
   </div>
