@@ -1,82 +1,125 @@
 <?php
 require_once('../config.php');
 
-// Only accept POST requests with JSON content
+// Set JSON response header
+header('Content-Type: application/json');
+
+// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
     exit;
 }
 
-// Get JSON data from request body
-$json = file_get_contents('php://input');
-$data = json_decode($json, true);
-
-// Validate required fields
-if (!isset($data['link_id'], $data['latitude'], $data['longitude'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing required fields']);
-    exit;
-}
-
-$db = connectDB();
-
-// Get country and city using reverse geocoding (optional)
-$country = null;
-$city = null;
-
-// Try to get country/city info from coordinates using a free service
-$geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$data['latitude']}&lon={$data['longitude']}&zoom=18&addressdetails=1";
-$geo_opts = [
-    'http' => [
-        'method' => 'GET',
-        'header' => "User-Agent: IP-Tools-Geolocation/1.0\r\n"
-    ]
-];
-
-$geo_context = stream_context_create($geo_opts);
-$geo_data = @file_get_contents($geo_url, false, $geo_context);
-
-if ($geo_data) {
-    $geo_json = json_decode($geo_data, true);
-    if (isset($geo_json['address'])) {
-        $country = $geo_json['address']['country'] ?? null;
-        $city = $geo_json['address']['city'] ?? $geo_json['address']['town'] ?? $geo_json['address']['village'] ?? null;
+try {
+    $db = connectDB();
+    
+    // Get POST data
+    $code = $_POST['code'] ?? '';
+    $latitude = $_POST['latitude'] ?? '';
+    $longitude = $_POST['longitude'] ?? '';
+    $accuracy = $_POST['accuracy'] ?? '';
+    $timestamp = $_POST['timestamp'] ?? date('Y-m-d H:i:s');
+    
+    // Validate required fields
+    if (empty($code) || empty($latitude) || empty($longitude)) {
+        throw new Exception('Missing required fields');
     }
+    
+    // Validate coordinates
+    if (!is_numeric($latitude) || !is_numeric($longitude)) {
+        throw new Exception('Invalid coordinates');
+    }
+    
+    if ($latitude < -90 || $latitude > 90 || $longitude < -180 || $longitude > 180) {
+        throw new Exception('Coordinates out of valid range');
+    }
+    
+    // Get link ID from short code
+    $stmt = $db->prepare("SELECT id FROM geo_links WHERE short_code = ?");
+    $stmt->execute([$code]);
+    $link = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$link) {
+        throw new Exception('Invalid tracking code');
+    }
+    
+    $link_id = $link['id'];
+    
+    // Get user information
+    $ip_address = $_SERVER['HTTP_CLIENT_IP'] 
+        ?? $_SERVER['HTTP_X_FORWARDED_FOR'] 
+        ?? $_SERVER['REMOTE_ADDR'] 
+        ?? 'UNKNOWN';
+    
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
+    $referrer = $_SERVER['HTTP_REFERER'] ?? '';
+    $device_type = preg_match('/mobile/i', $user_agent) ? 'Mobile' : 'Desktop';
+    
+    // Get location details using reverse geocoding
+    $geo_data = null;
+    try {
+        $geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$latitude}&lon={$longitude}&zoom=18&addressdetails=1";
+        $geo_response = @file_get_contents($geo_url);
+        
+        if ($geo_response) {
+            $geo_data = json_decode($geo_response, true);
+        }
+    } catch (Exception $e) {
+        // Continue without geocoding data
+    }
+    
+    // Extract location details
+    $country = $geo_data['address']['country'] ?? 'Unknown';
+    $city = $geo_data['address']['city'] ?? $geo_data['address']['town'] ?? 'Unknown';
+    $address = $geo_data['display_name'] ?? 'Unknown';
+    
+    // Insert precise location data
+    $stmt = $db->prepare("
+        INSERT INTO geo_logs (
+            link_id, ip_address, user_agent, referrer, 
+            latitude, longitude, accuracy, country, city, address,
+            device_type, timestamp, location_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'GPS')
+    ");
+    
+    $stmt->execute([
+        $link_id,
+        $ip_address,
+        $user_agent,
+        $referrer,
+        $latitude,
+        $longitude,
+        $accuracy,
+        $country,
+        $city,
+        $address,
+        $device_type,
+        $timestamp
+    ]);
+    
+    // Update click count
+    $db->prepare("UPDATE geo_links SET click_count = click_count + 1 WHERE id = ?")->execute([$link_id]);
+    
+    // Return success response
+    echo json_encode([
+        'success' => true,
+        'message' => 'Location saved successfully',
+        'data' => [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'accuracy' => $accuracy,
+            'country' => $country,
+            'city' => $city,
+            'address' => $address
+        ]
+    ]);
+    
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 }
-
-// Insert log with precise coordinates
-$insertStmt = $db->prepare("
-  INSERT INTO geo_logs (
-    ip_address, user_agent, referrer, country, city, 
-    latitude, longitude, link_id, device_type, timestamp, 
-    accuracy, location_source
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, 'precise')
-");
-
-$insertStmt->execute([
-    $data['ip_address'] ?? null,
-    $data['user_agent'] ?? null,
-    $data['referrer'] ?? null,
-    $country,
-    $city,
-    $data['latitude'],
-    $data['longitude'],
-    $data['link_id'],
-    $data['device_type'] ?? null,
-    $data['accuracy'] ?? null
-]);
-
-// Write debug log
-$logPath = __DIR__ . '/geo_debug.log';
-file_put_contents($logPath, json_encode([
-    'type' => 'precise',
-    'ip' => $data['ip_address'] ?? 'unknown',
-    'lat' => $data['latitude'],
-    'lon' => $data['longitude'],
-    'accuracy' => $data['accuracy'] ?? 'unknown',
-    'timestamp' => date('Y-m-d H:i:s')
-]) . PHP_EOL, FILE_APPEND);
-
-// Return success
-echo json_encode(['success' => true, 'message' => 'Location saved']);
+?>

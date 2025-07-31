@@ -8,9 +8,13 @@ include('../header.php');
 
 $db = connectDB();
 
-// 🧠 Fetch logs + link metadata
+// 🧠 Fetch logs + link metadata with precise location data
 $logs = $db->query("
-  SELECT g.*, l.original_url
+  SELECT g.*, l.original_url,
+         CASE 
+           WHEN g.location_type = 'GPS' THEN CONCAT('GPS (', g.accuracy, 'm)')
+           ELSE 'IP-based'
+         END as location_source
   FROM geo_logs g
   JOIN geo_links l ON g.link_id = l.id
   ORDER BY g.timestamp DESC;
@@ -71,6 +75,9 @@ foreach ($logs as $log) {
         <tr>
           <th>ID</th>
           <th>IP Address</th>
+          <th>Location Source</th>
+          <th>Accuracy</th>
+          <th>Address</th>
           <th>City</th>
           <th>Country</th>
           <th>Device</th>
@@ -83,6 +90,9 @@ foreach ($logs as $log) {
         <tr>
           <td><?= $log['id'] ?></td>
           <td><?= $log['ip_address'] ?></td>
+          <td><span class="badge bg-<?= $log['location_type'] === 'GPS' ? 'success' : 'secondary' ?>"><?= $log['location_source'] ?></span></td>
+          <td><?= $log['accuracy'] ? $log['accuracy'] . 'm' : '-' ?></td>
+          <td><?= htmlspecialchars($log['address'] ?? '-') ?></td>
           <td><?= $log['city'] ?? '-' ?></td>
           <td><?= $log['country'] ?? '-' ?></td>
           <td><?= $log['device_type'] ?? '-' ?></td>

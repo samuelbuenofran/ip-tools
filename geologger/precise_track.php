@@ -1,258 +1,218 @@
 <?php
 require_once('../config.php');
-
 $db = connectDB();
+
+// Get the tracking code from URL
 $code = $_GET['code'] ?? '';
 
-if ($code === '') {
-  die('❌ Invalid tracking code.');
+if (empty($code)) {
+    die('Invalid tracking code');
 }
 
-// Lookup link
-$linkStmt = $db->prepare("SELECT * FROM geo_links WHERE short_code = ?");
-$linkStmt->execute([$code]);
-$link = $linkStmt->fetch(PDO::FETCH_ASSOC);
+// Get the original link from database
+$stmt = $db->prepare("SELECT original_url FROM geo_links WHERE short_code = ?");
+$stmt->execute([$code]);
+$link = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$link) {
-  die('❌ Tracking link not found.');
+    die('Link not found');
 }
 
-// Expiry & limit checks
-if (
-  ($link['expires_at'] && strtotime($link['expires_at']) < time()) ||
-  ($link['click_limit'] && $link['click_count'] >= $link['click_limit'])
-) {
-  die('❌ Link expired or limit reached.');
-}
-
-// Get IP (as fallback)
-function getUserIP() {
-  return $_SERVER['HTTP_CLIENT_IP']
-    ?? $_SERVER['HTTP_X_FORWARDED_FOR']
-    ?? $_SERVER['REMOTE_ADDR']
-    ?? 'UNKNOWN';
-}
-$ip = getUserIP();
-
-// Referrer check
-$referrer = $_SERVER['HTTP_REFERER'] ?? '';
-$referrerLabel = trim($referrer) !== '' ? $referrer : 'Direct';
-
-// Handle manual override (for diagnostics)
-if (isset($_GET['ref']) && $_GET['ref'] === 'manual') {
-  $referrerLabel = 'Manual';
-}
-
-// Update click count
-$db->prepare("UPDATE geo_links SET click_count = click_count + 1 WHERE id = ?")->execute([$link['id']]);
-
-// Store the destination URL for JavaScript to use after getting location
-$destination = $link['original_url'];
+$original_url = $link['original_url'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting...</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f8f9fa;
-    }
-    .container {
-      text-align: center;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      background-color: white;
-      max-width: 90%;
-    }
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .btn {
-      padding: 10px 20px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .btn:hover {
-      background-color: #218838;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precise Location Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .location-status {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .status-loading { background-color: #fff3cd; border: 1px solid #ffeaa7; }
+        .status-success { background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .status-error { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .accuracy-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        .redirect-button {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <div id="loading">
-      <h2>Redirecting you to your destination...</h2>
-      <div class="spinner"></div>
-      <p>Please wait while we process your request.</p>
-    </div>
-    
-    <div id="permission" class="hidden">
-      <h2>Location Access Required</h2>
-      <p>To continue to your destination, please allow location access when prompted.</p>
-      <button id="locationBtn" class="btn">Continue to Site</button>
-    </div>
-    
-    <div id="error" class="hidden">
-      <h2>Unable to Access Location</h2>
-      <p>We couldn't access your location. You'll be redirected shortly.</p>
-    </div>
-  </div>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4><i class="fa-solid fa-map-marker-alt"></i> Precise Location Tracking</h4>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Location Status Display -->
+                        <div id="locationStatus" class="location-status status-loading">
+                            <div class="text-center">
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <h5 class="mt-3">Getting Your Precise Location...</h5>
+                                <p class="text-muted">Please allow location access when prompted by your browser.</p>
+                            </div>
+                        </div>
 
-  <script>
-    // Store PHP variables for JavaScript use
-    const linkId = <?= $link['id'] ?>;
-    const destination = "<?= htmlspecialchars($destination) ?>";
-    const ipAddress = "<?= htmlspecialchars($ip) ?>";
-    const userAgent = "<?= htmlspecialchars($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Agent') ?>";
-    const referrer = "<?= htmlspecialchars($referrerLabel) ?>";
-    const deviceType = "<?= preg_match('/mobile/i', $_SERVER['HTTP_USER_AGENT']) ? 'Mobile' : 'Desktop' ?>";
-    
-    // Show permission request after a short delay
-    setTimeout(() => {
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('permission').classList.remove('hidden');
-    }, 1500);
-    
-    // Handle location button click
-    document.getElementById('locationBtn').addEventListener('click', () => {
-      getLocationAndRedirect();
-    });
-    
-    // Try to get precise location and then redirect
-    function getLocationAndRedirect() {
-      if (navigator.geolocation) {
-        document.getElementById('permission').classList.add('hidden');
-        document.getElementById('loading').classList.remove('hidden');
-        
-        navigator.geolocation.getCurrentPosition(
-          // Success callback
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
+                        <!-- Location Details (Hidden initially) -->
+                        <div id="locationDetails" style="display: none;">
+                            <h5><i class="fa-solid fa-location-dot text-success"></i> Location Captured!</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Latitude:</strong> <span id="latitude"></span></p>
+                                    <p><strong>Longitude:</strong> <span id="longitude"></span></p>
+                                    <p><strong>Accuracy:</strong> <span id="accuracy"></span> meters</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Street Address:</strong> <span id="address"></span></p>
+                                    <p><strong>City:</strong> <span id="city"></span></p>
+                                    <p><strong>Country:</strong> <span id="country"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Redirect Button -->
+                        <div class="text-center redirect-button">
+                            <a id="redirectButton" href="<?= htmlspecialchars($original_url) ?>" 
+                               class="btn btn-success btn-lg" style="display: none;">
+                                <i class="fa-solid fa-external-link-alt"></i> Continue to Destination
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store tracking code for AJAX call
+        const trackingCode = '<?= $code ?>';
+        const originalUrl = '<?= htmlspecialchars($original_url) ?>';
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('locationStatus');
+            statusDiv.className = `location-status status-${type}`;
+            statusDiv.innerHTML = `
+                <div class="text-center">
+                    <h5><i class="fa-solid fa-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'}"></i> ${message}</h5>
+                </div>
+            `;
+        }
+
+        function showLocationDetails(location) {
+            document.getElementById('latitude').textContent = location.latitude.toFixed(6);
+            document.getElementById('longitude').textContent = location.longitude.toFixed(6);
+            document.getElementById('accuracy').textContent = location.accuracy.toFixed(1);
             
-            // Send location data to server
+            // Reverse geocoding to get address
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}&zoom=18&addressdetails=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.display_name) {
+                        document.getElementById('address').textContent = data.display_name;
+                        document.getElementById('city').textContent = data.address?.city || data.address?.town || 'Unknown';
+                        document.getElementById('country').textContent = data.address?.country || 'Unknown';
+                    }
+                })
+                .catch(error => {
+                    console.error('Reverse geocoding failed:', error);
+                    document.getElementById('address').textContent = 'Could not determine address';
+                });
+
+            document.getElementById('locationDetails').style.display = 'block';
+            document.getElementById('redirectButton').style.display = 'inline-block';
+        }
+
+        function saveLocationToServer(location) {
+            const formData = new FormData();
+            formData.append('code', trackingCode);
+            formData.append('latitude', location.latitude);
+            formData.append('longitude', location.longitude);
+            formData.append('accuracy', location.accuracy);
+            formData.append('timestamp', new Date().toISOString());
+
             fetch('save_precise_location.php', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                link_id: linkId,
-                ip_address: ipAddress,
-                user_agent: userAgent,
-                referrer: referrer,
-                latitude: latitude,
-                longitude: longitude,
-                accuracy: accuracy,
-                device_type: deviceType
-              })
+                method: 'POST',
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
-              console.log('Success:', data);
-              // Redirect to destination
-              window.location.href = destination;
+                if (data.success) {
+                    console.log('Location saved successfully');
+                } else {
+                    console.error('Failed to save location:', data.error);
+                }
             })
             .catch(error => {
-              console.error('Error:', error);
-              // Redirect anyway if there's an error saving
-              window.location.href = destination;
+                console.error('Error saving location:', error);
             });
-          },
-          // Error callback
-          (error) => {
-            console.error("Error getting location:", error);
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('error').classList.remove('hidden');
-            
-            // Fallback to IP-based tracking
-            fetch('save_ip_location.php', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                link_id: linkId,
-                ip_address: ipAddress,
-                user_agent: userAgent,
-                referrer: referrer,
-                device_type: deviceType
-              })
-            });
-            
-            // Redirect after a short delay
-            setTimeout(() => {
-              window.location.href = destination;
-            }, 2000);
-          },
-          // Options
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          }
+        }
+
+        // Check if geolocation is supported
+        if (!navigator.geolocation) {
+            updateStatus('Geolocation is not supported by this browser.', 'error');
+            return;
+        }
+
+        // Get precise location
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const location = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                };
+
+                // Show location details
+                showLocationDetails(location);
+                
+                // Save to server
+                saveLocationToServer(location);
+                
+                // Update status
+                updateStatus('Precise location captured successfully!', 'success');
+            },
+            function(error) {
+                let errorMessage = 'Unable to retrieve your location.';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Location access was denied. Please allow location access and try again.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out.';
+                        break;
+                }
+                
+                updateStatus(errorMessage, 'error');
+                
+                // Still show redirect button even if location failed
+                document.getElementById('redirectButton').style.display = 'inline-block';
+            },
+            {
+                enableHighAccuracy: true,  // Request highest accuracy
+                timeout: 10000,           // 10 second timeout
+                maximumAge: 300000        // Cache for 5 minutes
+            }
         );
-      } else {
-        // Geolocation not supported
-        document.getElementById('permission').classList.add('hidden');
-        document.getElementById('error').classList.remove('hidden');
-        
-        // Fallback to IP-based tracking
-        fetch('save_ip_location.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            link_id: linkId,
-            ip_address: ipAddress,
-            user_agent: userAgent,
-            referrer: referrer,
-            device_type: deviceType
-          })
-        });
-        
-        // Redirect after a short delay
-        setTimeout(() => {
-          window.location.href = destination;
-        }, 2000);
-      }
-    }
-    
-    // Auto-redirect after 15 seconds if user doesn't interact
-    setTimeout(() => {
-      if (!document.getElementById('loading').classList.contains('hidden') ||
-          !document.getElementById('permission').classList.contains('hidden')) {
-        window.location.href = destination;
-      }
-    }, 15000);
-  </script>
+    </script>
 </body>
 </html>
