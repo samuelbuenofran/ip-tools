@@ -362,24 +362,24 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: all 0.3s ease;
         }
         
-        /* Special animations for liquid glass theme */
-        [data-theme="liquid-glass"] .card {
-            animation: liquidFloat 6s ease-in-out infinite;
-        }
-        
-        @keyframes liquidFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        [data-theme="liquid-glass"] .btn {
-            animation: liquidGlow 4s ease-in-out infinite;
-        }
-        
-        @keyframes liquidGlow {
-            0%, 100% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
-        }
+                 /* Special animations for liquid glass theme */
+         [data-theme="liquid-glass"] .card {
+             animation: liquidFloat 6s ease-in-out infinite;
+         }
+         
+         @keyframes liquidFloat {
+             0%, 100% { transform: translateY(0px); }
+             50% { transform: translateY(-5px); }
+         }
+         
+         [data-theme="liquid-glass"] .btn {
+             animation: liquidGlow 4s ease-in-out infinite;
+         }
+         
+         @keyframes liquidGlow {
+             0%, 100% { box-shadow: 0 0 5px rgba(135, 206, 235, 0.3); }
+             50% { box-shadow: 0 0 20px rgba(135, 206, 235, 0.6); }
+         }
     `;
     document.head.appendChild(style);
 });
