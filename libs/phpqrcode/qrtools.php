@@ -27,13 +27,13 @@
         //----------------------------------------------------------------------
         public static function binarize($frame)
         {
-            $len = count($frame);
             foreach ($frame as &$frameLine) {
-                
-                for($i=0; $i<$len; $i++) {
-                    $frameLine[$i] = (ord($frameLine[$i])&1)?'1':'0';
+                $lineLength = strlen($frameLine);
+                for($i=0; $i<$lineLength; $i++) {
+                    $frameLine[$i] = ($frameLine[$i] & 1) ? '1' : '0';
                 }
             }
+            unset($frameLine); // Clean up the reference
             
             return $frame;
         }

