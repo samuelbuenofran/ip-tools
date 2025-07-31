@@ -1,6 +1,10 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once('../config.php');
-require_once('../libs/phpqrcode/qrlib.php');
+// require_once('../libs/phpqrcode/qrlib.php'); // Temporarily disabled due to compatibility issues
 $db = connectDB();
 
 $tracking_link = '';
@@ -18,21 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!filter_var($original_url, FILTER_VALIDATE_URL)) {
         $error = "<i class='fa-solid fa-triangle-exclamation'></i> Please enter a valid URL.";
     } else {
-        $short_code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
+        try {
+            $short_code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
 
-        $stmt = $db->prepare("INSERT INTO geo_links (original_url, short_code) VALUES (?, ?)");
-        $stmt->execute([$original_url, $short_code]);
+            $stmt = $db->prepare("INSERT INTO geo_links (original_url, short_code) VALUES (?, ?)");
+            $stmt->execute([$original_url, $short_code]);
 
-        $tracking_link = "https://keizai-tech.com/projects/ip-tools/geologger/precise_track.php?code=" . $short_code;
-
-        $qr_folder = '../assets/qrcodes/';
-        if (!file_exists($qr_folder)) {
-            mkdir($qr_folder, 0755, true);
+            $tracking_link = "https://keizai-tech.com/projects/ip-tools/geologger/precise_track.php?code=" . $short_code;
+        } catch (Exception $e) {
+            $error = "<i class='fa-solid fa-triangle-exclamation'></i> Database error: " . $e->getMessage();
         }
 
-        $qr_filename = $qr_folder . $short_code . '.png';
-        QRcode::png($tracking_link, $qr_filename, QR_ECLEVEL_L, 2);
-        $qr_img_tag = "<img src='$qr_filename' alt='QR Code for $tracking_link' title='QR Code' class='qr-code-img mt-3'>";
+        // Generate QR code using online service
+        $qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($tracking_link);
+        $qr_img_tag = "<img src='$qr_url' alt='QR Code for $tracking_link' title='QR Code' class='qr-code-img mt-3'>";
     }
 }
 ?>
@@ -121,10 +124,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function downloadQR() {
       const qrImg = document.querySelector('.qr-code-img');
       if (qrImg) {
-        const link = document.createElement('a');
-        link.download = 'tracking-qr-code.png';
-        link.href = qrImg.src;
-        link.click();
+        // Create a canvas to download the QR code
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 200;
+        canvas.height = 200;
+        
+        // Create a new image to avoid CORS issues
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, 200, 200);
+          canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'tracking-qr-code.png';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+          });
+        };
+        img.src = qrImg.src;
       }
     }
 
