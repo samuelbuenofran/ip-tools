@@ -120,16 +120,8 @@ foreach ($logs as $log) {
       });
     }
 
-    const body = document.body;
-    const btn = document.getElementById('toggleTheme');
-    if (localStorage.getItem('theme') === 'dark') {
-      body.classList.add('bg-dark', 'text-light');
-    }
-    btn?.addEventListener('click', () => {
-      body.classList.toggle('bg-dark');
-      body.classList.toggle('text-light');
-      localStorage.setItem('theme', body.classList.contains('bg-dark') ? 'dark' : 'light');
-    });
+    // Theme system is now handled by theme-switcher.js
+    // The old theme toggle has been replaced with a comprehensive theme selector
   </script>
 </body>
 </html>

@@ -124,27 +124,25 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         </a>
       </div>
 
+      <div class="col-md-4">
+        <a href="/projects/ip-tools/theme-demo.php" class="text-decoration-none">
+          <div class="card p-4 text-center h-100">
+            <div class="icon"><i class="fa-solid fa-palette"></i></div>
+            <h5 class="card-title">Theme Demo</h5>
+            <p>Explore the four different themes available in the suite.</p>
+          </div>
+        </a>
+      </div>
+
     </div>
   </div>
 	
   <?php include('footer.php'); ?>
   
   <script>
-  const body = document.body;
-  const btn = document.getElementById('toggleTheme');
-
-  // Load stored theme
-  if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('bg-dark', 'text-light');
-  }
-
-  btn.addEventListener('click', () => {
-    body.classList.toggle('bg-dark');
-    body.classList.toggle('text-light');
-    const theme = body.classList.contains('bg-dark') ? 'dark' : 'light';
-    localStorage.setItem('theme', theme);
-  });
-</script>
+  // Theme system is now handled by theme-switcher.js
+  // The old theme toggle has been replaced with a comprehensive theme selector
+  </script>
 
   
 </body>
