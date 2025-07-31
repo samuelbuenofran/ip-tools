@@ -65,7 +65,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
     <div class="row g-4">
 
       <div class="col-md-4">
-        <a href="geologger/create.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/geologger/create.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-map-pin"></i></div>
             <h5 class="card-title">Geolocation Tracker</h5>
@@ -75,7 +75,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
       </div>
 
       <div class="col-md-4">
-        <a href="network-tools/logs.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/network-tools/logs.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-chart-bar"></i></div>
             <h5 class="card-title">Logs Dashboard</h5>
@@ -85,7 +85,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
       </div>
 
       <div class="col-md-4">
-        <a href="phone-tracker/send_sms.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/phone-tracker/send_sms.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
             <h5 class="card-title">Phone Tracker</h5>
@@ -95,7 +95,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
       </div>
 
       <div class="col-md-4">
-        <a href="network-tools/ipinfo.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/network-tools/ipinfo.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-globe"></i></div>
             <h5 class="card-title">IP Info Viewer</h5>
@@ -105,7 +105,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
       </div>
 
       <div class="col-md-4">
-        <a href="generators/card-gen.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/generators/card-gen.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
             <h5 class="card-title">Card Generator</h5>
@@ -115,7 +115,7 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
       </div>
 
       <div class="col-md-4">
-        <a href="utils/speedtest.php" class="text-decoration-none">
+        <a href="/projects/ip-tools/utils/speedtest.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-gauge-high"></i></div>
             <h5 class="card-title">Speed Test</h5>

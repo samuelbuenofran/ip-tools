@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     <?php endif; ?>
 
-    <a href="logs.php" class="btn btn-outline-primary mt-4">
+    <a href="/projects/ip-tools/network-tools/logs.php" class="btn btn-outline-primary mt-4">
       <i class="fa-solid fa-chart-bar"></i> View Tracking Logs
     </a>
   </div>
