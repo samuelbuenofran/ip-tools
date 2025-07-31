@@ -7,6 +7,10 @@ define('DB_NAME', 'techeletric_ip_tools');
 define('DB_USER', 'techeletric_ip_tools');
 define('DB_PASS', 'zsP2rDZDaTea2YEhegmH');
 
+// Privacy and Security Settings
+define('SHOW_LOCATION_MESSAGES', false); // Set to false to hide location tracking messages
+define('SHOW_TRACKING_UI', false); // Set to false to hide all tracking-related UI elements
+
 // PDO connection function
 function connectDB() {
     try {
@@ -18,7 +22,7 @@ function connectDB() {
         );
         return $pdo;
     } catch (PDOException $e) {
-        die("?? DB Connection Failed: " . $e->getMessage());
+        die("❌ DB Connection Failed: " . $e->getMessage());
     }
 }
 ?>
