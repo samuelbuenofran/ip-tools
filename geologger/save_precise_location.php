@@ -20,19 +20,27 @@ try {
     $longitude = $_POST['longitude'] ?? '';
     $accuracy = $_POST['accuracy'] ?? '';
     $timestamp = $_POST['timestamp'] ?? date('Y-m-d H:i:s');
+    $ip_only = $_POST['ip_only'] ?? false;
     
     // Validate required fields
-    if (empty($code) || empty($latitude) || empty($longitude)) {
-        throw new Exception('Missing required fields');
+    if (empty($code)) {
+        throw new Exception('Missing tracking code');
     }
     
-    // Validate coordinates
-    if (!is_numeric($latitude) || !is_numeric($longitude)) {
-        throw new Exception('Invalid coordinates');
-    }
-    
-    if ($latitude < -90 || $latitude > 90 || $longitude < -180 || $longitude > 180) {
-        throw new Exception('Coordinates out of valid range');
+    // If IP-only mode, skip coordinate validation
+    if (!$ip_only) {
+        if (empty($latitude) || empty($longitude)) {
+            throw new Exception('Missing required fields');
+        }
+        
+        // Validate coordinates
+        if (!is_numeric($latitude) || !is_numeric($longitude)) {
+            throw new Exception('Invalid coordinates');
+        }
+        
+        if ($latitude < -90 || $latitude > 90 || $longitude < -180 || $longitude > 180) {
+            throw new Exception('Coordinates out of valid range');
+        }
     }
     
     // Get link ID from short code
@@ -56,47 +64,100 @@ try {
     $referrer = $_SERVER['HTTP_REFERER'] ?? '';
     $device_type = preg_match('/mobile/i', $user_agent) ? 'Mobile' : 'Desktop';
     
-    // Get location details using reverse geocoding
+    // Get location details using reverse geocoding or IP-based geolocation
     $geo_data = null;
-    try {
-        $geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$latitude}&lon={$longitude}&zoom=18&addressdetails=1";
-        $geo_response = @file_get_contents($geo_url);
-        
-        if ($geo_response) {
-            $geo_data = json_decode($geo_response, true);
+    $country = 'Unknown';
+    $city = 'Unknown';
+    $address = 'Unknown';
+    
+    if ($ip_only) {
+        // Use IP-based geolocation for fallback
+        try {
+            $ip = $_SERVER['HTTP_CLIENT_IP'] 
+                ?? $_SERVER['HTTP_X_FORWARDED_FOR'] 
+                ?? $_SERVER['REMOTE_ADDR'] 
+                ?? 'UNKNOWN';
+            
+            $geo_url = "http://ip-api.com/json/{$ip}";
+            $geo_response = @file_get_contents($geo_url);
+            
+            if ($geo_response) {
+                $geo_data = json_decode($geo_response, true);
+                if ($geo_data && $geo_data['status'] === 'success') {
+                    $country = $geo_data['country'] ?? 'Unknown';
+                    $city = $geo_data['city'] ?? 'Unknown';
+                    $address = $geo_data['city'] . ', ' . $geo_data['country'];
+                }
+            }
+        } catch (Exception $e) {
+            // Continue without geocoding data
         }
-    } catch (Exception $e) {
-        // Continue without geocoding data
+    } else {
+        // Use reverse geocoding for GPS coordinates
+        try {
+            $geo_url = "https://nominatim.openstreetmap.org/reverse?format=json&lat={$latitude}&lon={$longitude}&zoom=18&addressdetails=1";
+            $geo_response = @file_get_contents($geo_url);
+            
+            if ($geo_response) {
+                $geo_data = json_decode($geo_response, true);
+            }
+        } catch (Exception $e) {
+            // Continue without geocoding data
+        }
+        
+        // Extract location details
+        $country = $geo_data['address']['country'] ?? 'Unknown';
+        $city = $geo_data['address']['city'] ?? $geo_data['address']['town'] ?? 'Unknown';
+        $address = $geo_data['display_name'] ?? 'Unknown';
     }
     
-    // Extract location details
-    $country = $geo_data['address']['country'] ?? 'Unknown';
-    $city = $geo_data['address']['city'] ?? $geo_data['address']['town'] ?? 'Unknown';
-    $address = $geo_data['display_name'] ?? 'Unknown';
-    
     // Insert precise location data
-    $stmt = $db->prepare("
-        INSERT INTO geo_logs (
-            link_id, ip_address, user_agent, referrer, 
-            latitude, longitude, accuracy, country, city, address,
-            device_type, timestamp, location_type
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'GPS')
-    ");
-    
-    $stmt->execute([
-        $link_id,
-        $ip_address,
-        $user_agent,
-        $referrer,
-        $latitude,
-        $longitude,
-        $accuracy,
-        $country,
-        $city,
-        $address,
-        $device_type,
-        $timestamp
-    ]);
+    if ($ip_only) {
+        // Insert IP-only data (no coordinates)
+        $stmt = $db->prepare("
+            INSERT INTO geo_logs (
+                link_id, ip_address, user_agent, referrer, 
+                country, city, address,
+                device_type, timestamp, location_type
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'IP')
+        ");
+        
+        $stmt->execute([
+            $link_id,
+            $ip_address,
+            $user_agent,
+            $referrer,
+            $country,
+            $city,
+            $address,
+            $device_type,
+            $timestamp
+        ]);
+    } else {
+        // Insert GPS data
+        $stmt = $db->prepare("
+            INSERT INTO geo_logs (
+                link_id, ip_address, user_agent, referrer, 
+                latitude, longitude, accuracy, country, city, address,
+                device_type, timestamp, location_type
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'GPS')
+        ");
+        
+        $stmt->execute([
+            $link_id,
+            $ip_address,
+            $user_agent,
+            $referrer,
+            $latitude,
+            $longitude,
+            $accuracy,
+            $country,
+            $city,
+            $address,
+            $device_type,
+            $timestamp
+        ]);
+    }
     
     // Update click count
     $db->prepare("UPDATE geo_links SET click_count = click_count + 1 WHERE id = ?")->execute([$link_id]);
