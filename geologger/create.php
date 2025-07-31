@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $qr_filename = $qr_folder . $short_code . '.png';
-        QRcode::png($tracking_link, $qr_filename, QR_ECLEVEL_L, 4);
-        $qr_img_tag = "<img src='$qr_filename' alt='QR Code for $tracking_link' title='QR Code' class='img-fluid mt-3'>";
+        QRcode::png($tracking_link, $qr_filename, QR_ECLEVEL_L, 2);
+        $qr_img_tag = "<img src='$qr_filename' alt='QR Code for $tracking_link' title='QR Code' class='qr-code-img mt-3'>";
     }
 }
 ?>
@@ -44,6 +44,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .qr-code-img {
+      max-width: 300px;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .qr-code-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+    
+    @media (max-width: 768px) {
+      .qr-code-img {
+        max-width: 250px;
+        max-height: 250px;
+      }
+    }
+  </style>
 </head>
 <body class="bg-light text-center">
   <?php include('../header.php'); ?>
@@ -67,8 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="btn btn-secondary mb-3" onclick="copyLink()">
           <i class="fa-solid fa-copy"></i> Copy to Clipboard
         </button>
+        <button class="btn btn-info mb-3" onclick="downloadQR()">
+          <i class="fa-solid fa-download"></i> Download QR Code
+        </button>
         <h6><i class="fa-solid fa-qrcode"></i> QR Code:</h6>
-        <?= $qr_img_tag ?>
+        <div class="qr-code-container">
+          <?= $qr_img_tag ?>
+        </div>
       </div>
     <?php endif; ?>
 
@@ -84,6 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const link = document.querySelector('.fw-bold').textContent;
       navigator.clipboard.writeText(link);
       alert("✅ Link copied to clipboard!");
+    }
+    
+    function downloadQR() {
+      const qrImg = document.querySelector('.qr-code-img');
+      if (qrImg) {
+        const link = document.createElement('a');
+        link.download = 'tracking-qr-code.png';
+        link.href = qrImg.src;
+        link.click();
+      }
     }
 
     // Theme toggle logic
