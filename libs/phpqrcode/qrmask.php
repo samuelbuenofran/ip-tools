@@ -36,9 +36,19 @@
 		
 		//----------------------------------------------------------------------
 		public function __construct() 
-        {
-            $this->runLength = array_fill(0, QRSPEC_WIDTH_MAX + 1, 0);
-        }
+		{
+		    // Ensure the constant is defined to prevent undefined constant errors
+		    if (!defined('QRSPEC_WIDTH_MAX')) {
+		        throw new \RuntimeException('QRSPEC_WIDTH_MAX constant must be defined');
+		    }
+		    
+		    // Validate that QRSPEC_WIDTH_MAX is a reasonable positive value
+		    if (QRSPEC_WIDTH_MAX < 0) {
+		        throw new \InvalidArgumentException('QRSPEC_WIDTH_MAX must be a non-negative value');
+		    }
+		    
+		    $this->runLength = array_fill(0, QRSPEC_WIDTH_MAX + 1, 0);
+		}
         
         //----------------------------------------------------------------------
         public function writeFormatInformation($width, &$frame, $mask, $level)
