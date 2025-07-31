@@ -115,40 +115,57 @@ $original_url = $link['original_url'];
         console.log('Original URL:', originalUrl);
 
         function updateStatus(message, type) {
+            console.log('Updating status:', message, type);
             const statusDiv = document.getElementById('locationStatus');
-            statusDiv.className = `location-status status-${type}`;
-            statusDiv.innerHTML = `
-                <div class="text-center">
-                    <h5><i class="fa-solid fa-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'}"></i> ${message}</h5>
-                </div>
-            `;
+            if (statusDiv) {
+                statusDiv.className = `location-status status-${type}`;
+                statusDiv.innerHTML = `
+                    <div class="text-center">
+                        <h5><i class="fa-solid fa-${type === 'success' ? 'check-circle text-success' : 'exclamation-triangle text-danger'}"></i> ${message}</h5>
+                    </div>
+                `;
+            }
         }
 
         function showLocationDetails(location) {
-            document.getElementById('latitude').textContent = location.latitude.toFixed(6);
-            document.getElementById('longitude').textContent = location.longitude.toFixed(6);
-            document.getElementById('accuracy').textContent = location.accuracy.toFixed(1);
+            console.log('Showing location details:', location);
+            const latElement = document.getElementById('latitude');
+            const lngElement = document.getElementById('longitude');
+            const accElement = document.getElementById('accuracy');
+            
+            if (latElement) latElement.textContent = location.latitude.toFixed(6);
+            if (lngElement) lngElement.textContent = location.longitude.toFixed(6);
+            if (accElement) accElement.textContent = location.accuracy.toFixed(1);
             
             // Reverse geocoding to get address
             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}&zoom=18&addressdetails=1`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.display_name) {
-                        document.getElementById('address').textContent = data.display_name;
-                        document.getElementById('city').textContent = data.address?.city || data.address?.town || 'Unknown';
-                        document.getElementById('country').textContent = data.address?.country || 'Unknown';
+                        const addrElement = document.getElementById('address');
+                        const cityElement = document.getElementById('city');
+                        const countryElement = document.getElementById('country');
+                        
+                        if (addrElement) addrElement.textContent = data.display_name;
+                        if (cityElement) cityElement.textContent = data.address?.city || data.address?.town || 'Unknown';
+                        if (countryElement) countryElement.textContent = data.address?.country || 'Unknown';
                     }
                 })
                 .catch(error => {
                     console.error('Reverse geocoding failed:', error);
-                    document.getElementById('address').textContent = 'Could not determine address';
+                    const addrElement = document.getElementById('address');
+                    if (addrElement) addrElement.textContent = 'Could not determine address';
                 });
 
-            document.getElementById('locationDetails').style.display = 'block';
-            document.getElementById('redirectButton').style.display = 'inline-block';
+            const detailsElement = document.getElementById('locationDetails');
+            const redirectElement = document.getElementById('redirectButton');
+            
+            if (detailsElement) detailsElement.style.display = 'block';
+            if (redirectElement) redirectElement.style.display = 'inline-block';
         }
 
         function saveLocationToServer(location) {
+            console.log('Saving location to server:', location);
             const formData = new FormData();
             formData.append('code', trackingCode);
             formData.append('latitude', location.latitude);
@@ -204,20 +221,48 @@ $original_url = $link['original_url'];
 
         function skipLocation() {
             console.log('Skip location clicked');
-            clearTimeout(locationTimeout); // Clear any existing timeout
-            clearTimeout(quickFallback); // Clear the quick fallback
-            updateStatus('Location tracking skipped. Proceeding with IP-based tracking...', 'error');
-            saveIPBasedLocation();
-            document.getElementById('redirectButton').style.display = 'inline-block';
-            document.getElementById('skipLocationBtn').style.display = 'none'; // Hide the skip button
+            try {
+                if (typeof locationTimeout !== 'undefined') clearTimeout(locationTimeout);
+                if (typeof quickFallback !== 'undefined') clearTimeout(quickFallback);
+                
+                updateStatus('Location tracking skipped. Proceeding with IP-based tracking...', 'error');
+                saveIPBasedLocation();
+                
+                const redirectElement = document.getElementById('redirectButton');
+                const skipElement = document.getElementById('skipLocationBtn');
+                
+                if (redirectElement) redirectElement.style.display = 'inline-block';
+                if (skipElement) skipElement.style.display = 'none';
+                
+                console.log('Skip location completed successfully');
+            } catch (error) {
+                console.error('Error in skipLocation:', error);
+                // Force show redirect button even if there's an error
+                const redirectElement = document.getElementById('redirectButton');
+                if (redirectElement) redirectElement.style.display = 'inline-block';
+            }
         }
+
+        // Immediate fallback - show redirect button after 3 seconds regardless
+        setTimeout(() => {
+            console.log('Immediate fallback triggered');
+            const redirectElement = document.getElementById('redirectButton');
+            if (redirectElement && redirectElement.style.display === 'none') {
+                console.log('Showing redirect button via fallback');
+                redirectElement.style.display = 'inline-block';
+                updateStatus('Proceeding with IP-based tracking...', 'error');
+                saveIPBasedLocation();
+            }
+        }, 3000);
 
         // Check if geolocation is supported
         if (!navigator.geolocation) {
+            console.log('Geolocation not supported');
             updateStatus('Geolocation is not supported by this browser. Proceeding with IP-based tracking...', 'error');
             saveIPBasedLocation();
             setTimeout(() => {
-                document.getElementById('redirectButton').style.display = 'inline-block';
+                const redirectElement = document.getElementById('redirectButton');
+                if (redirectElement) redirectElement.style.display = 'inline-block';
             }, 2000);
             return;
         }
@@ -227,75 +272,101 @@ $original_url = $link['original_url'];
             console.log('Location timeout triggered');
             updateStatus('Location request timed out. Proceeding with IP-based tracking...', 'error');
             saveIPBasedLocation();
-            document.getElementById('redirectButton').style.display = 'inline-block';
-        }, 5000); // 5 second timeout - even more aggressive
+            const redirectElement = document.getElementById('redirectButton');
+            if (redirectElement) redirectElement.style.display = 'inline-block';
+        }, 4000); // 4 second timeout
 
-        // Additional quick fallback after 2 seconds if no response
+        // Additional quick fallback after 1.5 seconds if no response
         let quickFallback = setTimeout(() => {
             console.log('Quick fallback triggered');
-            if (document.getElementById('redirectButton').style.display === 'none') {
+            const redirectElement = document.getElementById('redirectButton');
+            if (redirectElement && redirectElement.style.display === 'none') {
                 updateStatus('Still waiting for location... You can skip or wait a bit more.', 'error');
             }
-        }, 2000); // 2 second warning
+        }, 1500); // 1.5 second warning
 
         // Get precise location
         console.log('Starting geolocation request...');
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                console.log('Geolocation success:', position);
-                clearTimeout(locationTimeout); // Clear the timeout
-                clearTimeout(quickFallback); // Clear the quick fallback
-                
-                const location = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy
-                };
+        try {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    console.log('Geolocation success:', position);
+                    try {
+                        if (typeof locationTimeout !== 'undefined') clearTimeout(locationTimeout);
+                        if (typeof quickFallback !== 'undefined') clearTimeout(quickFallback);
+                        
+                        const location = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            accuracy: position.coords.accuracy
+                        };
 
-                // Show location details
-                showLocationDetails(location);
-                
-                // Save to server
-                saveLocationToServer(location);
-                
-                // Update status
-                updateStatus('Precise location captured successfully!', 'success');
-            },
-            function(error) {
-                console.log('Geolocation error:', error);
-                clearTimeout(locationTimeout); // Clear the timeout
-                clearTimeout(quickFallback); // Clear the quick fallback
-                
-                let errorMessage = 'Unable to retrieve your location.';
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage = 'Location access was denied. Proceeding with IP-based tracking...';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage = 'Location information is unavailable. Proceeding with IP-based tracking...';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage = 'Location request timed out. Proceeding with IP-based tracking...';
-                        break;
+                        // Show location details
+                        showLocationDetails(location);
+                        
+                        // Save to server
+                        saveLocationToServer(location);
+                        
+                        // Update status
+                        updateStatus('Precise location captured successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error in geolocation success handler:', error);
+                        updateStatus('Location captured but there was an error. Proceeding...', 'error');
+                        const redirectElement = document.getElementById('redirectButton');
+                        if (redirectElement) redirectElement.style.display = 'inline-block';
+                    }
+                },
+                function(error) {
+                    console.log('Geolocation error:', error);
+                    try {
+                        if (typeof locationTimeout !== 'undefined') clearTimeout(locationTimeout);
+                        if (typeof quickFallback !== 'undefined') clearTimeout(quickFallback);
+                        
+                        let errorMessage = 'Unable to retrieve your location.';
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'Location access was denied. Proceeding with IP-based tracking...';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'Location information is unavailable. Proceeding with IP-based tracking...';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'Location request timed out. Proceeding with IP-based tracking...';
+                                break;
+                        }
+                        
+                        updateStatus(errorMessage, 'error');
+                        
+                        // Save IP-based location as fallback
+                        saveIPBasedLocation();
+                        
+                        // Show redirect button after a short delay
+                        setTimeout(() => {
+                            const redirectElement = document.getElementById('redirectButton');
+                            if (redirectElement) redirectElement.style.display = 'inline-block';
+                        }, 2000);
+                    } catch (error) {
+                        console.error('Error in geolocation error handler:', error);
+                        const redirectElement = document.getElementById('redirectButton');
+                        if (redirectElement) redirectElement.style.display = 'inline-block';
+                    }
+                },
+                {
+                    enableHighAccuracy: false,  // Use lower accuracy for faster response
+                    timeout: 5000,             // 5 second timeout
+                    maximumAge: 60000          // Cache for 1 minute
                 }
-                
-                updateStatus(errorMessage, 'error');
-                
-                // Save IP-based location as fallback
-                saveIPBasedLocation();
-                
-                // Show redirect button after a short delay
-                setTimeout(() => {
-                    document.getElementById('redirectButton').style.display = 'inline-block';
-                }, 2000);
-            },
-            {
-                enableHighAccuracy: true,  // Request highest accuracy
-                timeout: 10000,           // 10 second timeout
-                maximumAge: 300000        // Cache for 5 minutes
-            }
-        );
+            );
+        } catch (error) {
+            console.error('Error starting geolocation:', error);
+            updateStatus('Error starting location request. Proceeding with IP-based tracking...', 'error');
+            saveIPBasedLocation();
+            setTimeout(() => {
+                const redirectElement = document.getElementById('redirectButton');
+                if (redirectElement) redirectElement.style.display = 'inline-block';
+            }, 2000);
+        }
     </script>
 </body>
 </html>
