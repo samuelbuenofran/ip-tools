@@ -2,10 +2,10 @@
 class ThemeSwitcher {
     constructor() {
         this.themes = [
-            { id: 'flat-minimalist', name: 'Flat Minimalist', icon: '🎨' },
-            { id: 'frutiger-aero', name: 'Frutiger Aero', icon: '🪟' },
-            { id: 'macos-aqua', name: 'macOS Aqua', icon: '🍎' },
-            { id: 'liquid-glass', name: 'Liquid Glass', icon: '💎' }
+            { id: 'flat-minimalist', name: 'Flat Minimalist', icon: 'fa-solid fa-palette' },
+            { id: 'frutiger-aero', name: 'Frutiger Aero', icon: 'fa-solid fa-window-maximize' },
+            { id: 'macos-aqua', name: 'macOS Aqua', icon: 'fa-solid fa-apple-whole' },
+            { id: 'liquid-glass', name: 'Liquid Glass', icon: 'fa-solid fa-gem' }
         ];
         
         this.currentTheme = localStorage.getItem('selected-theme') || 'flat-minimalist';
@@ -28,6 +28,16 @@ class ThemeSwitcher {
     createThemeSelector() {
         const selector = document.createElement('div');
         selector.className = 'theme-selector fade-in';
+        
+        // Check saved state
+        const isCollapsed = localStorage.getItem('theme-selector-collapsed') === 'true';
+        const isMinimized = localStorage.getItem('theme-selector-minimized') === 'true';
+        const isHidden = localStorage.getItem('theme-selector-hidden') === 'true';
+        
+        if (isCollapsed) selector.classList.add('collapsed');
+        if (isMinimized) selector.classList.add('minimized');
+        if (isHidden) selector.classList.add('hidden');
+        
         selector.innerHTML = `
             <div class="theme-selector-header">
                 <div class="theme-selector-title">
@@ -36,10 +46,10 @@ class ThemeSwitcher {
                 </div>
                 <div class="theme-selector-controls">
                     <button class="theme-control-btn" onclick="themeSwitcher.toggleCollapse()" title="Toggle">
-                        <i class="fa-solid fa-chevron-up"></i>
+                        <i class="fa-solid fa-chevron-${isCollapsed ? 'down' : 'up'}"></i>
                     </button>
                     <button class="theme-control-btn" onclick="themeSwitcher.toggleMinimize()" title="Minimize">
-                        <i class="fa-solid fa-minus"></i>
+                        <i class="fa-solid fa-${isMinimized ? 'expand' : 'minus'}"></i>
                     </button>
                     <button class="theme-control-btn" onclick="themeSwitcher.hide()" title="Hide">
                         <i class="fa-solid fa-times"></i>
@@ -51,7 +61,7 @@ class ThemeSwitcher {
                     <button class="theme-option ${theme.id === this.currentTheme ? 'active' : ''}" 
                             data-theme="${theme.id}" 
                             onclick="themeSwitcher.switchTheme('${theme.id}')">
-                        <span class="theme-option-icon">${theme.icon}</span>
+                        <span class="theme-option-icon"><i class="${theme.icon}"></i></span>
                         <span>${theme.name}</span>
                     </button>
                 `).join('')}
@@ -60,6 +70,11 @@ class ThemeSwitcher {
         
         document.body.appendChild(selector);
         this.makeDraggable(selector);
+        
+        // If hidden, create restore button
+        if (isHidden) {
+            this.createRestoreButton();
+        }
     }
     
     switchTheme(themeId) {
@@ -115,7 +130,7 @@ class ThemeSwitcher {
         notification.className = 'theme-notification fade-in';
         notification.innerHTML = `
             <div class="d-flex align-items-center">
-                <span class="me-2">${theme.icon}</span>
+                <i class="${theme.icon} me-2"></i>
                 <span>Switched to ${theme.name}</span>
             </div>
         `;
@@ -187,9 +202,14 @@ class ThemeSwitcher {
         const selector = document.querySelector('.theme-selector');
         if (selector) {
             selector.classList.toggle('collapsed');
+            const isCollapsed = selector.classList.contains('collapsed');
+            
+            // Save state to localStorage
+            localStorage.setItem('theme-selector-collapsed', isCollapsed);
+            
             const toggleBtn = selector.querySelector('.theme-control-btn i');
             if (toggleBtn) {
-                toggleBtn.className = selector.classList.contains('collapsed') 
+                toggleBtn.className = isCollapsed 
                     ? 'fa-solid fa-chevron-down' 
                     : 'fa-solid fa-chevron-up';
             }
@@ -201,9 +221,14 @@ class ThemeSwitcher {
         const selector = document.querySelector('.theme-selector');
         if (selector) {
             selector.classList.toggle('minimized');
+            const isMinimized = selector.classList.contains('minimized');
+            
+            // Save state to localStorage
+            localStorage.setItem('theme-selector-minimized', isMinimized);
+            
             const minimizeBtn = selector.querySelector('.theme-control-btn:nth-child(2) i');
             if (minimizeBtn) {
-                minimizeBtn.className = selector.classList.contains('minimized') 
+                minimizeBtn.className = isMinimized 
                     ? 'fa-solid fa-expand' 
                     : 'fa-solid fa-minus';
             }
@@ -215,6 +240,10 @@ class ThemeSwitcher {
         const selector = document.querySelector('.theme-selector');
         if (selector) {
             selector.classList.add('hidden');
+            
+            // Save state to localStorage
+            localStorage.setItem('theme-selector-hidden', 'true');
+            
             // Show a small floating button to restore
             this.createRestoreButton();
         }
@@ -260,6 +289,9 @@ class ThemeSwitcher {
         if (restoreBtn) {
             restoreBtn.remove();
         }
+        
+        // Clear hidden state from localStorage
+        localStorage.removeItem('theme-selector-hidden');
     }
     
     // Make theme selector draggable
