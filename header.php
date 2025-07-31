@@ -25,6 +25,7 @@
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/network-tools/logs.php" data-translate="nav_logs"><i class="fa-solid fa-chart-line"></i> Logs Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker/send_sms.php" data-translate="nav_phone_tracker"><i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/utils/speedtest.php" data-translate="nav_speed_test"><i class="fa-solid fa-gauge-high"></i> Speed Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/settings.php" data-translate="settings"><i class="fa-solid fa-cog"></i> Configurações</a></li>
       </ul>
     </div>
   </div>

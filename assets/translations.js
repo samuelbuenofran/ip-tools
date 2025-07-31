@@ -155,6 +155,25 @@ const translations = {
         'switch_theme': 'Switch Theme',
         'theme_changed': 'Theme changed successfully!',
         
+        // Settings
+        'settings': 'Settings',
+        'language_settings': 'Language Settings',
+        'theme_settings': 'Theme Settings',
+        'system_info': 'System Information',
+        'developer_tools': 'Developer Tools',
+        'language_description': 'The default language of the application is Portuguese (Brazil). The English option is available only for development and debugging purposes.',
+        'theme_description': 'The current theme is macOS Aqua. This is the only option available to maintain visual consistency.',
+        'developer_description': 'Advanced tools for developers and system administrators.',
+        'switch_to_english': 'Switch to English (Dev)',
+        'language_warning': 'Warning: The English language is intended only for developers and debugging purposes. For production use, we recommend keeping the language in Portuguese (Brazil).',
+        'confirm_switch_english': 'Are you sure you want to switch to English? This is intended for development purposes only.',
+        'language_switched_english': 'Language switched to English for development purposes.',
+        'back_to_home': 'Back to Home',
+        'version': 'Version',
+        'php_version': 'PHP Version',
+        'server_time': 'Server Time',
+        'timezone': 'Timezone',
+        
         // Notifications
         'notification_success': 'Operation completed successfully!',
         'notification_error': 'An error occurred. Please try again.',
@@ -387,6 +406,25 @@ const translations = {
         'switch_theme': 'Alterar Tema',
         'theme_changed': 'Tema alterado com sucesso!',
         
+        // Settings
+        'settings': 'Configurações',
+        'language_settings': 'Configurações de Idioma',
+        'theme_settings': 'Configurações de Tema',
+        'system_info': 'Informações do Sistema',
+        'developer_tools': 'Ferramentas de Desenvolvedor',
+        'language_description': 'O idioma padrão do aplicativo é Português (Brasil). A opção de inglês está disponível apenas para fins de desenvolvimento e depuração.',
+        'theme_description': 'O tema atual é macOS Aqua. Esta é a única opção disponível para manter a consistência visual.',
+        'developer_description': 'Ferramentas avançadas para desenvolvedores e administradores do sistema.',
+        'switch_to_english': 'Alterar para Inglês (Dev)',
+        'language_warning': 'Atenção: O idioma inglês é destinado apenas para desenvolvedores e fins de depuração. Para uso em produção, recomendamos manter o idioma em Português (Brasil).',
+        'confirm_switch_english': 'Tem certeza de que deseja alterar para inglês? Isso é destinado apenas para fins de desenvolvimento.',
+        'language_switched_english': 'Idioma alterado para inglês para fins de desenvolvimento.',
+        'back_to_home': 'Voltar ao Início',
+        'version': 'Versão',
+        'php_version': 'Versão do PHP',
+        'server_time': 'Hora do Servidor',
+        'timezone': 'Fuso Horário',
+        
         // Notifications
         'notification_success': 'Operação concluída com sucesso!',
         'notification_error': 'Ocorreu um erro. Tente novamente.',
@@ -468,13 +506,16 @@ const translations = {
 // ===== LANGUAGE MANAGER =====
 class LanguageManager {
     constructor() {
-        this.currentLanguage = localStorage.getItem('selected-language') || 'en';
+        this.currentLanguage = localStorage.getItem('selected-language') || 'pt-BR';
         this.init();
     }
     
     init() {
         this.applyLanguage(this.currentLanguage);
-        this.createLanguageSelector();
+        // Only create language selector if we're in English mode (developer mode)
+        if (this.currentLanguage === 'en') {
+            this.createLanguageSelector();
+        }
     }
     
     createLanguageSelector() {
@@ -499,17 +540,21 @@ class LanguageManager {
                 </div>
             </div>
             <div class="language-selector-content">
+                <div class="alert alert-warning p-2 mb-2" style="font-size: 0.8rem;">
+                    <i class="fa-solid fa-exclamation-triangle"></i>
+                    <span>${this.getText('language_warning')}</span>
+                </div>
                 <button class="language-option ${this.currentLanguage === 'en' ? 'active' : ''}" 
                         data-language="en" 
                         onclick="languageManager.switchLanguage('en')">
-                    <span class="language-option-icon"><i class="fa-solid fa-flag"></i></span>
-                    <span>${this.getText('english')}</span>
+                    <span class="language-option-icon"><i class="fa-solid fa-code"></i></span>
+                    <span>${this.getText('english')} (Dev)</span>
                 </button>
                 <button class="language-option ${this.currentLanguage === 'pt-BR' ? 'active' : ''}" 
                         data-language="pt-BR" 
                         onclick="languageManager.switchLanguage('pt-BR')">
                     <span class="language-option-icon"><i class="fa-solid fa-flag"></i></span>
-                    <span>${this.getText('portuguese')}</span>
+                    <span>${this.getText('portuguese')} (Default)</span>
                 </button>
             </div>
         `;
@@ -542,6 +587,20 @@ class LanguageManager {
         
         // Update all text content
         this.updatePageContent();
+        
+        // Handle language selector visibility
+        if (languageId === 'pt-BR') {
+            // Hide language selector when switching to Portuguese
+            const selector = document.querySelector('.language-selector');
+            if (selector) {
+                selector.remove();
+            }
+        } else if (languageId === 'en') {
+            // Show language selector when switching to English
+            if (!document.querySelector('.language-selector')) {
+                this.createLanguageSelector();
+            }
+        }
     }
     
     applyLanguage(languageId) {
@@ -550,6 +609,9 @@ class LanguageManager {
         
         // Set language attribute on body
         document.body.setAttribute('data-language', languageId);
+        
+        // Update HTML lang attribute
+        document.documentElement.lang = languageId;
         
         // Remove transition class after animation completes
         setTimeout(() => {

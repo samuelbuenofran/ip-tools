@@ -1,6 +1,6 @@
 <?php require_once('config.php'); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>IP Tools Suite</title>
