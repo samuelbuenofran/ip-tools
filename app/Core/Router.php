@@ -42,7 +42,20 @@ class Router {
                 
                 $action = $this->params['action'];
                 if (method_exists($controller_object, $action)) {
-                    return call_user_func_array([$controller_object, $action], $this->params);
+                    // Filter out route parameters that aren't valid method parameters
+                    $methodParams = [];
+                    $reflection = new \ReflectionMethod($controller_object, $action);
+                    $paramNames = array_map(function($param) {
+                        return $param->getName();
+                    }, $reflection->getParameters());
+                    
+                    foreach ($this->params as $key => $value) {
+                        if (in_array($key, $paramNames)) {
+                            $methodParams[$key] = $value;
+                        }
+                    }
+                    
+                    return call_user_func_array([$controller_object, $action], $methodParams);
                 } else {
                     throw new \Exception("Method $action in controller $controller not found");
                 }
