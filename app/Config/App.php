@@ -35,7 +35,7 @@ class App {
     const CACHE_DURATION = 300; // 5 minutes
     
     // Error reporting
-    const DEBUG_MODE = false;
+    const DEBUG_MODE = true;
     
     public static function init() {
         // Set error reporting
