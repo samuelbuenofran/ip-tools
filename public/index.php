@@ -1,6 +1,10 @@
 <?php
-// Autoloader
-require_once '../vendor/autoload.php';
+// Autoloader - Use development autoloader if vendor doesn't exist
+if (file_exists('../vendor/autoload.php')) {
+    require_once '../vendor/autoload.php';
+} else {
+    require_once '../autoload.php';
+}
 
 // Initialize application
 use App\Config\App;
