@@ -7,7 +7,7 @@ const translations = {
         'nav_network_tools': 'Network Tools',
         'nav_phone_tracker': 'Phone Tracker',
         'nav_speed_test': 'Speed Test',
-        'nav_logs': 'Logs',
+        'nav_logs': 'Logs Dashboard',
         'nav_support': 'Support',
         'nav_privacy': 'Privacy',
         
@@ -57,6 +57,17 @@ const translations = {
         'speed_test_desc': 'Test your internet connection speed',
         'theme_demo_title': 'Theme Demo',
         'theme_demo_desc': 'Explore different visual themes',
+        'ip_info_title': 'IP Info Viewer',
+        'ip_info_desc': 'Look up details about any IP address instantly.',
+        'card_generator_title': 'Card Generator',
+        'card_generator_desc': 'Generate realistic mock credit cards for testing.',
+        'total_clicks': 'Total Clicks',
+        'active_links': 'Active Links',
+        'unique_visitors': 'Unique Visitors',
+        'visitor_log_dashboard': 'Visitor Log Dashboard',
+        'location_source': 'Location Source',
+        'precise_address': 'Precise Address',
+        'click_heatmap': 'Click Heatmap',
         
         // Geolocation Tracker
         'create_tracking_link': 'Create Tracking Link',
@@ -109,6 +120,13 @@ const translations = {
         'time': 'Time',
         'ip_address': 'IP Address',
         'location': 'Location',
+        'id': 'ID',
+        'street': 'Street',
+        'city': 'City',
+        'state': 'State',
+        'country': 'Country',
+        'device': 'Device',
+        'timestamp': 'Timestamp',
         'user_agent': 'User Agent',
         'referrer': 'Referrer',
         'status': 'Status',
@@ -258,7 +276,7 @@ const translations = {
         'nav_network_tools': 'Ferramentas de Rede',
         'nav_phone_tracker': 'Rastreador de Telefone',
         'nav_speed_test': 'Teste de Velocidade',
-        'nav_logs': 'Logs',
+        'nav_logs': 'Painel de Logs',
         'nav_support': 'Suporte',
         'nav_privacy': 'Privacidade',
         
@@ -308,6 +326,17 @@ const translations = {
         'speed_test_desc': 'Teste a velocidade da sua conexão com a internet',
         'theme_demo_title': 'Demonstração de Temas',
         'theme_demo_desc': 'Explore diferentes temas visuais',
+        'ip_info_title': 'Visualizador de IP',
+        'ip_info_desc': 'Consulte detalhes sobre qualquer endereço IP instantaneamente.',
+        'card_generator_title': 'Gerador de Cartões',
+        'card_generator_desc': 'Gere cartões de crédito fictícios realistas para testes.',
+        'total_clicks': 'Total de Cliques',
+        'active_links': 'Links Ativos',
+        'unique_visitors': 'Visitantes Únicos',
+        'visitor_log_dashboard': 'Painel de Logs de Visitantes',
+        'location_source': 'Fonte da Localização',
+        'precise_address': 'Endereço Preciso',
+        'click_heatmap': 'Mapa de Calor de Cliques',
         
         // Geolocation Tracker
         'create_tracking_link': 'Criar Link de Rastreamento',
@@ -360,6 +389,13 @@ const translations = {
         'time': 'Hora',
         'ip_address': 'Endereço IP',
         'location': 'Localização',
+        'id': 'ID',
+        'street': 'Rua',
+        'city': 'Cidade',
+        'state': 'Estado',
+        'country': 'País',
+        'device': 'Dispositivo',
+        'timestamp': 'Data/Hora',
         'user_agent': 'User Agent',
         'referrer': 'Referenciador',
         'status': 'Status',
@@ -512,6 +548,8 @@ class LanguageManager {
     
     init() {
         this.applyLanguage(this.currentLanguage);
+        // Update page content immediately
+        this.updatePageContent();
         // Only create language selector if we're in English mode (developer mode)
         if (this.currentLanguage === 'en') {
             this.createLanguageSelector();
@@ -800,6 +838,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+    
+    // Ensure language is applied after a short delay to allow all elements to load
+    setTimeout(() => {
+        if (languageManager) {
+            languageManager.updatePageContent();
+        }
+    }, 100);
 });
 
 // ===== UTILITY FUNCTIONS =====

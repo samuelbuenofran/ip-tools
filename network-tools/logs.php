@@ -49,26 +49,26 @@ foreach ($logs as $log) {
 
 <div class="container py-4">
   <h2 class="mb-4 text-center">
-    <i class="fa-solid fa-list-check text-primary"></i> Visitor Log Dashboard
+    <i class="fa-solid fa-list-check text-primary"></i> <span data-translate="visitor_log_dashboard">Visitor Log Dashboard</span>
   </h2>
 
   <!-- 📈 Stats Cards -->
   <div class="row g-4 text-center mb-4">
     <div class="col-md-4">
       <div class="card p-3 border-primary">
-        <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> Total Clicks</h5>
+        <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> <span data-translate="total_clicks">Total Clicks</span></h5>
         <h3><?= $totalClicks ?></h3>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card p-3 border-success">
-        <h5><i class="fa-solid fa-link text-success"></i> Active Links</h5>
+        <h5><i class="fa-solid fa-link text-success"></i> <span data-translate="active_links">Active Links</span></h5>
         <h3><?= $activeLinks ?></h3>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card p-3 border-info">
-        <h5><i class="fa-solid fa-user-check text-info"></i> Unique Visitors</h5>
+        <h5><i class="fa-solid fa-user-check text-info"></i> <span data-translate="unique_visitors">Unique Visitors</span></h5>
         <h3><?= $uniqueIPs ?></h3>
       </div>
     </div>
@@ -79,18 +79,18 @@ foreach ($logs as $log) {
     <table class="table table-bordered table-striped">
       <thead class="table-light text-center">
         <tr>
-          <th>ID</th>
-          <th>IP Address</th>
-          <th>Location Source</th>
-          <th>Accuracy</th>
-          <th>Precise Address</th>
-          <th>Street</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Country</th>
-          <th>Device</th>
-          <th>Referrer</th>
-          <th>Timestamp</th>
+          <th data-translate="id">ID</th>
+          <th data-translate="ip_address">IP Address</th>
+          <th data-translate="location_source">Location Source</th>
+          <th data-translate="accuracy">Accuracy</th>
+          <th data-translate="precise_address">Precise Address</th>
+          <th data-translate="street">Street</th>
+          <th data-translate="city">City</th>
+          <th data-translate="state">State</th>
+          <th data-translate="country">Country</th>
+          <th data-translate="device">Device</th>
+          <th data-translate="referrer">Referrer</th>
+          <th data-translate="timestamp">Timestamp</th>
         </tr>
       </thead>
       <tbody class="text-center">
@@ -116,7 +116,7 @@ foreach ($logs as $log) {
 
   <!-- 🗺️ Heatmap -->
   <h4 class="mt-5">
-    <i class="fa-solid fa-map-location-dot"></i> Click Heatmap
+    <i class="fa-solid fa-map-location-dot"></i> <span data-translate="click_heatmap">Click Heatmap</span>
   </h4>
   <div id="map" style="width:100%; height:500px;" class="border rounded shadow-sm mb-5"></div>
 </div>

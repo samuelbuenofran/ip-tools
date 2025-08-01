@@ -43,19 +43,19 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
 <div class="row g-4 text-center mb-4">
   <div class="col-md-4">
     <div class="card p-3 border-primary">
-      <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> Total Clicks</h5>
+      <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> <span data-translate="total_clicks">Total Clicks</span></h5>
       <h3><?= $totalClicks ?></h3>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card p-3 border-success">
-      <h5><i class="fa-solid fa-link text-success"></i> Active Links</h5>
+      <h5><i class="fa-solid fa-link text-success"></i> <span data-translate="active_links">Active Links</span></h5>
       <h3><?= $activeLinks ?></h3>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card p-3 border-info">
-      <h5><i class="fa-solid fa-user-check text-info"></i> Unique Visitors</h5>
+      <h5><i class="fa-solid fa-user-check text-info"></i> <span data-translate="unique_visitors">Unique Visitors</span></h5>
       <h3><?= $uniqueIPs ?></h3>
     </div>
   </div>
@@ -98,8 +98,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/network-tools/ipinfo.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-globe"></i></div>
-            <h5 class="card-title">IP Info Viewer</h5>
-            <p>Look up details about any IP address instantly.</p>
+            <h5 class="card-title" data-translate="ip_info_title">IP Info Viewer</h5>
+            <p data-translate="ip_info_desc">Look up details about any IP address instantly.</p>
           </div>
         </a>
       </div>
@@ -108,8 +108,8 @@ $uniqueIPs = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetc
         <a href="/projects/ip-tools/generators/card-gen.php" class="text-decoration-none">
           <div class="card p-4 text-center h-100">
             <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
-            <h5 class="card-title">Card Generator</h5>
-            <p>Generate realistic mock credit cards for testing.</p>
+            <h5 class="card-title" data-translate="card_generator_title">Card Generator</h5>
+            <p data-translate="card_generator_desc">Generate realistic mock credit cards for testing.</p>
           </div>
         </a>
       </div>
