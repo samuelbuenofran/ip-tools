@@ -19,6 +19,7 @@ $router = new Router();
 // Define routes
 $router->add('', ['controller' => 'HomeController', 'action' => 'index']);
 $router->add('home', ['controller' => 'HomeController', 'action' => 'index']);
+$router->add('dashboard', ['controller' => 'DashboardController', 'action' => 'index']);
 $router->add('about', ['controller' => 'HomeController', 'action' => 'about']);
 $router->add('contact', ['controller' => 'HomeController', 'action' => 'contact']);
 $router->add('privacy', ['controller' => 'HomeController', 'action' => 'privacy']);
@@ -42,6 +43,16 @@ $router->add('utils/speed_analytics', ['controller' => 'SpeedTestController', 'a
 
 // Admin routes
 $router->add('admin/privacy_settings', ['controller' => 'AdminController', 'action' => 'privacySettings']);
+
+// Authentication routes
+$router->add('login', ['controller' => 'AuthController', 'action' => 'login']);
+$router->add('register', ['controller' => 'AuthController', 'action' => 'register']);
+$router->add('logout', ['controller' => 'AuthController', 'action' => 'logout']);
+$router->add('profile', ['controller' => 'AuthController', 'action' => 'profile']);
+$router->add('auth/login', ['controller' => 'AuthController', 'action' => 'login']);
+$router->add('auth/register', ['controller' => 'AuthController', 'action' => 'register']);
+$router->add('auth/logout', ['controller' => 'AuthController', 'action' => 'logout']);
+$router->add('auth/profile', ['controller' => 'AuthController', 'action' => 'profile']);
 
 // Get the URL path
 $url = $_SERVER['REQUEST_URI'] ?? '';

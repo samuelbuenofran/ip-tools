@@ -100,6 +100,46 @@ abstract class Controller {
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
         ];
         
-        error_log(json_encode($logEntry) . PHP_EOL, 3, 'logs/error.log');
+        // Log to file (you can implement this as needed)
+        error_log(json_encode($logEntry) . PHP_EOL, 3, __DIR__ . '/../../logs/error.log');
+    }
+    
+    // Authentication methods
+    protected function isLoggedIn() {
+        return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+    }
+    
+    protected function requireLogin() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('/login');
+        }
+    }
+    
+    protected function requireAdmin() {
+        $this->requireLogin();
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            $this->redirect('/dashboard');
+        }
+    }
+    
+    protected function getCurrentUser() {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+        
+        $userModel = new \App\Models\User();
+        return $userModel->findById($_SESSION['user_id']);
+    }
+    
+    protected function getCurrentUserId() {
+        return $_SESSION['user_id'] ?? null;
+    }
+    
+    protected function getCurrentUsername() {
+        return $_SESSION['username'] ?? null;
+    }
+    
+    protected function getCurrentUserRole() {
+        return $_SESSION['role'] ?? null;
     }
 } 
