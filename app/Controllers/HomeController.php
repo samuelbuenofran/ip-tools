@@ -12,15 +12,26 @@ class HomeController extends Controller {
     
     public function __construct($params = []) {
         parent::__construct($params);
-        $this->geoLink = new GeoLink();
-        $this->geoLog = new GeoLog();
+        // Temporarily disable models for testing
+        // $this->geoLink = new GeoLink();
+        // $this->geoLog = new GeoLog();
     }
     
     public function index() {
-        // Get statistics
-        $linkStats = $this->geoLink->getStats();
-        $logStats = $this->geoLog->getStats();
-        $recentActivity = $this->geoLog->getRecentActivity(5);
+        // Use dummy data for testing
+        $linkStats = [
+            'total_links' => 0,
+            'active_links' => 0,
+            'expired_links' => 0
+        ];
+        
+        $logStats = [
+            'total_clicks' => 0,
+            'unique_visitors' => 0,
+            'gps_tracking' => 0
+        ];
+        
+        $recentActivity = [];
         
         $data = [
             'title' => 'Dashboard - ' . App::APP_NAME,
