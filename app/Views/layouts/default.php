@@ -12,100 +12,37 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="<?= $this->asset('style.css') ?>" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/projects/ip-tools/assets/style.css" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-        
         .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
+            font-weight: bold;
         }
-        
         .card {
-            border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border-radius: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.125);
         }
-        
-        .card-header {
-            background-color: #fff;
-            border-bottom: 1px solid #e9ecef;
-            border-radius: 0.75rem 0.75rem 0 0 !important;
-        }
-        
         .btn {
-            border-radius: 0.5rem;
-            font-weight: 500;
+            border-radius: 0.375rem;
         }
-        
-        .form-control, .form-select {
-            border-radius: 0.5rem;
-            border: 1px solid #dee2e6;
+        .list-group-item {
+            border-left: none;
+            border-right: none;
         }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        .list-group-item:first-child {
+            border-top: none;
         }
-        
-        .table {
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        
-        .alert {
-            border-radius: 0.5rem;
-            border: none;
-        }
-        
-        .badge {
-            font-weight: 500;
-        }
-        
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
-        }
-        
-        .theme-dark {
-            background-color: #1a1a1a !important;
-            color: #ffffff !important;
-        }
-        
-        .theme-dark .card {
-            background-color: #2d2d2d !important;
-            color: #ffffff !important;
-        }
-        
-        .theme-dark .navbar {
-            background-color: #2d2d2d !important;
-        }
-        
-        .theme-dark .table {
-            color: #ffffff !important;
-        }
-        
-        .theme-dark .form-control,
-        .theme-dark .form-select {
-            background-color: #3d3d3d !important;
-            color: #ffffff !important;
-            border-color: #4d4d4d !important;
+        .list-group-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
-<body>
+<body class="bg-light">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="<?= $this->url() ?>">
-                <i class="fa-solid fa-globe text-primary"></i> IP Tools Suite
+            <a class="navbar-brand" href="<?= $this->url('') ?>">
+                <i class="fa-solid fa-globe"></i> IP Tools Suite
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -115,38 +52,63 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link <?= $this->isActive('') ?>" href="<?= $this->url() ?>">
-                            <i class="fa-solid fa-home"></i> Dashboard
+                        <a class="nav-link" href="<?= $this->url('') ?>">
+                            <i class="fa-solid fa-home"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $this->isActive('geologger/create') ?>" href="<?= $this->url('geologger/create') ?>">
+                        <a class="nav-link" href="<?= $this->url('geologger/create') ?>">
                             <i class="fa-solid fa-map-pin"></i> Geolocation Tracker
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $this->isActive('geologger/logs') ?>" href="<?= $this->url('geologger/logs') ?>">
-                            <i class="fa-solid fa-chart-line"></i> Logs Dashboard
+                        <a class="nav-link" href="<?= $this->url('geologger/logs') ?>">
+                            <i class="fa-solid fa-chart-line"></i> Logs Panel
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $this->isActive('phone-tracker') ?>" href="<?= $this->url('phone-tracker/send_sms') ?>">
+                        <a class="nav-link" href="<?= $this->url('phone-tracker/send_sms') ?>">
                             <i class="fa-solid fa-mobile-screen-button"></i> Phone Tracker
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $this->isActive('utils/speedtest') ?>" href="<?= $this->url('utils/speedtest') ?>">
+                        <a class="nav-link" href="<?= $this->url('utils/speedtest') ?>">
                             <i class="fa-solid fa-gauge-high"></i> Speed Test
                         </a>
                     </li>
                 </ul>
                 
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <button class="btn btn-outline-secondary btn-sm" id="themeToggle">
-                            <i class="fa-solid fa-moon"></i>
-                        </button>
-                    </li>
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-user"></i> <?= $_SESSION['username'] ?? 'User' ?>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="<?= $this->url('dashboard') ?>">
+                                    <i class="fa-solid fa-tachometer-alt"></i> Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="<?= $this->url('auth/profile') ?>">
+                                    <i class="fa-solid fa-user-edit"></i> Profile
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<?= $this->url('auth/logout') ?>">
+                                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $this->url('auth/login') ?>">
+                                <i class="fa-solid fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $this->url('auth/register') ?>">
+                                <i class="fa-solid fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -154,25 +116,46 @@
 
     <!-- Main Content -->
     <main class="py-4">
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="container">
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <?= $_SESSION['success_message'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+            <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error_message'])): ?>
+            <div class="container">
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fa-solid fa-exclamation-triangle"></i>
+                    <?= $_SESSION['error_message'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+            <?php unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
+
         <?= $content ?>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-top mt-5">
-        <div class="container py-4">
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-1">&copy; <?= date("Y") ?> Keizai Tech IP Tools Suite</p>
-                    <small class="text-muted">
-                        Version 2.0. Built with ❤️ in São Paulo. 
-                        <a href="<?= $this->url('support') ?>" class="text-decoration-none">Support</a> |
-                        <a href="<?= $this->url('privacy') ?>" class="text-decoration-none">Privacy</a>
-                    </small>
+                    <h5><i class="fa-solid fa-globe"></i> IP Tools Suite</h5>
+                    <p class="mb-0">Advanced IP tracking and network analysis tools.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <small class="text-muted">
-                        <i class="fa-solid fa-shield-halved"></i> Secure & Private
-                    </small>
+                    <p class="mb-0">
+                        <a href="<?= $this->url('about') ?>" class="text-light text-decoration-none">About</a> |
+                        <a href="<?= $this->url('contact') ?>" class="text-light text-decoration-none">Contact</a> |
+                        <a href="<?= $this->url('privacy') ?>" class="text-light text-decoration-none">Privacy</a> |
+                        <a href="<?= $this->url('support') ?>" class="text-light text-decoration-none">Support</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -181,35 +164,16 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Theme Toggle Script -->
+    <!-- Custom JS -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('themeToggle');
-            const body = document.body;
-            const icon = themeToggle.querySelector('i');
-            
-            // Check for saved theme preference
-            const currentTheme = localStorage.getItem('theme');
-            if (currentTheme === 'dark') {
-                body.classList.add('theme-dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-            
-            themeToggle.addEventListener('click', function() {
-                if (body.classList.contains('theme-dark')) {
-                    body.classList.remove('theme-dark');
-                    localStorage.setItem('theme', 'light');
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                } else {
-                    body.classList.add('theme-dark');
-                    localStorage.setItem('theme', 'dark');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
             });
-        });
+        }, 5000);
     </script>
 </body>
 </html> 
