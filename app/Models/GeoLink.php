@@ -30,6 +30,12 @@ class GeoLink {
         return $stmt->fetch();
     }
     
+    public function findByShortCode($shortCode) {
+        $sql = "SELECT * FROM geo_links WHERE short_code = ?";
+        $stmt = $this->db->query($sql, [$shortCode]);
+        return $stmt->fetch();
+    }
+    
     public function findById($id) {
         $sql = "SELECT * FROM geo_links WHERE id = ?";
         $stmt = $this->db->query($sql, [$id]);

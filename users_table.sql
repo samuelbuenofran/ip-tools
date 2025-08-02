@@ -3,34 +3,60 @@ CREATE TABLE IF NOT EXISTS `users` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `username` varchar(50) NOT NULL UNIQUE,
     `email` varchar(100) NOT NULL UNIQUE,
-    `password_hash` varchar(255) NOT NULL,
-    `role` enum('admin', 'user') NOT NULL DEFAULT 'user',
-    `is_active` tinyint(1) NOT NULL DEFAULT '1',
+    `password` varchar(255) NOT NULL,
+    `first_name` varchar(50) DEFAULT NULL,
+    `last_name` varchar(50) DEFAULT NULL,
+    `role` enum('user', 'admin') DEFAULT 'user',
+    `is_active` tinyint(1) DEFAULT 1,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `last_login` timestamp NULL DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_username` (`username`),
-    KEY `idx_email` (`email`),
-    KEY `idx_role` (`role`)
+    KEY `idx_email` (`email`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
--- Insert admin user for testing
--- Username: admin
--- Password: admin123
--- Email: admin@keizai-tech.com
+-- Insert default admin user (password: admin123)
 INSERT INTO `users` (
         `username`,
         `email`,
-        `password_hash`,
-        `role`,
-        `is_active`
+        `password`,
+        `first_name`,
+        `last_name`,
+        `role`
     )
 VALUES (
         'admin',
         'admin@keizai-tech.com',
         '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'admin',
-        1
+        'Admin',
+        'User',
+        'admin'
     );
--- Note: The password hash above is for 'admin123'
--- In production, you should change this to a more secure password
+-- Update geo_links table to include user_id
+ALTER TABLE `geo_links`
+ADD COLUMN `user_id` int(11) DEFAULT NULL
+AFTER `id`;
+ALTER TABLE `geo_links`
+ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE
+SET NULL;
+-- Update geo_logs table to include user_id
+ALTER TABLE `geo_logs`
+ADD COLUMN `user_id` int(11) DEFAULT NULL
+AFTER `id`;
+ALTER TABLE `geo_logs`
+ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE
+SET NULL;
+-- Create user_sessions table for session management
+CREATE TABLE IF NOT EXISTS `user_sessions` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) NOT NULL,
+    `session_id` varchar(255) NOT NULL,
+    `ip_address` varchar(45) DEFAULT NULL,
+    `user_agent` text,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `expires_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_session_id` (`session_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

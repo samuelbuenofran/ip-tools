@@ -57,14 +57,20 @@ $router->add('utils/speed_analytics', ['controller' => 'SpeedTestController', 'a
 $router->add('admin/privacy_settings', ['controller' => 'AdminController', 'action' => 'privacySettings']);
 
 // Authentication routes
-$router->add('login', ['controller' => 'AuthController', 'action' => 'login']);
-$router->add('register', ['controller' => 'AuthController', 'action' => 'register']);
-$router->add('logout', ['controller' => 'AuthController', 'action' => 'logout']);
-$router->add('profile', ['controller' => 'AuthController', 'action' => 'profile']);
 $router->add('auth/login', ['controller' => 'AuthController', 'action' => 'login']);
+$router->add('auth/loginPost', ['controller' => 'AuthController', 'action' => 'loginPost']);
 $router->add('auth/register', ['controller' => 'AuthController', 'action' => 'register']);
+$router->add('auth/registerPost', ['controller' => 'AuthController', 'action' => 'registerPost']);
 $router->add('auth/logout', ['controller' => 'AuthController', 'action' => 'logout']);
 $router->add('auth/profile', ['controller' => 'AuthController', 'action' => 'profile']);
+$router->add('auth/updateProfile', ['controller' => 'AuthController', 'action' => 'updateProfile']);
+$router->add('auth/changePassword', ['controller' => 'AuthController', 'action' => 'changePassword']);
+
+// Dashboard routes (require authentication)
+$router->add('dashboard/createLink', ['controller' => 'DashboardController', 'action' => 'createLink']);
+$router->add('dashboard/links', ['controller' => 'DashboardController', 'action' => 'links']);
+$router->add('dashboard/logs', ['controller' => 'DashboardController', 'action' => 'logs']);
+$router->add('dashboard/deleteLink', ['controller' => 'DashboardController', 'action' => 'deleteLink']);
 
 // Get the URL path
 $url = $_SERVER['REQUEST_URI'] ?? '';

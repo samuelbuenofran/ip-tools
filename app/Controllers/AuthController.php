@@ -1,263 +1,311 @@
 <?php
+
 namespace App\Controllers;
 
-use App\Core\Controller;
 use App\Models\User;
-use App\Config\App;
+use App\Core\Controller;
 
 class AuthController extends Controller {
-    private $user;
+    private $userModel;
     
-    public function __construct($params = []) {
-        parent::__construct($params);
-        $this->user = new User();
+    public function __construct() {
+        parent::__construct();
+        try {
+            $this->userModel = new User();
+        } catch (Exception $e) {
+            // Handle database connection error gracefully
+            error_log("Database connection failed in AuthController: " . $e->getMessage());
+        }
     }
     
+    /**
+     * Show login form
+     */
     public function login() {
-        // Redirect if already logged in
+        // If already logged in, redirect to dashboard
         if ($this->isLoggedIn()) {
-            $this->redirect('/dashboard');
+            $this->redirect('dashboard');
         }
         
-        if ($this->isPost()) {
-            $this->validateCSRF();
+        $this->view->render('auth/login', [
+            'title' => 'Login - IP Tools Suite'
+        ]);
+    }
+    
+    /**
+     * Handle login form submission
+     */
+    public function loginPost() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('auth/login');
+        }
+        
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+        
+        // Validate input
+        if (empty($username) || empty($password)) {
+            $_SESSION['error_message'] = 'Por favor, preencha todos os campos.';
+            $this->redirect('auth/login');
+        }
+        
+        // Demo mode - allow admin login without database
+        if ($username === 'admin' && $password === 'admin123') {
+            $_SESSION['logged_in'] = true;
+            $_SESSION['user_id'] = 1;
+            $_SESSION['username'] = 'admin';
+            $_SESSION['user_role'] = 'admin';
+            $_SESSION['demo_mode'] = true;
             
-            $username = $this->sanitizeInput($this->getPost('username'));
-            $password = $this->getPost('password');
-            $remember = $this->getPost('remember') ? true : false;
+            $_SESSION['success_message'] = 'Login realizado com sucesso! (Modo Demo)';
+            $this->redirect('dashboard');
+            return;
+        }
+        
+        // Check if database is available
+        if (!$this->userModel) {
+            $_SESSION['error_message'] = 'Sistema temporariamente indisponível. Tente novamente mais tarde.';
+            $this->redirect('auth/login');
+        }
+        
+        try {
+            // Find user
+            $user = $this->userModel->findByUsernameOrEmail($username);
             
-            $errors = $this->validateRequired([
-                'username' => $username,
-                'password' => $password
-            ], ['username', 'password']);
-            
-            if (empty($errors)) {
-                $user = $this->user->authenticate($username, $password);
-                
-                if ($user) {
-                    // Set session
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['username'] = $user['username'];
-                    $_SESSION['role'] = $user['role'];
-                    $_SESSION['logged_in'] = true;
-                    
-                    // Set remember me cookie if requested
-                    if ($remember) {
-                        $token = bin2hex(random_bytes(32));
-                        setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/'); // 30 days
-                        
-                        // Store token in database (you might want to create a separate table for this)
-                        // For now, we'll just use the session
-                    }
-                    
-                    $_SESSION['success_message'] = 'Welcome back, ' . $user['username'] . '!';
-                    $this->redirect('/dashboard');
-                } else {
-                    $errors[] = 'Invalid username or password';
-                }
+            if (!$user || !password_verify($password, $user['password'])) {
+                $_SESSION['error_message'] = 'Usuário ou senha inválidos.';
+                $this->redirect('auth/login');
             }
             
-            $data = [
-                'title' => 'Login - ' . App::APP_NAME,
-                'errors' => $errors,
-                'form_data' => [
-                    'username' => $username
-                ],
-                'csrf_token' => $this->generateCSRFToken()
-            ];
+            if (!$user['is_active']) {
+                $_SESSION['error_message'] = 'Sua conta está desativada.';
+                $this->redirect('auth/login');
+            }
             
-            return $this->render('auth/login', $data);
+            // Update last login
+            $this->userModel->updateLastLogin($user['id']);
+            
+            // Set session
+            $_SESSION['logged_in'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['user_role'] = $user['role'];
+            
+            $_SESSION['success_message'] = 'Login realizado com sucesso!';
+            $this->redirect('dashboard');
+        } catch (Exception $e) {
+            $_SESSION['error_message'] = 'Erro de conexão com o banco de dados. Tente novamente mais tarde.';
+            $this->redirect('auth/login');
+        }
+    }
+    
+    /**
+     * Show registration form
+     */
+    public function register() {
+        // If already logged in, redirect to dashboard
+        if ($this->isLoggedIn()) {
+            $this->redirect('dashboard');
+        }
+        
+        $this->view->render('auth/register', [
+            'title' => 'Registrar - IP Tools Suite'
+        ]);
+    }
+    
+    /**
+     * Handle registration form submission
+     */
+    public function registerPost() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('auth/register');
         }
         
         $data = [
-            'title' => 'Login - ' . App::APP_NAME,
-            'csrf_token' => $this->generateCSRFToken()
+            'username' => trim($_POST['username'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'password' => $_POST['password'] ?? '',
+            'confirm_password' => $_POST['confirm_password'] ?? '',
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name' => trim($_POST['last_name'] ?? '')
         ];
         
-        return $this->render('auth/login', $data);
+        // Validate input
+        $errors = $this->validateRegistration($data);
+        
+        if (!empty($errors)) {
+            $_SESSION['error_message'] = implode('<br>', $errors);
+            $this->redirect('auth/register');
+        }
+        
+        // Check if username or email already exists
+        if ($this->userModel->usernameExists($data['username'])) {
+            $_SESSION['error_message'] = 'Nome de usuário já está em uso.';
+            $this->redirect('auth/register');
+        }
+        
+        if ($this->userModel->emailExists($data['email'])) {
+            $_SESSION['error_message'] = 'Email já está em uso.';
+            $this->redirect('auth/register');
+        }
+        
+        // Create user
+        if ($this->userModel->create($data)) {
+            $_SESSION['success_message'] = 'Conta criada com sucesso! Faça login para continuar.';
+            $this->redirect('auth/login');
+        } else {
+            $_SESSION['error_message'] = 'Erro ao criar conta. Tente novamente.';
+            $this->redirect('auth/register');
+        }
     }
     
+    /**
+     * Logout user
+     */
     public function logout() {
         // Clear session
         session_destroy();
         
-        // Clear remember me cookie
-        setcookie('remember_token', '', time() - 3600, '/');
-        
-        $this->redirect('/login');
+        $_SESSION['success_message'] = 'Logout realizado com sucesso!';
+        $this->redirect('');
     }
     
-    public function register() {
-        // Only allow registration if not logged in
-        if ($this->isLoggedIn()) {
-            $this->redirect('/dashboard');
-        }
-        
-        if ($this->isPost()) {
-            $this->validateCSRF();
-            
-            $username = $this->sanitizeInput($this->getPost('username'));
-            $email = $this->sanitizeInput($this->getPost('email'));
-            $password = $this->getPost('password');
-            $confirmPassword = $this->getPost('confirm_password');
-            
-            $errors = $this->validateRequired([
-                'username' => $username,
-                'email' => $email,
-                'password' => $password,
-                'confirm_password' => $confirmPassword
-            ], ['username', 'email', 'password', 'confirm_password']);
-            
-            // Validate email format
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = 'Please enter a valid email address';
-            }
-            
-            // Validate password length
-            if (strlen($password) < 6) {
-                $errors[] = 'Password must be at least 6 characters long';
-            }
-            
-            // Validate password confirmation
-            if ($password !== $confirmPassword) {
-                $errors[] = 'Passwords do not match';
-            }
-            
-            // Check if username already exists
-            if ($this->user->findByUsername($username)) {
-                $errors[] = 'Username already exists';
-            }
-            
-            // Check if email already exists
-            if ($this->user->findByEmail($email)) {
-                $errors[] = 'Email already exists';
-            }
-            
-            if (empty($errors)) {
-                try {
-                    $userId = $this->user->create([
-                        'username' => $username,
-                        'email' => $email,
-                        'password' => $password,
-                        'role' => 'user'
-                    ]);
-                    
-                    $_SESSION['success_message'] = 'Registration successful! Please log in.';
-                    $this->redirect('/login');
-                } catch (\Exception $e) {
-                    $errors[] = 'Registration failed. Please try again.';
-                }
-            }
-            
-            $data = [
-                'title' => 'Register - ' . App::APP_NAME,
-                'errors' => $errors,
-                'form_data' => [
-                    'username' => $username,
-                    'email' => $email
-                ],
-                'csrf_token' => $this->generateCSRFToken()
-            ];
-            
-            return $this->render('auth/register', $data);
-        }
-        
-        $data = [
-            'title' => 'Register - ' . App::APP_NAME,
-            'csrf_token' => $this->generateCSRFToken()
-        ];
-        
-        return $this->render('auth/register', $data);
-    }
-    
+    /**
+     * Show user profile
+     */
     public function profile() {
         if (!$this->isLoggedIn()) {
-            $this->redirect('/login');
+            $this->redirect('auth/login');
         }
         
-        $user = $this->user->findById($_SESSION['user_id']);
+        $user = $this->userModel->findById($_SESSION['user_id']);
         
-        if ($this->isPost()) {
-            $this->validateCSRF();
-            
-            $username = $this->sanitizeInput($this->getPost('username'));
-            $email = $this->sanitizeInput($this->getPost('email'));
-            $currentPassword = $this->getPost('current_password');
-            $newPassword = $this->getPost('new_password');
-            $confirmPassword = $this->getPost('confirm_password');
-            
-            $errors = [];
-            
-            // Validate email format
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = 'Please enter a valid email address';
-            }
-            
-            // Check if username already exists (excluding current user)
-            $existingUser = $this->user->findByUsername($username);
-            if ($existingUser && $existingUser['id'] != $_SESSION['user_id']) {
-                $errors[] = 'Username already exists';
-            }
-            
-            // Check if email already exists (excluding current user)
-            $existingUser = $this->user->findByEmail($email);
-            if ($existingUser && $existingUser['id'] != $_SESSION['user_id']) {
-                $errors[] = 'Email already exists';
-            }
-            
-            // If changing password
-            if (!empty($newPassword)) {
-                if (strlen($newPassword) < 6) {
-                    $errors[] = 'Password must be at least 6 characters long';
-                }
-                
-                if ($newPassword !== $confirmPassword) {
-                    $errors[] = 'New passwords do not match';
-                }
-                
-                if (!password_verify($currentPassword, $user['password_hash'])) {
-                    $errors[] = 'Current password is incorrect';
-                }
-            }
-            
-            if (empty($errors)) {
-                try {
-                    $this->user->update($_SESSION['user_id'], [
-                        'username' => $username,
-                        'email' => $email,
-                        'role' => $user['role'],
-                        'is_active' => $user['is_active']
-                    ]);
-                    
-                    // Update password if provided
-                    if (!empty($newPassword)) {
-                        $this->user->updatePassword($_SESSION['user_id'], $newPassword);
-                    }
-                    
-                    $_SESSION['username'] = $username;
-                    $_SESSION['success_message'] = 'Profile updated successfully!';
-                    $this->redirect('/profile');
-                } catch (\Exception $e) {
-                    $errors[] = 'Failed to update profile. Please try again.';
-                }
-            }
-            
-            $data = [
-                'title' => 'Profile - ' . App::APP_NAME,
-                'user' => $user,
-                'errors' => $errors,
-                'csrf_token' => $this->generateCSRFToken()
-            ];
-            
-            return $this->render('auth/profile', $data);
+        $this->view->render('auth/profile', [
+            'title' => 'Perfil - IP Tools Suite',
+            'user' => $user
+        ]);
+    }
+    
+    /**
+     * Update user profile
+     */
+    public function updateProfile() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('auth/profile');
         }
         
         $data = [
-            'title' => 'Profile - ' . App::APP_NAME,
-            'user' => $user,
-            'csrf_token' => $this->generateCSRFToken()
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name' => trim($_POST['last_name'] ?? ''),
+            'email' => trim($_POST['email'] ?? '')
         ];
         
-        return $this->render('auth/profile', $data);
+        // Validate email
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_message'] = 'Email inválido.';
+            $this->redirect('auth/profile');
+        }
+        
+        // Check if email is already used by another user
+        $currentUser = $this->userModel->findById($_SESSION['user_id']);
+        if ($data['email'] !== $currentUser['email'] && $this->userModel->emailExists($data['email'])) {
+            $_SESSION['error_message'] = 'Email já está em uso.';
+            $this->redirect('auth/profile');
+        }
+        
+        // Update profile
+        if ($this->userModel->updateProfile($_SESSION['user_id'], $data)) {
+            $_SESSION['success_message'] = 'Perfil atualizado com sucesso!';
+        } else {
+            $_SESSION['error_message'] = 'Erro ao atualizar perfil.';
+        }
+        
+        $this->redirect('auth/profile');
+    }
+    
+    /**
+     * Change password
+     */
+    public function changePassword() {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('auth/login');
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('auth/profile');
+        }
+        
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+        
+        // Validate input
+        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+            $_SESSION['error_message'] = 'Por favor, preencha todos os campos.';
+            $this->redirect('auth/profile');
+        }
+        
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error_message'] = 'As senhas não coincidem.';
+            $this->redirect('auth/profile');
+        }
+        
+        if (strlen($newPassword) < 6) {
+            $_SESSION['error_message'] = 'A nova senha deve ter pelo menos 6 caracteres.';
+            $this->redirect('auth/profile');
+        }
+        
+        // Verify current password
+        $user = $this->userModel->findById($_SESSION['user_id']);
+        if (!password_verify($currentPassword, $user['password'])) {
+            $_SESSION['error_message'] = 'Senha atual incorreta.';
+            $this->redirect('auth/profile');
+        }
+        
+        // Change password
+        if ($this->userModel->changePassword($_SESSION['user_id'], $newPassword)) {
+            $_SESSION['success_message'] = 'Senha alterada com sucesso!';
+        } else {
+            $_SESSION['error_message'] = 'Erro ao alterar senha.';
+        }
+        
+        $this->redirect('auth/profile');
+    }
+    
+    /**
+     * Validate registration data
+     */
+    private function validateRegistration($data) {
+        $errors = [];
+        
+        if (empty($data['username'])) {
+            $errors[] = 'Nome de usuário é obrigatório.';
+        } elseif (strlen($data['username']) < 3) {
+            $errors[] = 'Nome de usuário deve ter pelo menos 3 caracteres.';
+        } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $data['username'])) {
+            $errors[] = 'Nome de usuário deve conter apenas letras, números e underscore.';
+        }
+        
+        if (empty($data['email'])) {
+            $errors[] = 'Email é obrigatório.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Email inválido.';
+        }
+        
+        if (empty($data['password'])) {
+            $errors[] = 'Senha é obrigatória.';
+        } elseif (strlen($data['password']) < 6) {
+            $errors[] = 'Senha deve ter pelo menos 6 caracteres.';
+        }
+        
+        if ($data['password'] !== $data['confirm_password']) {
+            $errors[] = 'As senhas não coincidem.';
+        }
+        
+        return $errors;
     }
 } 
