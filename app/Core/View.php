@@ -68,7 +68,26 @@ class View {
     }
     
     public function url($path = '') {
-        return App::getBaseUrl() . '/' . ltrim($path, '/');
+        // Validate input type
+        if (!is_string($path)) {
+            $path = (string) $path;
+        }
+        
+        // Remove null bytes and sanitize path to prevent directory traversal
+        $path = str_replace("\0", '', $path);
+        
+        // Normalize the path by removing leading slashes
+        $path = ltrim($path, '/');
+        
+        // Get base URL and ensure it doesn't end with slash for consistent concatenation
+        $baseUrl = rtrim(App::getBaseUrl(), '/');
+        
+        // Construct URL with proper slash handling
+        if (empty($path)) {
+            return $baseUrl . '/';
+        }
+        
+        return $baseUrl . '/' . $path;
     }
     
     public function csrf() {
