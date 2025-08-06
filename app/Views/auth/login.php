@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Entrar</title>
-  <!-- Bootstrap CSS + FontAwesome CDN as you had -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/YOUR-KIT-ID.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="container py-5">
@@ -14,7 +13,8 @@
       <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
           <div class="card-header text-center">
-            <h4><i class="fas fa-sign-in-alt"></i>
+            <h4>
+              <i class="fas fa-sign-in-alt"></i>
               <span data-translate="login">Entrar</span>
             </h4>
           </div>
@@ -31,7 +31,7 @@
                        name="username"
                        required>
               </div>
-              
+
               <div class="mb-3">
                 <label for="password" class="form-label">
                   <i class="fas fa-lock"></i>
@@ -43,7 +43,7 @@
                        name="password"
                        required>
               </div>
-              
+
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary">
                   <i class="fas fa-sign-in-alt"></i>
@@ -62,7 +62,6 @@
       </div>
     </div>
   </div>
-  <!-- Bootstrap JS (optional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
