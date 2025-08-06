@@ -9,7 +9,19 @@ class User {
     private $db;
     
     public function __construct() {
-        $this->db = Database::getInstance()->getConnection();
+        try {
+            $this->db = Database::getInstance()->getConnection();
+        } catch (\Exception $e) {
+            // Handle database connection error gracefully
+            $this->db = null;
+        }
+    }
+    
+    /**
+     * Check if database is available
+     */
+    public function isConnected() {
+        return $this->db !== null;
     }
     
     /**

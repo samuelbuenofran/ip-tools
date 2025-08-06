@@ -62,7 +62,7 @@ class View {
     }
     
     public function csrf() {
-        return '<input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] ?? '' . '">';
+        return '<input type="hidden" name="csrf_token" value="' . ($_SESSION['csrf_token'] ?? '') . '">';
     }
     
     public function escape($string) {

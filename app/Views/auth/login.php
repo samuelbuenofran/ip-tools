@@ -9,18 +9,18 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- FontAwesome -->
-  <script src="https://kit.fontawesome.com/YOUR-KIT-ID.js" crossorigin="anonymous"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="index.php?page=dashboard">IP Tools Suite</a>
+    <a class="navbar-brand" href="<?= $this->url('') ?>">IP Tools Suite</a>
     <div class="ms-auto">
       <a class="btn btn-outline-primary me-2"
-         href="index.php?page=auth&method=form">
+         href="<?= $this->url('auth/login') ?>">
         <i class="fas fa-sign-in-alt"></i> Entrar
       </a>
       <a class="btn btn-primary"
-         href="index.php?page=auth&method=register">
+         href="<?= $this->url('auth/register') ?>">
         <i class="fas fa-user-plus"></i> Registrar
       </a>
     </div>
@@ -38,7 +38,8 @@
           </div>
           <div class="card-body">
             <form method="POST"
-                  action="index.php?page=auth&method=login">
+                  action="<?= $this->url('auth/loginPost') ?>">
+              <?= $this->csrf() ?>
               <div class="mb-3">
                 <label for="username" class="form-label">
                   <i class="fas fa-user"></i>
@@ -70,7 +71,7 @@
           </div>
           <div class="card-footer text-center">
             Não tem uma conta?
-            <a href="index.php?page=auth&method=register">Registrar</a>
+            <a href="<?= $this->url('auth/register') ?>">Registrar</a>
           </div>
         </div>
       </div>
