@@ -47,8 +47,8 @@ class App {
             ini_set('display_errors', 0);
         }
         
-        // Start session
-        if (session_status() === PHP_SESSION_NONE) {
+        // Start session only if headers haven't been sent
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             session_name(self::SESSION_NAME);
             session_set_cookie_params(self::SESSION_LIFETIME);
             session_start();

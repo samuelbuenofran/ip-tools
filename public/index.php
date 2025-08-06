@@ -1,22 +1,25 @@
 <?php
+// Prevent any output before session start
+ob_start();
+
 // Direct includes - bypass autoloader completely
-require_once '../app/Config/App.php';
-require_once '../app/Config/Database.php';
-require_once '../app/Core/Router.php';
-require_once '../app/Core/Controller.php';
-require_once '../app/Core/View.php';
-require_once '../app/Models/GeoLink.php';
-require_once '../app/Models/GeoLog.php';
-require_once '../app/Models/User.php';
+require_once __DIR__ . '/../app/Config/App.php';
+require_once __DIR__ . '/../app/Config/Database.php';
+require_once __DIR__ . '/../app/Core/Router.php';
+require_once __DIR__ . '/../app/Core/Controller.php';
+require_once __DIR__ . '/../app/Core/View.php';
+require_once __DIR__ . '/../app/Models/GeoLink.php';
+require_once __DIR__ . '/../app/Models/GeoLog.php';
+require_once __DIR__ . '/../app/Models/User.php';
 
 // Include all controllers
-require_once '../app/Controllers/HomeController.php';
-require_once '../app/Controllers/DashboardController.php';
-require_once '../app/Controllers/GeologgerController.php';
-require_once '../app/Controllers/PhoneTrackerController.php';
-require_once '../app/Controllers/SpeedTestController.php';
-require_once '../app/Controllers/AdminController.php';
-require_once '../app/Controllers/AuthController.php';
+require_once __DIR__ . '/../app/Controllers/HomeController.php';
+require_once __DIR__ . '/../app/Controllers/DashboardController.php';
+require_once __DIR__ . '/../app/Controllers/GeologgerController.php';
+require_once __DIR__ . '/../app/Controllers/PhoneTrackerController.php';
+require_once __DIR__ . '/../app/Controllers/SpeedTestController.php';
+require_once __DIR__ . '/../app/Controllers/AdminController.php';
+require_once __DIR__ . '/../app/Controllers/AuthController.php';
 
 // Initialize application
 use App\Config\App;
@@ -98,4 +101,8 @@ try {
             echo '<p>An error occurred. Please try again later.</p>';
         }
     }
-} 
+}
+
+// Flush output buffer
+ob_end_flush();
+?> 

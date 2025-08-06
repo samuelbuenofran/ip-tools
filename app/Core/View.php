@@ -5,7 +5,7 @@ use App\Config\App;
 
 class View {
     private $layout = 'default';
-    private $viewPath = '../app/Views/';
+    private $viewPath = __DIR__ . '/../Views/';
     
     public function render($view, $data = []) {
         // Extract data to make variables available in view
