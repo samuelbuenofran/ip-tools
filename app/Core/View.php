@@ -39,9 +39,19 @@ class View {
         }
     }
     
-    public function setLayout($layout) {
-        $this->layout = $layout;
-    }
+        /**
+         * Set the layout for the component
+         * 
+         * @param string $layout The layout name
+         * @return void
+         * @throws InvalidArgumentException if layout is not a valid string
+         */
+        public function setLayout($layout) {
+            if (!is_string($layout) || empty($layout)) {
+                throw new InvalidArgumentException('Layout must be a non-empty string');
+            }
+            $this->layout = $layout;
+        }
     
     public function partial($view, $data = []) {
         extract($data);
