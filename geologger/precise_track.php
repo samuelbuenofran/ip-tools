@@ -5,7 +5,11 @@ $db = connectDB();
 // Get the tracking code from URL
 $code = $_GET['code'] ?? '';
 
+// Debug logging
+error_log("Tracking request received for code: $code");
+
 if (empty($code)) {
+    error_log("Empty tracking code received");
     die('Invalid tracking code');
 }
 
@@ -15,10 +19,26 @@ $stmt->execute([$code]);
 $link = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$link) {
+    error_log("Link not found for code: $code");
     die('Link not found');
 }
 
 $original_url = $link['original_url'];
+error_log("Found original URL: $original_url for code: $code");
+
+// FALLBACK: If anything goes wrong, redirect to original URL after 3 seconds
+register_shutdown_function(function() use ($original_url) {
+    if (headers_sent()) {
+        echo "<script>setTimeout(function(){ window.location.href = '$original_url'; }, 3000);</script>";
+        echo "<p>Redirecting to destination in 3 seconds...</p>";
+    }
+});
+
+// Debug: Check if constant is defined
+if (!defined('SHOW_LOCATION_MESSAGES')) {
+    error_log("SHOW_LOCATION_MESSAGES constant not defined, defaulting to stealth mode");
+    define('SHOW_LOCATION_MESSAGES', false);
+}
 
 // If stealth mode is enabled, redirect immediately
 if (!SHOW_LOCATION_MESSAGES) {
@@ -32,21 +52,31 @@ if (!SHOW_LOCATION_MESSAGES) {
         'ip_address' => $_SERVER['REMOTE_ADDR'] ?? ''
     ];
     
-    // Save basic tracking data immediately
-    $stmt = $db->prepare("
-        INSERT INTO geo_logs (link_id, ip_address, user_agent, referrer, timestamp, location_type) 
-        SELECT id, ?, ?, ?, ?, 'IP' 
-        FROM geo_links WHERE short_code = ?
-    ");
-    $stmt->execute([
-        $tracking_data['ip_address'],
-        $tracking_data['user_agent'],
-        $tracking_data['referrer'],
-        $tracking_data['timestamp'],
-        $code
-    ]);
+    try {
+        // Save basic tracking data immediately
+        $stmt = $db->prepare("
+            INSERT INTO geo_logs (link_id, ip_address, user_agent, referrer, timestamp, location_type) 
+            SELECT id, ?, ?, ?, ?, 'IP' 
+            FROM geo_links WHERE short_code = ?
+        ");
+        $stmt->execute([
+            $tracking_data['ip_address'],
+            $tracking_data['user_agent'],
+            $tracking_data['referrer'],
+            $tracking_data['timestamp'],
+            $code
+        ]);
+        
+        // Log successful tracking
+        error_log("Tracking successful for code: $code, redirecting to: $original_url");
+        
+    } catch (Exception $e) {
+        // Log tracking error but continue with redirect
+        error_log("Tracking error for code $code: " . $e->getMessage());
+    }
     
     // Redirect immediately
+    error_log("Redirecting to: $original_url");
     header("Location: " . $original_url);
     exit();
 }

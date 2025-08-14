@@ -1,11 +1,14 @@
-<?php $this->layout('layouts/default', ['title' => $title]); ?>
+<?php
+// This view will use the default layout automatically
+// The title is passed from the controller
+?>
 
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="text-dark" data-translate="my_links">Meus Links</h1>
-                <a href="dashboard" class="btn btn-primary">
+                <a href="<?= $view->url('dashboard') ?>" class="btn btn-primary">
                     <i class="fas fa-arrow-left"></i> 
                     <span data-translate="back_to_dashboard">Voltar ao Dashboard</span>
                 </a>
@@ -33,7 +36,7 @@
                         <i class="fas fa-link fa-3x text-muted mb-3"></i>
                         <h5 class="text-dark" data-translate="no_links_created">Nenhum link criado ainda</h5>
                         <p class="text-muted" data-translate="create_first_link">Crie seu primeiro link de rastreamento no dashboard.</p>
-                        <a href="dashboard" class="btn btn-primary">
+                        <a href="<?= $view->url('dashboard') ?>" class="btn btn-primary">
                             <i class="fas fa-plus"></i> 
                             <span data-translate="create_link">Criar Link</span>
                         </a>
@@ -89,7 +92,7 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="geologger/logs?link=<?php echo $link['short_code']; ?>" 
+                                                    <a href="<?= $view->url('geologger/logs') ?>?link=<?php echo $link['short_code']; ?>" 
                                                        class="btn btn-sm btn-outline-primary" title="Ver Logs">
                                                         <i class="fas fa-chart-line"></i>
                                                     </a>
@@ -129,7 +132,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <span data-translate="cancel">Cancelar</span>
                 </button>
-                <form method="POST" action="dashboard/deleteLink" style="display: inline;">
+                <form method="POST" action="<?= $view->url('dashboard/deleteLink') ?>" style="display: inline;">
                     <input type="hidden" name="link_id" id="deleteLinkId">
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash"></i> 

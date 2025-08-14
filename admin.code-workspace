@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"path": "admin"
+		},
+		{
+			"path": "app"
+		},
+		{
+			"path": "assets"
+		},
+		{
+			"path": "geologger"
+		},
+		{
+			"path": "libs"
+		},
+		{
+			"path": "network-tools"
+		},
+		{
+			"path": "phone-tracker"
+		},
+		{
+			"path": "public"
+		},
+		{
+			"path": "utils"
+		}
+	],
+	"settings": {}
+}

@@ -145,7 +145,7 @@
                         <li><strong class="text-dark"><span data-translate="speed_testing">Teste de Velocidade:</span></strong> <span data-translate="speed_desc">Análise de velocidade de conexão com a internet</span></li>
                         <li><strong class="text-dark"><span data-translate="analytics">Analytics:</span></strong> <span data-translate="analytics_desc">Logs detalhados de visitantes e estatísticas</span></li>
                     </ul>
-                    <a href="<?= $this->url('about') ?>" class="btn btn-outline-primary">
+                    <a href="<?= $view->url('about') ?>" class="btn btn-outline-primary">
                         <i class="fa-solid fa-info-circle"></i> <span data-translate="learn_more">Saiba Mais</span>
                     </a>
                 </div>

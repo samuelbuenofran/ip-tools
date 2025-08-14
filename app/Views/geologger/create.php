@@ -35,10 +35,10 @@
                         </div>
                         
                         <div class="mt-4">
-                            <a href="<?= $this->url('geologger/logs') ?>" class="btn btn-primary">
+                            <a href="<?= $view->url('geologger/logs') ?>" class="btn btn-primary">
                                 <i class="fa-solid fa-chart-line"></i> View Logs
                             </a>
-                            <a href="<?= $this->url('geologger/create') ?>" class="btn btn-outline-primary">
+                            <a href="<?= $view->url('geologger/create') ?>" class="btn btn-outline-primary">
                                 <i class="fa-solid fa-plus"></i> Create Another Link
                             </a>
                         </div>
@@ -50,8 +50,8 @@
                             </div>
                         <?php endif; ?>
                         
-                        <form method="POST" action="<?= $this->url('geologger/create') ?>">
-                            <?= $this->csrf() ?>
+                        <form method="POST" action="<?= $view->url('geologger/create') ?>">
+                            <?= $view->csrf() ?>
                             
                             <div class="mb-3">
                                 <label for="original_url" class="form-label">Original URL *</label>

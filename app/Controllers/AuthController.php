@@ -29,7 +29,7 @@ class AuthController extends Controller {
         }
         
         $this->view->render('auth/login', [
-            'title' => 'Login - IP Tools Suite'
+            'title' => 'Entrar - IP Tools Suite'
         ]);
     }
     

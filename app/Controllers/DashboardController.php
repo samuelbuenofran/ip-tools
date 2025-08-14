@@ -160,10 +160,15 @@ class DashboardController extends Controller {
             'expires_at' => $expiresAt ? date('Y-m-d H:i:s', strtotime($expiresAt)) : null
         ];
         
-        if ($this->userModel->createLink($userId, $linkData)) {
-            $_SESSION['success_message'] = 'Link de rastreamento criado com sucesso!';
-        } else {
-            $_SESSION['error_message'] = 'Erro ao criar link de rastreamento.';
+        try {
+            if ($this->userModel->createLink($userId, $linkData)) {
+                $_SESSION['success_message'] = 'Link de rastreamento criado com sucesso!';
+            } else {
+                $_SESSION['error_message'] = 'Erro ao criar link de rastreamento.';
+            }
+        } catch (Exception $e) {
+            error_log("Error creating tracking link: " . $e->getMessage());
+            $_SESSION['error_message'] = 'Erro de banco de dados ao criar link de rastreamento. Verifique se a estrutura do banco está correta.';
         }
         
         $this->redirect('dashboard');

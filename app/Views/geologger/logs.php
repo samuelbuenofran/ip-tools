@@ -45,7 +45,7 @@
                                    placeholder="🔍 Filter by IP, location, device...">
                         </div>
                         <div class="col-md-6 text-end">
-                            <a href="<?= $this->url('geologger/create') ?>" class="btn btn-primary">
+                            <a href="<?= $view->url('geologger/create') ?>" class="btn btn-primary">
                                 <i class="fa-solid fa-plus"></i> Create New Link
                             </a>
                         </div>
@@ -85,7 +85,7 @@
                                     <td><?= $log['city'] ?? '-' ?></td>
                                     <td><?= $log['country'] ?? '-' ?></td>
                                     <td><?= $log['device_type'] ?? '-' ?></td>
-                                    <td><?= $this->formatDate($log['timestamp']) ?></td>
+                                    <td><?= date('d/m/Y H:i', strtotime($log['timestamp'])) ?></td>
                                     <td>
                                         <a href="<?= htmlspecialchars($log['original_url']) ?>" target="_blank" 
                                            class="btn btn-sm btn-outline-primary">
@@ -117,7 +117,7 @@
 </div>
 
 <!-- Google Maps Script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=<?= App::GOOGLE_MAPS_API_KEY ?>&libraries=visualization"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
 
 <script>
 const heatmapData = <?= json_encode($heatmapData, JSON_NUMERIC_CHECK) ?>;

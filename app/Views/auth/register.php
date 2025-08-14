@@ -6,7 +6,7 @@
                     <h4><i class="fa-solid fa-user-plus"></i> <span data-translate="register">Registrar</span></h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="<?= $this->url('auth/registerPost') ?>">
+                    <form method="POST" action="<?= $view->url('auth/registerPost') ?>">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -70,7 +70,7 @@
                 <div class="card-footer text-center">
                     <p class="mb-0">
                         <span data-translate="already_have_account">Já tem uma conta?</span>
-                        <a href="<?= $this->url('auth/login') ?>" class="text-decoration-none">
+                        <a href="<?= $view->url('auth/login') ?>" class="text-decoration-none">
                             <span data-translate="login">Entrar</span>
                         </a>
                     </p>

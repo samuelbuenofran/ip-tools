@@ -16,7 +16,7 @@
                             </p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a href="<?= $this->url('auth/profile') ?>" class="btn btn-light">
+                            <a href="<?= $view->url('auth/profile') ?>" class="btn btn-light">
                                 <i class="fa-solid fa-user-edit"></i> <span data-translate="profile">Perfil</span>
                             </a>
                         </div>
@@ -74,7 +74,7 @@
                     <h5><i class="fa-solid fa-plus"></i> <span data-translate="create_new_link">Criar Novo Link de Rastreamento</span></h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="<?= $this->url('dashboard/createLink') ?>">
+                    <form method="POST" action="<?= $view->url('dashboard/createLink') ?>">
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
@@ -170,7 +170,7 @@
                                             </small>
                                         </div>
                                         <div>
-                                            <a href="<?= $this->url('geologger/track/' . $link['short_code']) ?>" 
+                                            <a href="<?= $view->url('geologger/track/' . $link['short_code']) ?>" 
                                                target="_blank" class="btn btn-sm btn-outline-primary">
                                                 <i class="fa-solid fa-external-link-alt"></i>
                                             </a>
@@ -180,7 +180,7 @@
                             <?php endforeach; ?>
                         </div>
                         <div class="mt-3">
-                            <a href="<?= $this->url('dashboard/links') ?>" class="btn btn-outline-primary">
+                            <a href="<?= $view->url('dashboard/links') ?>" class="btn btn-outline-primary">
                                 <i class="fa-solid fa-list"></i> <span data-translate="view_all_links">Ver Todos os Links</span>
                             </a>
                         </div>

@@ -12,9 +12,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="assets/themes.css" rel="stylesheet">
-    <script src="assets/theme-switcher.js" defer></script>
-    <script src="assets/translations.js" defer></script>
+    <link href="<?= $view->asset('themes.css') ?>" rel="stylesheet">
+    <script src="<?= $view->asset('theme-switcher.js') ?>" defer></script>
+    <script src="<?= $view->asset('translations.js') ?>" defer></script>
     
     <style>
         /* Additional custom styles for MVC */
@@ -202,8 +202,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="<?= $this->url('') ?>">
-                <img src="assets/iptoolssuite-logo.png" alt="IP Tools Suite Logo" height="40" class="me-2">
+            <a class="navbar-brand d-flex align-items-center" href="<?= $view->url('') ?>">
+                <img src="<?= $view->asset('iptoolssuite-logo.png') ?>" alt="IP Tools Suite Logo" height="40" class="me-2">
                 IP Tools Suite
             </a>
             
@@ -214,27 +214,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $this->url('') ?>">
+                        <a class="nav-link" href="<?= $view->url('') ?>">
                             <i class="fa-solid fa-home"></i> <span data-translate="nav_home">Início</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $this->url('geologger/create') ?>">
+                        <a class="nav-link" href="<?= $view->url('geologger/create') ?>">
                             <i class="fa-solid fa-map-pin"></i> <span data-translate="nav_geologger">Rastreador de Localização</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $this->url('geologger/logs') ?>">
+                        <a class="nav-link" href="<?= $view->url('geologger/logs') ?>">
                             <i class="fa-solid fa-chart-line"></i> <span data-translate="nav_logs">Painel de Logs</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $this->url('phone-tracker/send_sms') ?>">
+                        <a class="nav-link" href="<?= $view->url('phone-tracker/send_sms') ?>">
                             <i class="fa-solid fa-mobile-screen-button"></i> <span data-translate="nav_phone_tracker">Rastreador de Telefone</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $this->url('utils/speedtest') ?>">
+                        <a class="nav-link" href="<?= $view->url('utils/speedtest') ?>">
                             <i class="fa-solid fa-gauge-high"></i> <span data-translate="nav_speed_test">Teste de Velocidade</span>
                         </a>
                     </li>
@@ -247,26 +247,26 @@
                                 <i class="fa-solid fa-user"></i> <?= $_SESSION['username'] ?? 'User' ?>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="<?= $this->url('dashboard') ?>">
+                                <li><a class="dropdown-item" href="<?= $view->url('dashboard') ?>">
                                     <i class="fa-solid fa-tachometer-alt"></i> Dashboard
                                 </a></li>
-                                <li><a class="dropdown-item" href="<?= $this->url('auth/profile') ?>">
+                                <li><a class="dropdown-item" href="<?= $view->url('auth/profile') ?>">
                                     <i class="fa-solid fa-user-edit"></i> Profile
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?= $this->url('auth/logout') ?>">
+                                <li><a class="dropdown-item" href="<?= $view->url('auth/logout') ?>">
                                     <i class="fa-solid fa-sign-out-alt"></i> Logout
                                 </a></li>
                             </ul>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $this->url('auth/login') ?>">
+                            <a class="nav-link" href="<?= $view->url('auth/login') ?>">
                                 <i class="fa-solid fa-sign-in-alt"></i> <span data-translate="login">Entrar</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $this->url('auth/register') ?>">
+                            <a class="nav-link" href="<?= $view->url('auth/register') ?>">
                                 <i class="fa-solid fa-user-plus"></i> <span data-translate="register">Registrar</span>
                             </a>
                         </li>
@@ -309,17 +309,17 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex align-items-center mb-2">
-                        <img src="assets/iptoolssuite-logo.png" alt="IP Tools Suite Logo" height="30" class="me-2">
+                        <img src="<?= $view->asset('iptoolssuite-logo.png') ?>" alt="IP Tools Suite Logo" height="30" class="me-2">
                         <h5 class="mb-0">IP Tools Suite</h5>
                     </div>
                     <p class="mb-0">Ferramentas avançadas de rastreamento de IP e análise de rede.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="mb-0">
-                        <a href="<?= $this->url('about') ?>" class="text-decoration-none">Sobre</a> |
-                        <a href="<?= $this->url('contact') ?>" class="text-decoration-none">Contato</a> |
-                        <a href="<?= $this->url('privacy') ?>" class="text-decoration-none">Privacidade</a> |
-                        <a href="<?= $this->url('support') ?>" class="text-decoration-none">Suporte</a>
+                        <a href="<?= $view->url('about') ?>" class="text-decoration-none">Sobre</a> |
+                        <a href="<?= $view->url('contact') ?>" class="text-decoration-none">Contato</a> |
+                        <a href="<?= $view->url('privacy') ?>" class="text-decoration-none">Privacidade</a> |
+                        <a href="<?= $view->url('support') ?>" class="text-decoration-none">Suporte</a>
                     </p>
                 </div>
             </div>

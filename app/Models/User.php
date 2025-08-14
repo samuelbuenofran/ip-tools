@@ -151,17 +151,30 @@ class User {
      * Create a new link for user
      */
     public function createLink($userId, $data) {
-        $sql = "INSERT INTO geo_links (user_id, original_url, short_code, expires_at) 
-                VALUES (:user_id, :original_url, :short_code, :expires_at)";
-        
-        $stmt = $this->db->prepare($sql);
-        
-        return $stmt->execute([
-            'user_id' => $userId,
-            'original_url' => $data['original_url'],
-            'short_code' => $data['short_code'],
-            'expires_at' => $data['expires_at'] ?? null
-        ]);
+        try {
+            $sql = "INSERT INTO geo_links (user_id, original_url, short_code, expires_at) 
+                    VALUES (:user_id, :original_url, :short_code, :expires_at)";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            $result = $stmt->execute([
+                'user_id' => $userId,
+                'original_url' => $data['original_url'],
+                'short_code' => $data['short_code'],
+                'expires_at' => $data['expires_at'] ?? null
+            ]);
+            
+            if (!$result) {
+                error_log("Failed to create link: " . print_r($stmt->errorInfo(), true));
+            }
+            
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Database error in createLink: " . $e->getMessage());
+            error_log("SQL: INSERT INTO geo_links (user_id, original_url, short_code, expires_at) VALUES (:user_id, :original_url, :short_code, :expires_at)");
+            error_log("Data: " . print_r($data, true));
+            throw $e;
+        }
     }
     
     /**

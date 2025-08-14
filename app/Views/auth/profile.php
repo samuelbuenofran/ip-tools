@@ -7,7 +7,7 @@
                     <h5><i class="fa-solid fa-user-edit"></i> <span data-translate="profile_information">Informações do Perfil</span></h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="<?= $this->url('auth/updateProfile') ?>">
+                    <form method="POST" action="<?= $view->url('auth/updateProfile') ?>">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -52,7 +52,7 @@
                     <h5><i class="fa-solid fa-key"></i> <span data-translate="change_password">Alterar Senha</span></h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="<?= $this->url('auth/changePassword') ?>">
+                    <form method="POST" action="<?= $view->url('auth/changePassword') ?>">
                         <div class="mb-3">
                             <label for="current_password" class="form-label">
                                 <i class="fa-solid fa-lock"></i> <span data-translate="current_password">Senha Atual</span>
@@ -134,13 +134,13 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="<?= $this->url('dashboard') ?>" class="btn btn-outline-primary">
+                        <a href="<?= $view->url('dashboard') ?>" class="btn btn-outline-primary">
                             <i class="fa-solid fa-tachometer-alt"></i> <span data-translate="dashboard">Dashboard</span>
                         </a>
-                        <a href="<?= $this->url('geologger/create') ?>" class="btn btn-outline-success">
+                        <a href="<?= $view->url('geologger/create') ?>" class="btn btn-outline-success">
                             <i class="fa-solid fa-plus"></i> <span data-translate="create_link">Criar Link</span>
                         </a>
-                        <a href="<?= $this->url('geologger/logs') ?>" class="btn btn-outline-info">
+                        <a href="<?= $view->url('geologger/logs') ?>" class="btn btn-outline-info">
                             <i class="fa-solid fa-chart-line"></i> <span data-translate="view_logs">Ver Logs</span>
                         </a>
                     </div>

@@ -1,4 +1,7 @@
-<?php $this->layout('layouts/default', ['title' => $title]); ?>
+<?php
+// This view will use the default layout automatically
+// The title is passed from the controller
+?>
 
 <div class="container mt-4">
     <div class="row">

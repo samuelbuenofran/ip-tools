@@ -67,7 +67,8 @@ class App {
         if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
             return 'http://' . $host . '/projects/ip-tools/public';
         }
-        return self::BASE_URL;
+        // For production, always include /public since that's where the MVC framework runs
+        return self::BASE_URL . '/public';
     }
     
     public static function getAssetUrl($path) {
@@ -75,7 +76,7 @@ class App {
     }
     
     public static function redirect($path) {
-        header("Location: " . self::BASE_URL . $path);
+        header("Location: " . self::getBaseUrl() . '/' . ltrim($path, '/'));
         exit();
     }
     
