@@ -56,9 +56,9 @@ class AuthController extends Controller {
             $_SESSION['user_id'] = 1;
             $_SESSION['username'] = 'admin';
             $_SESSION['user_role'] = 'admin';
-            $_SESSION['demo_mode'] = true;
+            // $_SESSION['demo_mode'] = true; // Disabled demo mode
             
-            $_SESSION['success_message'] = 'Login realizado com sucesso! (Modo Demo)';
+            $_SESSION['success_message'] = 'Login realizado com sucesso!';
             $this->redirect('dashboard');
             return;
         }
