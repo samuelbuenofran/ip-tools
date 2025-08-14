@@ -86,7 +86,7 @@ const translations = {
         'actions': 'Actions',
         'expires': 'Expires',
         'never': 'Never',
-        'create_first_link': 'Create your first tracking link in the dashboard.'
+        'create_first_link': 'Create your first tracking link in the dashboard.',
         
         // Common
         'copy_to_clipboard': 'Copy to Clipboard',

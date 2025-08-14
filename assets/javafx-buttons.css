@@ -1,0 +1,392 @@
+/* JavaFX-Style 3D Button Effects */
+.btn-javafx {
+    /* Base styling */
+    position: relative;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    
+    /* 3D effect with pseudo-elements */
+    overflow: hidden;
+}
+
+.btn-javafx::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+    );
+    border-radius: 6px 6px 0 0;
+    pointer-events: none;
+}
+
+.btn-javafx::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
+    border-radius: 0 0 6px 6px;
+    pointer-events: none;
+}
+
+/* Primary Button (Blue) */
+.btn-javafx.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 50%, #004085 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 50%, #002752 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Success Button (Green) */
+.btn-javafx.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 50%, #155724 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-success:hover {
+    background: linear-gradient(135deg, #1e7e34 0%, #155724 50%, #0f4018 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-success:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Warning Button (Yellow/Orange) */
+.btn-javafx.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 50%, #d39e00 100%);
+    color: #212529;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.btn-javafx.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 50%, #b8860b 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-warning:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Danger Button (Red) */
+.btn-javafx.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 50%, #a71e2a 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #a71e2a 50%, #721c24 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-danger:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Info Button (Cyan) */
+.btn-javafx.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 50%, #117a8b 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-info:hover {
+    background: linear-gradient(135deg, #138496 0%, #117a8b 50%, #0c5460 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-info:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Secondary Button (Gray) */
+.btn-javafx.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 50%, #495057 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 50%, #343a40 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Button */
+.btn-javafx.btn-dark {
+    background: linear-gradient(135deg, #343a40 0%, #2c3136 50%, #212529 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-javafx.btn-dark:hover {
+    background: linear-gradient(135deg, #2c3136 0%, #212529 50%, #1a1d20 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-dark:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Light Button */
+.btn-javafx.btn-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+    color: #212529;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.btn-javafx.btn-light:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 50%, #ced4da 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-javafx.btn-light:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Outline Button Variants */
+.btn-javafx.btn-outline-primary {
+    background: transparent;
+    border: 2px solid #007bff;
+    color: #007bff;
+    text-shadow: none;
+}
+
+.btn-javafx.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-javafx.btn-outline-success {
+    background: transparent;
+    border: 2px solid #28a745;
+    color: #28a745;
+    text-shadow: none;
+}
+
+.btn-javafx.btn-outline-success:hover {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-javafx.btn-outline-warning {
+    background: transparent;
+    border: 2px solid #ffc107;
+    color: #ffc107;
+    text-shadow: none;
+}
+
+.btn-javafx.btn-outline-warning:hover {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: #212529;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-javafx.btn-outline-info {
+    background: transparent;
+    border: 2px solid #17a2b8;
+    color: #17a2b8;
+    text-shadow: none;
+}
+
+.btn-javafx.btn-outline-info:hover {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Button Sizes */
+.btn-javafx.btn-lg {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+.btn-javafx.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+}
+
+/* Disabled State */
+.btn-javafx:disabled,
+.btn-javafx.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Focus State */
+.btn-javafx:focus {
+    outline: none;
+    box-shadow: 
+        0 0 0 3px rgba(0, 123, 255, 0.25),
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Icon Styling */
+.btn-javafx i {
+    margin-right: 8px;
+    transition: transform 0.2s ease;
+}
+
+.btn-javafx:hover i {
+    transform: scale(1.1);
+}
+
+/* Loading State */
+.btn-javafx.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-javafx.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Ripple Effect */
+.btn-javafx {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-javafx .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

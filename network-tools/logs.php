@@ -135,7 +135,7 @@ foreach ($logs as $log) {
 </div>
 
 <!-- 🌐 Google Maps Script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs&libraries=visualization&callback=initMap" async defer>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs" async defer>
 </script>
 
 <script>
@@ -143,15 +143,24 @@ foreach ($logs as $log) {
   let map = null;
   let heatmap = null;
 
+  // Wait for both DOM and Google Maps to be ready
   function initMap() {
+    console.log('🗺️ Starting map initialization...');
     try {
       // Check if Google Maps loaded successfully
       if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
         throw new Error('Google Maps failed to load');
       }
 
+      // Check if map container exists
+      const mapContainer = document.getElementById("map");
+      if (!mapContainer) {
+        throw new Error('Map container element not found');
+      }
+      
+      console.log('📍 Creating Google Maps instance...');
       // Create the map
-      map = new google.maps.Map(document.getElementById("map"), {
+      map = new google.maps.Map(mapContainer, {
         zoom: 4,
         center: { lat: -15.78, lng: -47.93 }, // Center over Brazil
         mapTypeId: "roadmap",
@@ -160,26 +169,38 @@ foreach ($logs as $log) {
         fullscreenControl: true
       });
 
-      // Add heatmap if we have data
+      // Add markers for each location (replacing deprecated heatmap)
       if (Array.isArray(heatmapData) && heatmapData.length > 0) {
         try {
-          heatmap = new google.maps.visualization.HeatmapLayer({
-            data: heatmapData.map(p => new google.maps.LatLng(p.lat, p.lng)),
-            radius: 20,
-            opacity: 0.8
+          console.log("📍 Adding markers for", heatmapData.length, "locations...");
+          
+          heatmapData.forEach((position, index) => {
+            const marker = new google.maps.Marker({
+              position: { lat: position.lat, lng: position.lng },
+              map: map,
+              title: `Location ${index + 1}`,
+              icon: {
+                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="8" fill="#ff4444" stroke="#ffffff" stroke-width="2"/>
+                  </svg>
+                `),
+                scaledSize: new google.maps.Size(20, 20)
+              }
+            });
           });
-          heatmap.setMap(map);
-          console.log("✅ Heatmap rendered successfully with", heatmapData.length, "points");
+          
+          console.log("✅ Markers added successfully for", heatmapData.length, "locations");
           
           // Hide any error messages
           document.getElementById('mapError').style.display = 'none';
-        } catch (heatmapError) {
-          console.error("Heatmap error:", heatmapError);
-          showMapError("Heatmap visualization failed: " + heatmapError.message);
+        } catch (markerError) {
+          console.error("Marker error:", markerError);
+          showMapError("Marker visualization failed: " + markerError.message);
         }
       } else {
-        console.warn("⚠️ No heatmap data available");
-        showMapError("No location data available for heatmap visualization");
+        console.warn("⚠️ No location data available");
+        showMapError("No location data available for visualization");
       }
 
     } catch (error) {
@@ -206,6 +227,46 @@ foreach ($logs as $log) {
       showMapError("Google Maps failed to load. Please check your internet connection and try again.");
     }
   }, 10000); // 10 second timeout
+
+  // Initialize map when both DOM and Google Maps are ready
+  function waitForGoogleMaps() {
+    console.log('🔍 Checking Google Maps availability...');
+    console.log('Google object:', typeof google);
+    console.log('Google.maps object:', typeof google?.maps);
+    
+    if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+      console.log('✅ Google Maps is ready, initializing map...');
+      initMap();
+    } else {
+      console.log('⏳ Google Maps not ready yet, waiting...');
+      setTimeout(waitForGoogleMaps, 100);
+    }
+  }
+
+  // Start waiting for Google Maps to load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForGoogleMaps);
+  } else {
+    waitForGoogleMaps();
+  }
+
+  // Global error handler to catch any JavaScript errors
+  window.addEventListener('error', function(event) {
+    console.error('🚨 JavaScript Error:', event.error);
+    console.error('Error details:', {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno
+    });
+    showMapError('JavaScript error: ' + event.message);
+  });
+
+  // Handle unhandled promise rejections
+  window.addEventListener('unhandledrejection', function(event) {
+    console.error('🚨 Unhandled Promise Rejection:', event.reason);
+    showMapError('Promise error: ' + event.reason);
+  });
 </script>
 
 <?php include('../footer.php'); ?>
