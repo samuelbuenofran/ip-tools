@@ -86,9 +86,11 @@ if (empty($url)) {
     }
 }
 
-// Remove the base path from the URL
+// Simplify URL processing - just remove the base path
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
 $basePath = dirname($scriptName);
+
+// Remove the base path from the URL
 if ($basePath !== '/' && $basePath !== '.') {
     $url = str_replace($basePath, '', $url);
 }
@@ -105,6 +107,11 @@ if (App::DEBUG_MODE) {
 }
 
 try {
+    // Debug: Log the final URL being processed
+    if (App::DEBUG_MODE) {
+        error_log("Final URL to dispatch: " . $url);
+    }
+    
     // Dispatch the request
     $router->dispatch($url);
 } catch (Exception $e) {
