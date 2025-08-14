@@ -10,12 +10,26 @@
                             <p class="mb-0 text-white"><span data-translate="welcome_subtitle">Seu kit completo de ferramentas para rastreamento de IP e análise de rede.</span></p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a href="<?= $view->url('auth/login') ?>" class="btn btn-light">
-                                <i class="fa-solid fa-sign-in-alt"></i> <span data-translate="login">Entrar</span>
-                            </a>
-                            <a href="<?= $view->url('auth/register') ?>" class="btn btn-outline-light">
-                                <i class="fa-solid fa-user-plus"></i> <span data-translate="register">Registrar</span>
-                            </a>
+                            <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                                <!-- User is logged in - show welcome message -->
+                                <div class="text-white">
+                                    <small class="d-block">Bem-vindo, <?= htmlspecialchars($_SESSION['username'] ?? 'Usuário') ?>!</small>
+                                    <a href="<?= $view->url('dashboard') ?>" class="btn btn-light btn-sm">
+                                        <i class="fa-solid fa-tachometer-alt"></i> Dashboard
+                                    </a>
+                                    <a href="<?= $view->url('auth/logout') ?>" class="btn btn-outline-light btn-sm">
+                                        <i class="fa-solid fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </div>
+                            <?php else: ?>
+                                <!-- User is not logged in - show login/register buttons -->
+                                <a href="<?= $view->url('auth/login') ?>" class="btn btn-light">
+                                    <i class="fa-solid fa-sign-in-alt"></i> <span data-translate="login">Entrar</span>
+                                </a>
+                                <a href="<?= $view->url('auth/register') ?>" class="btn btn-outline-light">
+                                    <i class="fa-solid fa-user-plus"></i> <span data-translate="register">Registrar</span>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
