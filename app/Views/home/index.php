@@ -6,14 +6,14 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-8">
-                            <h3 class="text-white"><i class="fa-solid fa-tachometer-alt"></i> <span data-translate="welcome_title">Bem-vindo ao IP Tools Suite</span></h3>
-                            <p class="mb-0 text-white"><span data-translate="welcome_subtitle">Seu kit completo de ferramentas para rastreamento de IP e análise de rede.</span></p>
+                            <h3 class="text-white fw-bold"><i class="fa-solid fa-tachometer-alt"></i> <span data-translate="welcome_title">Bem-vindo ao IP Tools Suite</span></h3>
+                            <p class="mb-0 text-white fw-medium"><span data-translate="welcome_subtitle">Seu kit completo de ferramentas para rastreamento de IP e análise de rede.</span></p>
                         </div>
                         <div class="col-md-4 text-end">
                             <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
                                 <!-- User is logged in - show welcome message -->
                                 <div class="text-white">
-                                    <small class="d-block">Bem-vindo, <?= htmlspecialchars($_SESSION['username'] ?? 'Usuário') ?>!</small>
+                                    <small class="d-block fw-bold text-white">Bem-vindo, <?= htmlspecialchars($_SESSION['username'] ?? 'Usuário') ?>!</small>
                                     <a href="<?= $view->url('dashboard') ?>" class="btn btn-light btn-sm">
                                         <i class="fa-solid fa-tachometer-alt"></i> Dashboard
                                     </a>

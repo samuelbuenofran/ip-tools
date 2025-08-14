@@ -8,7 +8,7 @@
                         <div class="col-md-8">
                             <h3 class="text-white">
                                 <i class="fa-solid fa-tachometer-alt"></i> 
-                                <span data-translate="welcome_back">Bem-vindo de volta,</span> 
+                                <span data-translate="welcome_back" class="fw-bold">Bem-vindo de volta,</span> 
                                 <?= htmlspecialchars($user['first_name'] ?? $user['username']) ?>!
                             </h3>
                             <p class="mb-0 text-white">
