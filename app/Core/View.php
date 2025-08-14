@@ -7,15 +7,18 @@ class View {
     private $layout = 'default';
     private $viewPath = __DIR__ . '/../Views/';
     
-    public function render($view, $data = []) {
+    public function render($viewName, $data = []) {
         // Extract data to make variables available in view
         extract($data);
+        
+        // Make the View object available as $view in the view context
+        $view = $this;
         
         // Start output buffering
         ob_start();
         
         // Include the view file
-        $viewFile = $this->viewPath . $view . '.php';
+        $viewFile = $this->viewPath . $viewName . '.php';
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {

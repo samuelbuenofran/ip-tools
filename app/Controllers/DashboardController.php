@@ -12,8 +12,8 @@ class DashboardController extends Controller {
     private $geoLinkModel;
     private $geoLogModel;
     
-    public function __construct() {
-        parent::__construct();
+    public function __construct($params = []) {
+        parent::__construct($params);
         
         // Require authentication
         if (!$this->isLoggedIn()) {

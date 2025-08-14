@@ -13,14 +13,14 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="<?= $this->url('') ?>">IP Tools Suite</a>
+    <a class="navbar-brand" href="<?= $view->url('') ?>">IP Tools Suite</a>
     <div class="ms-auto">
       <a class="btn btn-outline-primary me-2"
-         href="<?= $this->url('auth/login') ?>">
+         href="<?= $view->url('auth/login') ?>">
         <i class="fas fa-sign-in-alt"></i> Entrar
       </a>
       <a class="btn btn-primary"
-         href="<?= $this->url('auth/register') ?>">
+         href="<?= $view->url('auth/register') ?>">
         <i class="fas fa-user-plus"></i> Registrar
       </a>
     </div>
@@ -38,8 +38,8 @@
           </div>
           <div class="card-body">
             <form method="POST"
-                  action="<?= $this->url('auth/loginPost') ?>">
-              <?= $this->csrf() ?>
+                  action="<?= $view->url('auth/loginPost') ?>">
+              <?= $view->csrf() ?>
               <div class="mb-3">
                 <label for="username" class="form-label">
                   <i class="fas fa-user"></i>
@@ -71,7 +71,7 @@
           </div>
           <div class="card-footer text-center">
             Não tem uma conta?
-            <a href="<?= $this->url('auth/register') ?>">Registrar</a>
+            <a href="<?= $view->url('auth/register') ?>">Registrar</a>
           </div>
         </div>
       </div>

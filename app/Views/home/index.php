@@ -10,10 +10,10 @@
                             <p class="mb-0 text-white"><span data-translate="welcome_subtitle">Seu kit completo de ferramentas para rastreamento de IP e análise de rede.</span></p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a href="<?= $this->url('auth/login') ?>" class="btn btn-light">
+                            <a href="<?= $view->url('auth/login') ?>" class="btn btn-light">
                                 <i class="fa-solid fa-sign-in-alt"></i> <span data-translate="login">Entrar</span>
                             </a>
-                            <a href="<?= $this->url('auth/register') ?>" class="btn btn-outline-light">
+                            <a href="<?= $view->url('auth/register') ?>" class="btn btn-outline-light">
                                 <i class="fa-solid fa-user-plus"></i> <span data-translate="register">Registrar</span>
                             </a>
                         </div>
@@ -73,22 +73,22 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <a href="<?= $this->url('geologger/create') ?>" class="btn btn-primary w-100">
+                            <a href="<?= $view->url('geologger/create') ?>" class="btn btn-primary w-100">
                                 <i class="fa-solid fa-plus"></i> <span data-translate="create_tracking_link">Criar Link de Rastreamento</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="<?= $this->url('geologger/logs') ?>" class="btn btn-info w-100">
+                            <a href="<?= $view->url('geologger/logs') ?>" class="btn btn-info w-100">
                                 <i class="fa-solid fa-chart-line"></i> <span data-translate="view_logs">Ver Logs</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="<?= $this->url('phone-tracker/send_sms') ?>" class="btn btn-success w-100">
+                            <a href="<?= $view->url('phone-tracker/send_sms') ?>" class="btn btn-success w-100">
                                 <i class="fa-solid fa-mobile-screen-button"></i> <span data-translate="nav_phone_tracker">Rastreador de Telefone</span>
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="<?= $this->url('utils/speedtest') ?>" class="btn btn-warning w-100">
+                            <a href="<?= $view->url('utils/speedtest') ?>" class="btn btn-warning w-100">
                                 <i class="fa-solid fa-gauge-high"></i> <span data-translate="nav_speed_test">Teste de Velocidade</span>
                             </a>
                         </div>

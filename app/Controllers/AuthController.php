@@ -9,8 +9,8 @@ use App\Config\App;
 class AuthController extends Controller {
     private $userModel;
     
-    public function __construct() {
-        parent::__construct();
+    public function __construct($params = []) {
+        parent::__construct($params);
         try {
             $this->userModel = new User();
         } catch (Exception $e) {

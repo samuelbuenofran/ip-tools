@@ -77,8 +77,32 @@ $router->add('dashboard/deleteLink', ['controller' => 'DashboardController', 'ac
 
 // Get the URL path
 $url = $_SERVER['REQUEST_URI'] ?? '';
-$url = str_replace('/projects/ip-tools/public/', '', $url);
+
+// If REQUEST_URI is not set (like in CLI), try to get it from other sources
+if (empty($url)) {
+    $url = $_SERVER['PATH_INFO'] ?? '';
+    if (empty($url)) {
+        $url = $_SERVER['ORIG_PATH_INFO'] ?? '';
+    }
+}
+
+// Remove the base path from the URL
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+$basePath = dirname($scriptName);
+if ($basePath !== '/' && $basePath !== '.') {
+    $url = str_replace($basePath, '', $url);
+}
+
+// Remove any leading/trailing slashes
 $url = trim($url, '/');
+
+// Debug information (remove this in production)
+if (App::DEBUG_MODE) {
+    error_log("Original REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'NOT SET'));
+    error_log("Script Name: " . ($_SERVER['SCRIPT_NAME'] ?? 'NOT SET'));
+    error_log("Base Path: " . $basePath);
+    error_log("Processed URL: " . $url);
+}
 
 try {
     // Dispatch the request

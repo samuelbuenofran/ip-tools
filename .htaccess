@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Redirect all requests to the public directory
+RewriteCond %{REQUEST_URI} !^/projects/ip-tools/public/
+RewriteRule ^(.*)$ /projects/ip-tools/public/$1 [L]
+
+# If accessing the root directly, redirect to public
+RewriteRule ^$ /projects/ip-tools/public/ [R=301,L]
+

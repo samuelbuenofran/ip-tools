@@ -62,6 +62,11 @@ class App {
     }
     
     public static function getBaseUrl() {
+        // Detect if we're in a local environment
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+            return 'http://' . $host . '/projects/ip-tools/public';
+        }
         return self::BASE_URL;
     }
     
