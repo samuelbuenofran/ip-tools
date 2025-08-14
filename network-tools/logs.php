@@ -30,6 +30,7 @@ $db = connectDB();
 $totalClicks = $db->query("SELECT COUNT(*) FROM geo_logs")->fetchColumn();
 $activeLinks = $db->query("SELECT COUNT(*) FROM geo_links WHERE expires_at IS NULL OR expires_at > NOW()")->fetchColumn();
 $uniqueIPs   = $db->query("SELECT COUNT(DISTINCT ip_address) FROM geo_logs")->fetchColumn();
+$gpsTracking = $db->query("SELECT COUNT(*) FROM geo_logs WHERE location_type = 'GPS' AND latitude IS NOT NULL AND longitude IS NOT NULL")->fetchColumn();
 
 // 🔥 Filtered heatmap coordinates
 $positions = [];
@@ -54,22 +55,28 @@ foreach ($logs as $log) {
 
   <!-- 📈 Stats Cards -->
   <div class="row g-4 text-center mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card p-3 border-primary">
         <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> <span data-translate="total_clicks">Total Clicks</span></h5>
         <h3><?= $totalClicks ?></h3>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card p-3 border-success">
         <h5><i class="fa-solid fa-link text-success"></i> <span data-translate="active_links">Active Links</span></h5>
         <h3><?= $activeLinks ?></h3>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card p-3 border-info">
         <h5><i class="fa-solid fa-user-check text-info"></i> <span data-translate="unique_visitors">Unique Visitors</span></h5>
         <h3><?= $uniqueIPs ?></h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-3 border-warning">
+        <h5><i class="fa-solid fa-map-marker-alt text-warning"></i> <span data-translate="gps_tracking">GPS Tracking</span></h5>
+        <h3><?= $gpsTracking ?></h3>
       </div>
     </div>
   </div>
@@ -119,35 +126,86 @@ foreach ($logs as $log) {
     <i class="fa-solid fa-map-location-dot"></i> <span data-translate="click_heatmap">Click Heatmap</span>
   </h4>
   <div id="map" style="width:100%; height:500px;" class="border rounded shadow-sm mb-5"></div>
+  
+  <!-- Map Error Display -->
+  <div id="mapError" class="alert alert-warning" style="display: none;">
+    <i class="fa-solid fa-exclamation-triangle"></i>
+    <strong>Map Loading Issue:</strong> <span id="errorMessage"></span>
+  </div>
 </div>
 
 <!-- 🌐 Google Maps Script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs&libraries=visualization">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs&libraries=visualization&callback=initMap" async defer>
 </script>
 
 <script>
   const heatmapData = <?= json_encode($positions, JSON_NUMERIC_CHECK) ?>;
+  let map = null;
+  let heatmap = null;
 
   function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 4,
-      center: { lat: -15.78, lng: -47.93 }, // Center over Brazil
-      mapTypeId: "roadmap"
-    });
+    try {
+      // Check if Google Maps loaded successfully
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        throw new Error('Google Maps failed to load');
+      }
 
-    if (Array.isArray(heatmapData) && heatmapData.length > 0) {
-      const heatmap = new google.maps.visualization.HeatmapLayer({
-        data: heatmapData.map(p => new google.maps.LatLng(p.lat, p.lng)),
-        radius: 20
+      // Create the map
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 4,
+        center: { lat: -15.78, lng: -47.93 }, // Center over Brazil
+        mapTypeId: "roadmap",
+        mapTypeControl: true,
+        streetViewControl: false,
+        fullscreenControl: true
       });
-      heatmap.setMap(map);
-      console.log("✅ Heatmap rendered:", heatmapData);
-    } else {
-      console.warn("⚠️ No heatmap points available.");
+
+      // Add heatmap if we have data
+      if (Array.isArray(heatmapData) && heatmapData.length > 0) {
+        try {
+          heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData.map(p => new google.maps.LatLng(p.lat, p.lng)),
+            radius: 20,
+            opacity: 0.8
+          });
+          heatmap.setMap(map);
+          console.log("✅ Heatmap rendered successfully with", heatmapData.length, "points");
+          
+          // Hide any error messages
+          document.getElementById('mapError').style.display = 'none';
+        } catch (heatmapError) {
+          console.error("Heatmap error:", heatmapError);
+          showMapError("Heatmap visualization failed: " + heatmapError.message);
+        }
+      } else {
+        console.warn("⚠️ No heatmap data available");
+        showMapError("No location data available for heatmap visualization");
+      }
+
+    } catch (error) {
+      console.error("Map initialization error:", error);
+      showMapError("Failed to initialize Google Maps: " + error.message);
     }
   }
 
-  window.onload = initMap;
+  function showMapError(message) {
+    const errorDiv = document.getElementById('mapError');
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorDiv.style.display = 'block';
+  }
+
+  // Handle Google Maps loading errors
+  window.gm_authFailure = function() {
+    showMapError("Google Maps authentication failed. Please check your API key.");
+  };
+
+  // Fallback if Google Maps doesn't load
+  setTimeout(function() {
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+      showMapError("Google Maps failed to load. Please check your internet connection and try again.");
+    }
+  }, 10000); // 10 second timeout
 </script>
 
 <?php include('../footer.php'); ?>
