@@ -57,7 +57,9 @@ $router->add('utils/save_speed_test', ['controller' => 'SpeedTestController', 'a
 $router->add('utils/speed_analytics', ['controller' => 'SpeedTestController', 'action' => 'analytics']);
 
 // Admin routes
+$router->add('admin', ['controller' => 'AdminController', 'action' => 'index']);
 $router->add('admin/privacy_settings', ['controller' => 'AdminController', 'action' => 'privacySettings']);
+$router->add('admin/test_dashboard', ['controller' => 'AdminController', 'action' => 'testDashboard']);
 
 // Authentication routes
 $router->add('auth/login', ['controller' => 'AuthController', 'action' => 'login']);

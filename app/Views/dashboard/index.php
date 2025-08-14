@@ -16,6 +16,11 @@
                             </p>
                         </div>
                         <div class="col-md-4 text-end">
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                                <a href="<?= $view->url('admin') ?>" class="btn btn-warning me-2">
+                                    <i class="fa-solid fa-shield-alt"></i> Admin Panel
+                                </a>
+                            <?php endif; ?>
                             <a href="<?= $view->url('auth/profile') ?>" class="btn btn-light">
                                 <i class="fa-solid fa-user-edit"></i> <span data-translate="profile">Perfil</span>
                             </a>

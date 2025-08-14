@@ -10,6 +10,25 @@ class AdminController extends Controller {
         parent::__construct($params);
     }
     
+    public function index() {
+        // Admin dashboard overview
+        $data = [
+            'title' => 'Admin Dashboard - ' . App::APP_NAME,
+            'user' => [
+                'username' => $_SESSION['username'] ?? 'Admin',
+                'role' => $_SESSION['user_role'] ?? 'admin'
+            ]
+        ];
+        
+        return $this->render('admin/index', $data);
+    }
+    
+    public function testDashboard() {
+        // Redirect to the comprehensive test dashboard
+        header('Location: ../../admin/test_dashboard.php');
+        exit();
+    }
+    
     public function privacySettings() {
         if ($this->isPost()) {
             $this->validateCSRF();
