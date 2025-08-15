@@ -332,6 +332,91 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
+/* AGGRESSIVE OVERRIDE - Force white text for ALL navbar elements */
+.navbar *,
+.navbar *::before,
+.navbar *::after {
+    color: #ffffff !important;
+}
+
+/* Specific overrides for common Bootstrap classes */
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link,
+.navbar .dropdown-toggle,
+.navbar .navbar-toggler-icon {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Override any potential theme conflicts */
+.navbar,
+.navbar *,
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+/* Force white text with maximum specificity */
+body .navbar.navbar-dark .navbar-brand,
+body .navbar.navbar-dark .nav-link,
+body .navbar.navbar-dark .navbar-nav .nav-link,
+body .navbar.navbar-dark .dropdown-toggle,
+body .navbar.navbar-dark .navbar-nav .show > .nav-link {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Override any CSS variables that might be set */
+.navbar {
+    --text-primary: #ffffff !important;
+    --text-secondary: #ffffff !important;
+    --text-muted: #ffffff !important;
+}
+
+/* Force white text for ALL elements inside navbar - maximum override */
+.navbar,
+.navbar *,
+.navbar *::before,
+.navbar *::after,
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link,
+.navbar .dropdown-toggle,
+.navbar .navbar-toggler,
+.navbar .navbar-toggler-icon,
+.navbar .fa-solid,
+.navbar .fa,
+.navbar i,
+.navbar span,
+.navbar a,
+.navbar div,
+.navbar ul,
+.navbar li {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Specific icon overrides */
+.navbar .fa-solid,
+.navbar .fa,
+.navbar i {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Override any potential Bootstrap or theme conflicts */
+.navbar.navbar-dark,
+.navbar.bg-primary {
+    color: #ffffff !important;
+}
+
+.navbar.navbar-dark *,
+.navbar.bg-primary * {
+    color: #ffffff !important;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
     .navbar,
