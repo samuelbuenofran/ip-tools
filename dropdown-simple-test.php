@@ -201,7 +201,10 @@
                     dropdownMenu.style.border = '2px solid #ffffff';
                     dropdownMenu.style.borderRadius = '8px';
                     dropdownMenu.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.3)';
-                    dropdownMenu.style.minWidth = '200px';
+                    dropdownMenu.style.minWidth = 'auto';
+                    dropdownMenu.style.width = 'auto';
+                    dropdownMenu.style.maxWidth = 'none';
+                    dropdownMenu.style.padding = '4px';
                     
                     // Force dropdown items
                     const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
@@ -210,6 +213,14 @@
                         item.style.color = '#ffffff';
                         item.style.fontWeight = '600';
                         item.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.5)';
+                        item.style.padding = '8px 16px';
+                        item.style.margin = '1px 4px';
+                        item.style.borderRadius = '4px';
+                        item.style.width = 'auto';
+                        item.style.minWidth = 'auto';
+                        item.style.maxWidth = 'none';
+                        item.style.display = 'block';
+                        item.style.whiteSpace = 'nowrap';
                     });
                     
                     fixedCount++;
