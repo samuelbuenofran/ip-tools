@@ -4,9 +4,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="/projects/ip-tools/assets/themes.css" rel="stylesheet">
 <link href="/projects/ip-tools/assets/navbar-fixes.css" rel="stylesheet">
-<link href="/projects/ip-tools/assets/dropdown-overlay-fix.css" rel="stylesheet">
+<link href="/projects/ip-tools/assets/dropdown-simple-fix.css" rel="stylesheet">
 <script src="/projects/ip-tools/assets/theme-switcher.js" defer></script>
-<script src="/projects/ip-tools/assets/dropdown-force-fix.js" defer></script>
+<script src="/projects/ip-tools/assets/dropdown-simple-fix.js" defer></script>
 <script src="/projects/ip-tools/assets/translations.js" defer></script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
