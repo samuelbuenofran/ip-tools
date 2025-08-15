@@ -96,18 +96,32 @@ foreach ($logs as $log) {
     const heatmapData = <?= json_encode($positions) ?>;
 
     function initMap() {
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 2,
-        center: { lat: 0, lng: 0 },
-        mapTypeId: "roadmap"
-      });
+      try {
+        console.log('Initializing Google Maps...');
+        console.log('Heatmap data:', heatmapData);
+        
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 2,
+          center: { lat: 0, lng: 0 },
+          mapTypeId: "roadmap"
+        });
+        
+        console.log('Map created successfully');
 
-      const heatmap = new google.maps.visualization.HeatmapLayer({
-        data: heatmapData.map(loc => new google.maps.LatLng(loc.lat, loc.lng)),
-        radius: 20
-      });
-
-      heatmap.setMap(map);
+        if (heatmapData && heatmapData.length > 0) {
+          const heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData.map(loc => new google.maps.LatLng(loc.lat, loc.lng)),
+            radius: 20
+          });
+          heatmap.setMap(map);
+          console.log('Heatmap created successfully with', heatmapData.length, 'points');
+        } else {
+          console.warn('No heatmap data available');
+        }
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        document.getElementById('map').innerHTML = '<div style="padding: 20px; text-align: center; color: red;">Error loading map: ' + error.message + '</div>';
+      }
     }
 
     window.onload = initMap;

@@ -117,7 +117,7 @@
 </div>
 
 <!-- Google Maps Script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs&libraries=visualization"></script>
 
 <script>
 const heatmapData = <?= json_encode($heatmapData, JSON_NUMERIC_CHECK) ?>;

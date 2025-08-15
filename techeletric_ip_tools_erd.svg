@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg
+PUBLIC "-//W3C//DTD SVG 1.1//EN"
+       "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg viewBox="6 65 1368 765" width="1362px" height="700px" xmlns="http://www.w3.org/2000/svg" version="1.1">
+   <line x1="690" y1="270" x2="680" y2="270" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="158" y1="119" x2="148" y2="119" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="680" y1="270" x2="158" y2="119" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="682.5" y1="270" x2="686.03553390593" y2="273.53553390593" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="682.5" y1="270" x2="686.03553390593" y2="266.46446609407" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="153" y1="119" x2="156.53553390593" y2="122.53553390593" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="153" y1="119" x2="156.53553390593" y2="115.46446609407" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="1240" y1="190" x2="1230" y2="190" style="stroke:#333;stroke-width:1;"/>
+   <line x1="1077" y1="250" x2="1067" y2="250" style="stroke:#333;stroke-width:1;"/>
+   <line x1="1230" y1="190" x2="1077" y2="250" style="stroke:#333;stroke-width:1;"/>
+   <line x1="1232.5" y1="190" x2="1236.0355339059" y2="193.53553390593" style="stroke:#333;stroke-width:2;"/>
+   <line x1="1232.5" y1="190" x2="1236.0355339059" y2="186.46446609407" style="stroke:#333;stroke-width:2;"/>
+   <line x1="1072" y1="250" x2="1075.5355339059" y2="253.53553390593" style="stroke:#333;stroke-width:2;"/>
+   <line x1="1072" y1="250" x2="1075.5355339059" y2="246.46446609407" style="stroke:#333;stroke-width:2;"/>
+   <rect width="127" height="20" x="350" y="400" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="355" y="414" style="fill:#fff;" font-family="Arial" font-size="16px"> geo_alerts</text>
+   <rect width="127" height="20" x="350" y="420" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="355" y="434" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="350" y="440" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="454" style="fill:black;" font-family="Arial" font-size="16px">link_id</text>
+   <rect width="127" height="20" x="350" y="460" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="474" style="fill:black;" font-family="Arial" font-size="16px">reason</text>
+   <rect width="127" height="20" x="350" y="480" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="494" style="fill:black;" font-family="Arial" font-size="16px">timestamp</text>
+   <rect width="127" height="20" x="21" y="89" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="26" y="103" style="fill:#fff;" font-family="Arial" font-size="16px"> geo_links</text>
+   <rect width="127" height="20" x="21" y="109" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="26" y="123" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="21" y="129" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="143" style="fill:black;" font-family="Arial" font-size="16px">user_id</text>
+   <rect width="127" height="20" x="21" y="149" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="163" style="fill:black;" font-family="Arial" font-size="16px">original_url</text>
+   <rect width="127" height="20" x="21" y="169" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="183" style="fill:black;" font-family="Arial" font-size="16px">short_code</text>
+   <rect width="127" height="20" x="21" y="189" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="203" style="fill:black;" font-family="Arial" font-size="16px">created_at</text>
+   <rect width="127" height="20" x="21" y="209" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="223" style="fill:black;" font-family="Arial" font-size="16px">expires_at</text>
+   <rect width="127" height="20" x="21" y="229" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="243" style="fill:black;" font-family="Arial" font-size="16px">click_limit</text>
+   <rect width="127" height="20" x="21" y="249" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="263" style="fill:black;" font-family="Arial" font-size="16px">click_count</text>
+   <rect width="127" height="20" x="21" y="269" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="26" y="283" style="fill:black;" font-family="Arial" font-size="16px">clicks</text>
+   <rect width="127" height="20" x="690" y="80" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="695" y="94" style="fill:#fff;" font-family="Arial" font-size="16px"> geo_logs</text>
+   <rect width="127" height="20" x="690" y="100" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="695" y="114" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="690" y="120" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="134" style="fill:black;" font-family="Arial" font-size="16px">user_id</text>
+   <rect width="127" height="20" x="690" y="140" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="154" style="fill:black;" font-family="Arial" font-size="16px">ip_address</text>
+   <rect width="127" height="20" x="690" y="160" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="174" style="fill:black;" font-family="Arial" font-size="16px">user_agent</text>
+   <rect width="127" height="20" x="690" y="180" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="194" style="fill:black;" font-family="Arial" font-size="16px">referrer</text>
+   <rect width="127" height="20" x="690" y="200" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="214" style="fill:black;" font-family="Arial" font-size="16px">country</text>
+   <rect width="127" height="20" x="690" y="220" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="234" style="fill:black;" font-family="Arial" font-size="16px">city</text>
+   <rect width="127" height="20" x="690" y="240" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="254" style="fill:black;" font-family="Arial" font-size="16px">timestamp</text>
+   <rect width="127" height="20" x="690" y="260" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="274" style="fill:black;" font-family="Arial" font-size="16px">link_id</text>
+   <rect width="127" height="20" x="690" y="280" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="294" style="fill:black;" font-family="Arial" font-size="16px">device_type</text>
+   <rect width="127" height="20" x="690" y="300" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="314" style="fill:black;" font-family="Arial" font-size="16px">latitude</text>
+   <rect width="127" height="20" x="690" y="320" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="334" style="fill:black;" font-family="Arial" font-size="16px">longitude</text>
+   <rect width="127" height="20" x="690" y="340" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="354" style="fill:black;" font-family="Arial" font-size="16px">accuracy</text>
+   <rect width="127" height="20" x="690" y="360" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="374" style="fill:black;" font-family="Arial" font-size="16px">address</text>
+   <rect width="127" height="20" x="690" y="380" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="394" style="fill:black;" font-family="Arial" font-size="16px">location_type</text>
+   <rect width="127" height="20" x="690" y="400" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="414" style="fill:black;" font-family="Arial" font-size="16px">street</text>
+   <rect width="127" height="20" x="690" y="420" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="434" style="fill:black;" font-family="Arial" font-size="16px">house_number</text>
+   <rect width="127" height="20" x="690" y="440" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="454" style="fill:black;" font-family="Arial" font-size="16px">postcode</text>
+   <rect width="127" height="20" x="690" y="460" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="695" y="474" style="fill:black;" font-family="Arial" font-size="16px">state</text>
+   <rect width="127" height="20" x="1240" y="140" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="154" style="fill:#fff;" font-family="Arial" font-size="16px"> phone_clicks</text>
+   <rect width="127" height="20" x="1240" y="160" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="174" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="1240" y="180" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="194" style="fill:black;" font-family="Arial" font-size="16px">tracking_code</text>
+   <rect width="127" height="20" x="1240" y="200" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="214" style="fill:black;" font-family="Arial" font-size="16px">ip_address</text>
+   <rect width="127" height="20" x="1240" y="220" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="234" style="fill:black;" font-family="Arial" font-size="16px">user_agent</text>
+   <rect width="127" height="20" x="1240" y="240" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="254" style="fill:black;" font-family="Arial" font-size="16px">referrer</text>
+   <rect width="127" height="20" x="1240" y="260" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="274" style="fill:black;" font-family="Arial" font-size="16px">country</text>
+   <rect width="127" height="20" x="1240" y="280" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="294" style="fill:black;" font-family="Arial" font-size="16px">city</text>
+   <rect width="127" height="20" x="1240" y="300" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="314" style="fill:black;" font-family="Arial" font-size="16px">device_type</text>
+   <rect width="127" height="20" x="1240" y="320" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="1245" y="334" style="fill:black;" font-family="Arial" font-size="16px">timestamp</text>
+   <rect width="127" height="20" x="940" y="140" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="945" y="154" style="fill:#fff;" font-family="Arial" font-size="16px"> phone_tracking</text>
+   <rect width="127" height="20" x="940" y="160" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="945" y="174" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="940" y="180" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="194" style="fill:black;" font-family="Arial" font-size="16px">phone_number</text>
+   <rect width="127" height="20" x="940" y="200" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="214" style="fill:black;" font-family="Arial" font-size="16px">message_text</text>
+   <rect width="127" height="20" x="940" y="220" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="234" style="fill:black;" font-family="Arial" font-size="16px">original_url</text>
+   <rect width="127" height="20" x="940" y="240" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="254" style="fill:black;" font-family="Arial" font-size="16px">tracking_code</text>
+   <rect width="127" height="20" x="940" y="260" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="274" style="fill:black;" font-family="Arial" font-size="16px">tracking_link</text>
+   <rect width="127" height="20" x="940" y="280" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="294" style="fill:black;" font-family="Arial" font-size="16px">status</text>
+   <rect width="127" height="20" x="940" y="300" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="314" style="fill:black;" font-family="Arial" font-size="16px">created_at</text>
+   <rect width="127" height="20" x="940" y="320" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="334" style="fill:black;" font-family="Arial" font-size="16px">updated_at</text>
+   <rect width="127" height="20" x="350" y="90" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="355" y="104" style="fill:#fff;" font-family="Arial" font-size="16px"> sms_links</text>
+   <rect width="127" height="20" x="350" y="110" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="355" y="124" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="350" y="130" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="144" style="fill:black;" font-family="Arial" font-size="16px">phone_number</text>
+   <rect width="127" height="20" x="350" y="150" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="164" style="fill:black;" font-family="Arial" font-size="16px">short_code</text>
+   <rect width="127" height="20" x="350" y="170" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="184" style="fill:black;" font-family="Arial" font-size="16px">original_url</text>
+   <rect width="127" height="20" x="350" y="190" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="204" style="fill:black;" font-family="Arial" font-size="16px">clicked</text>
+   <rect width="127" height="20" x="350" y="210" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="224" style="fill:black;" font-family="Arial" font-size="16px">click_time</text>
+   <rect width="127" height="20" x="350" y="230" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="244" style="fill:black;" font-family="Arial" font-size="16px">ip_address</text>
+   <rect width="127" height="20" x="350" y="250" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="264" style="fill:black;" font-family="Arial" font-size="16px">country</text>
+   <rect width="127" height="20" x="350" y="270" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="284" style="fill:black;" font-family="Arial" font-size="16px">city</text>
+   <rect width="127" height="20" x="350" y="290" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="304" style="fill:black;" font-family="Arial" font-size="16px">device_type</text>
+   <rect width="127" height="20" x="350" y="310" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="324" style="fill:black;" font-family="Arial" font-size="16px">user_agent</text>
+   <rect width="127" height="20" x="350" y="330" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="344" style="fill:black;" font-family="Arial" font-size="16px">timestamp</text>
+   <rect width="127" height="20" x="350" y="530" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="355" y="544" style="fill:#fff;" font-family="Arial" font-size="16px"> speed_tests</text>
+   <rect width="127" height="20" x="350" y="550" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="355" y="564" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="350" y="570" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="584" style="fill:black;" font-family="Arial" font-size="16px">ip_address</text>
+   <rect width="127" height="20" x="350" y="590" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="604" style="fill:black;" font-family="Arial" font-size="16px">download_speed</text>
+   <rect width="127" height="20" x="350" y="610" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="624" style="fill:black;" font-family="Arial" font-size="16px">upload_speed</text>
+   <rect width="127" height="20" x="350" y="630" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="644" style="fill:black;" font-family="Arial" font-size="16px">ping</text>
+   <rect width="127" height="20" x="350" y="650" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="664" style="fill:black;" font-family="Arial" font-size="16px">jitter</text>
+   <rect width="127" height="20" x="350" y="670" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="684" style="fill:black;" font-family="Arial" font-size="16px">country</text>
+   <rect width="127" height="20" x="350" y="690" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="704" style="fill:black;" font-family="Arial" font-size="16px">city</text>
+   <rect width="127" height="20" x="350" y="710" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="724" style="fill:black;" font-family="Arial" font-size="16px">user_agent</text>
+   <rect width="127" height="20" x="350" y="730" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="355" y="744" style="fill:black;" font-family="Arial" font-size="16px">timestamp</text>
+   <rect width="127" height="20" x="940" y="390" style="fill:#007;stroke:black;"/>
+   <text width="127" height="20" x="945" y="404" style="fill:#fff;" font-family="Arial" font-size="16px"> users</text>
+   <rect width="127" height="20" x="940" y="410" style="fill:#aea;stroke:black;"/>
+   <text width="127" height="20" x="945" y="424" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="127" height="20" x="940" y="430" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="444" style="fill:black;" font-family="Arial" font-size="16px">username</text>
+   <rect width="127" height="20" x="940" y="450" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="464" style="fill:black;" font-family="Arial" font-size="16px">email</text>
+   <rect width="127" height="20" x="940" y="470" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="484" style="fill:black;" font-family="Arial" font-size="16px">password_hash</text>
+   <rect width="127" height="20" x="940" y="490" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="504" style="fill:black;" font-family="Arial" font-size="16px">role</text>
+   <rect width="127" height="20" x="940" y="510" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="524" style="fill:black;" font-family="Arial" font-size="16px">is_active</text>
+   <rect width="127" height="20" x="940" y="530" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="544" style="fill:black;" font-family="Arial" font-size="16px">last_login</text>
+   <rect width="127" height="20" x="940" y="550" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="564" style="fill:black;" font-family="Arial" font-size="16px">created_at</text>
+   <rect width="127" height="20" x="940" y="570" style="fill:none;stroke:black;"/>
+   <text width="127" height="20" x="945" y="584" style="fill:black;" font-family="Arial" font-size="16px">updated_at</text>
+</svg>
