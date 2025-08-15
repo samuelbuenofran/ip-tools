@@ -18,6 +18,7 @@
     <link href="<?= $view->asset('navbar-fixes.css') ?>" rel="stylesheet">
     <link href="<?= $view->asset('dropdown-overlay-fix.css') ?>" rel="stylesheet">
     <script src="<?= $view->asset('theme-switcher.js') ?>" defer></script>
+    <script src="<?= $view->asset('dropdown-force-fix.js') ?>" defer></script>
     <script src="<?= $view->asset('translations.js') ?>" defer></script>
     
     <style>

@@ -1,119 +1,117 @@
-/* ===== DROPDOWN OVERLAY FIX ===== */
-/* This file specifically addresses the dropdown menu being covered by other elements */
+/* ===== AGGRESSIVE DROPDOWN OVERLAY FIX ===== */
+/* This file uses !important declarations to override Bootstrap's default behavior */
 
-/* Force dropdown to be on top of everything */
+/* Force dropdown to be on top of EVERYTHING */
 .dropdown-menu {
-    z-index: 9999 !important; /* Maximum z-index */
-    position: fixed !important; /* Use fixed positioning to avoid layout issues */
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
+    z-index: 99999 !important; /* Maximum possible z-index */
+    position: absolute !important; /* Keep absolute positioning */
+    top: 100% !important; /* Position below the dropdown toggle */
+    left: auto !important; /* Let Bootstrap handle horizontal positioning */
+    right: 0 !important; /* Align to the right */
+    transform: none !important; /* Disable any transforms */
+    background: #007bff !important; /* Solid blue background */
+    border: 2px solid #ffffff !important; /* White border for visibility */
+    border-radius: 8px !important;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 5px 20px rgba(0, 0, 0, 0.2) !important;
+    min-width: 200px !important;
+    margin-top: 5px !important;
+    padding: 8px 0 !important;
 }
 
-/* Ensure dropdown container has proper positioning */
-.navbar-nav .dropdown {
-    position: static !important; /* Allow dropdown to position itself */
-}
-
-/* Fix dropdown positioning when opened */
-.dropdown-menu.show {
-    position: fixed !important;
-    z-index: 9999 !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
-}
-
-/* Ensure all other elements stay below dropdown */
+/* Force all other elements to stay below dropdown */
 *:not(.dropdown-menu):not(.dropdown-menu *) {
     z-index: 1 !important;
 }
 
-/* Specific fix for cards and buttons that might overlap */
-.card, .btn, .alert, .container, .row, .col, [class*="col-"] {
+/* Specific elements that commonly cause issues */
+.card, .btn, .alert, .container, .row, .col, [class*="col-"],
+.bg-primary, .container-fluid, .navbar-collapse {
     position: relative !important;
     z-index: 1 !important;
 }
 
-/* Fix for the specific blue bar issue shown in the image */
-.bg-primary, .card.bg-primary, .container .bg-primary {
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-/* Ensure navbar doesn't interfere with dropdown */
-.navbar {
-    z-index: 1030 !important;
-}
-
-.navbar-nav {
-    z-index: 1030 !important;
-}
-
-/* Force dropdown to be visible above everything */
-.dropdown-menu.show {
-    z-index: 9999 !important;
-    position: fixed !important;
-    background: rgba(0, 123, 255, 0.98) !important;
-    border: 2px solid rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.3),
-        0 5px 20px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-}
-
-/* Enhanced dropdown items for better visibility */
-.dropdown-menu.show .dropdown-item {
-    background: rgba(0, 123, 255, 0.9) !important;
-    color: #ffffff !important;
+/* Enhanced dropdown items with perfect visibility */
+.dropdown-item {
+    background: #007bff !important; /* Solid blue background */
+    color: #ffffff !important; /* White text */
     font-weight: 600 !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-    border-radius: 8px !important;
-    margin: 4px 8px !important;
     padding: 12px 20px !important;
+    margin: 2px 8px !important;
+    border-radius: 6px !important;
     transition: all 0.2s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    border: none !important;
 }
 
-.dropdown-menu.show .dropdown-item:hover {
-    background: rgba(0, 123, 255, 1) !important;
+.dropdown-item:hover {
+    background: #0056b3 !important; /* Darker blue on hover */
     color: #ffffff !important;
-    transform: translateX(6px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transform: translateX(4px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
-.dropdown-menu.show .dropdown-item:active {
-    background: rgba(0, 86, 179, 1) !important;
+.dropdown-item:active {
+    background: #004085 !important; /* Even darker when active */
     color: #ffffff !important;
-    transform: translateX(3px) !important;
+    transform: translateX(2px) !important;
 }
 
-/* Enhanced dropdown divider */
-.dropdown-menu.show .dropdown-divider {
+/* Dropdown divider with better visibility */
+.dropdown-divider {
     border-color: rgba(255, 255, 255, 0.4) !important;
     border-width: 2px !important;
     margin: 8px 12px !important;
 }
 
-/* Fix for mobile devices */
+/* Fix navbar text visibility - force white text */
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .dropdown-toggle {
+    color: #ffffff !important; /* Force white text */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 500 !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .navbar-nav .dropdown-toggle:hover {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Ensure navbar has proper z-index */
+.navbar {
+    z-index: 1030 !important;
+    position: relative !important;
+}
+
+/* Force dropdown container to have proper positioning */
+.navbar-nav .dropdown {
+    position: relative !important;
+    z-index: 99999 !important; /* Same as dropdown menu */
+}
+
+/* Mobile responsiveness */
 @media (max-width: 991.98px) {
-    .dropdown-menu.show {
-        position: relative !important;
-        z-index: 9999 !important;
-        background: rgba(0, 123, 255, 0.95) !important;
+    .dropdown-menu {
+        position: static !important; /* Stack vertically on mobile */
+        z-index: 99999 !important;
+        background: #007bff !important;
         margin-top: 10px !important;
-        border-radius: 12px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
     }
     
-    .dropdown-menu.show .dropdown-item {
+    .dropdown-item {
         background: transparent !important;
         color: #ffffff !important;
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         margin: 2px 8px !important;
     }
     
-    .dropdown-menu.show .dropdown-item:hover {
+    .dropdown-item:hover {
         background: rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
         transform: translateX(8px) !important;
@@ -124,19 +122,35 @@
 @keyframes dropdownSlideIn {
     from {
         opacity: 0;
-        transform: translateY(-20px) scale(0.9);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
 .dropdown-menu.show {
-    animation: dropdownSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    animation: dropdownSlideIn 0.2s ease-out !important;
 }
 
-/* Ensure dropdown is always visible */
+/* Ensure dropdown is always visible and not clipped */
+.dropdown-menu.show {
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Force proper stacking context */
+.navbar > .container-fluid,
+.navbar > .container {
+    position: relative !important;
+    z-index: 1030 !important;
+}
+
+/* Additional safety measures */
 .dropdown-menu.show::before {
     content: '';
     position: fixed;
@@ -145,26 +159,40 @@
     right: 0;
     bottom: 0;
     z-index: -1;
-    background: rgba(0, 0, 0, 0.1);
     pointer-events: none;
 }
 
-/* Fix for specific layout containers */
-.container-fluid, .container {
-    position: relative !important;
-    z-index: 1 !important;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .dropdown-menu {
+        background: #000000 !important;
+        border: 3px solid #ffffff !important;
+        z-index: 99999 !important;
+    }
+    
+    .dropdown-item {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border-bottom: 1px solid #ffffff !important;
+    }
+    
+    .dropdown-item:hover {
+        background: #333333 !important;
+        color: #ffffff !important;
+    }
 }
 
-/* Ensure proper stacking context */
-.navbar > .container-fluid,
-.navbar > .container {
-    position: relative !important;
-    z-index: 1030 !important;
+/* Ensure no other CSS can override these rules */
+.dropdown-menu,
+.dropdown-menu.show,
+.dropdown-item,
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .dropdown-toggle {
+    /* Force these styles to be applied */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
-/* Force dropdown to break out of any overflow containers */
-.dropdown-menu.show {
-    overflow: visible !important;
-    clip: auto !important;
-    clip-path: none !important;
 }
