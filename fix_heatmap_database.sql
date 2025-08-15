@@ -1,16 +1,22 @@
 -- Fix Heatmap Database Issues
 -- This will add all missing columns needed for the heatmap to work
 
--- 1. Add missing columns to geo_links table
+-- 1. Add missing columns to geo_links table (safe for older MySQL)
 ALTER TABLE `geo_links` 
-ADD COLUMN IF NOT EXISTS `click_count` int(11) DEFAULT 0 AFTER `clicks`,
-ADD COLUMN IF NOT EXISTS `user_id` int(11) DEFAULT NULL AFTER `id`;
+ADD COLUMN `click_count` int(11) DEFAULT 0 AFTER `clicks`;
 
--- 2. Add missing columns to geo_logs table  
+ALTER TABLE `geo_links` 
+ADD COLUMN `user_id` int(11) DEFAULT NULL AFTER `id`;
+
+-- 2. Add missing columns to geo_logs table (safe for older MySQL)
 ALTER TABLE `geo_logs` 
-ADD COLUMN IF NOT EXISTS `device_type` varchar(50) DEFAULT NULL AFTER `user_agent`,
-ADD COLUMN IF NOT EXISTS `location_type` enum('IP','GPS','Manual') DEFAULT 'IP' AFTER `longitude`,
-ADD COLUMN IF NOT EXISTS `user_id` int(11) DEFAULT NULL AFTER `id`;
+ADD COLUMN `device_type` varchar(50) DEFAULT NULL AFTER `user_agent`;
+
+ALTER TABLE `geo_logs` 
+ADD COLUMN `location_type` enum('IP','GPS','Manual') DEFAULT 'IP' AFTER `longitude`;
+
+ALTER TABLE `geo_logs` 
+ADD COLUMN `user_id` int(11) DEFAULT NULL AFTER `id`;
 
 -- 3. Create users table if it doesn't exist
 CREATE TABLE IF NOT EXISTS `users` (
@@ -42,11 +48,11 @@ UPDATE `geo_logs` SET `location_type` = 'IP' WHERE `location_type` IS NULL;
 -- 7. Update clicks column to match click_count values
 UPDATE `geo_links` SET `clicks` = `click_count` WHERE `clicks` IS NULL OR `clicks` = 0;
 
--- 8. Add indexes for better performance
-ALTER TABLE `geo_links` ADD INDEX IF NOT EXISTS `idx_user_id` (`user_id`);
-ALTER TABLE `geo_logs` ADD INDEX IF NOT EXISTS `idx_user_id` (`user_id`);
-ALTER TABLE `geo_logs` ADD INDEX IF NOT EXISTS `idx_link_id` (`link_id`);
-ALTER TABLE `geo_logs` ADD INDEX IF NOT EXISTS `idx_timestamp` (`timestamp`);
+-- 8. Add indexes for better performance (safe for older MySQL)
+ALTER TABLE `geo_links` ADD INDEX `idx_user_id` (`user_id`);
+ALTER TABLE `geo_logs` ADD INDEX `idx_user_id` (`user_id`);
+ALTER TABLE `geo_logs` ADD INDEX `idx_link_id` (`link_id`);
+ALTER TABLE `geo_logs` ADD INDEX `idx_timestamp` (`timestamp`);
 
 -- 9. Show current status
 SELECT 

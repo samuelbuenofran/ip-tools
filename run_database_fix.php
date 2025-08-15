@@ -47,8 +47,9 @@ try {
                 }
             } catch (Exception $e) {
                 // Some statements might fail if columns already exist - that's okay
-                if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
-                    echo "ℹ️ Column already exists (this is fine)<br>";
+                if (strpos($e->getMessage(), 'Duplicate column name') !== false || 
+                    strpos($e->getMessage(), 'Duplicate key name') !== false) {
+                    echo "ℹ️ Column/Index already exists (this is fine)<br>";
                 } else {
                     echo "⚠️ Statement failed: " . $e->getMessage() . "<br>";
                 }
