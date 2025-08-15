@@ -149,10 +149,21 @@ error_log("Heatmap: $validPositions valid positions out of $totalLogs total logs
       try {
         console.log('Initializing Google Maps...');
         console.log('Heatmap data:', heatmapData);
+        console.log('Heatmap data length:', heatmapData ? heatmapData.length : 'null');
+        console.log('Map container element:', document.getElementById("map"));
         
         // Set initial map center based on data
         let center = { lat: 0, lng: 0 };
         let zoom = 2;
+        
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: zoom,
+          center: center,
+          mapTypeId: "roadmap",
+          mapTypeControl: true,
+          streetViewControl: true,
+          fullscreenControl: true
+        });
         
         if (heatmapData && heatmapData.length > 0) {
           // Calculate center based on data
@@ -165,15 +176,6 @@ error_log("Heatmap: $validPositions valid positions out of $totalLogs total logs
           map.fitBounds(bounds);
           zoom = 3; // Adjust zoom based on data spread
         }
-        
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: zoom,
-          center: center,
-          mapTypeId: "roadmap",
-          mapTypeControl: true,
-          streetViewControl: true,
-          fullscreenControl: true
-        });
         
         // Store references for controls
         mapInstance = map;

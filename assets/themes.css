@@ -53,28 +53,19 @@ body {
 }
 
 /* ===== NAVBAR STYLES ===== */
+/* Navbar background - let navbar-fixes.css handle this */
 .navbar {
-  background: var(--bg-primary) !important;
-  border-bottom: var(--border-width) solid var(--border-color);
-  backdrop-filter: blur(10px);
   transition: var(--transition);
 }
 
-
-
+/* Navbar brand - let navbar-fixes.css handle text color */
 .navbar-brand {
-  color: var(--text-primary) !important;
   font-weight: 600;
   transition: var(--transition);
 }
 
 .navbar-brand img {
   transition: var(--transition);
-  filter: brightness(1);
-}
-
-/* Logo styling */
-.navbar-brand img {
   filter: brightness(1.05) contrast(1.05);
 }
 
@@ -83,13 +74,9 @@ body {
   transform: scale(1.05);
 }
 
+/* Nav links - let navbar-fixes.css handle text color */
 .nav-link {
-  color: var(--text-secondary) !important;
   transition: var(--transition);
-}
-
-.nav-link:hover {
-  color: var(--primary-color) !important;
 }
 
 /* ===== CARD STYLES ===== */

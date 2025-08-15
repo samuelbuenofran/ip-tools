@@ -120,7 +120,7 @@ class GeoLog {
     }
     
     public function getHeatmapData() {
-        $sql = "SELECT latitude, longitude 
+        $sql = "SELECT latitude, longitude, accuracy, city, country
                 FROM geo_logs 
                 WHERE latitude IS NOT NULL 
                 AND longitude IS NOT NULL
@@ -128,7 +128,21 @@ class GeoLog {
                 AND longitude BETWEEN -180 AND 180";
         
         $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Transform the data to match the expected format
+        $heatmapData = [];
+        foreach ($results as $row) {
+            $heatmapData[] = [
+                'lat' => (float)$row['latitude'],
+                'lng' => (float)$row['longitude'],
+                'accuracy' => $row['accuracy'] ?? null,
+                'city' => $row['city'] ?? 'Unknown',
+                'country' => $row['country'] ?? 'Unknown'
+            ];
+        }
+        
+        return $heatmapData;
     }
     
     public function getLocationStats() {

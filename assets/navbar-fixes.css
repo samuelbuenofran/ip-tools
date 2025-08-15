@@ -10,6 +10,21 @@
     z-index: 1030; /* Ensure navbar is above other elements */
 }
 
+/* Ensure navbar-dark class always has proper styling */
+.navbar.navbar-dark {
+    background: rgba(0, 123, 255, 0.95) !important;
+}
+
+/* Force maximum contrast for navbar text */
+.navbar.navbar-dark .navbar-brand,
+.navbar.navbar-dark .nav-link,
+.navbar.navbar-dark .navbar-nav .nav-link,
+.navbar.navbar-dark .dropdown-toggle {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    font-weight: 600;
+}
+
 /* Ensure navbar text is always visible */
 .navbar-brand,
 .navbar-nav .nav-link,
@@ -17,6 +32,23 @@
     color: rgba(255, 255, 255, 0.95) !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     font-weight: 500;
+}
+
+/* Force white text for navbar elements - override any theme conflicts */
+.navbar.navbar-dark .navbar-brand,
+.navbar.navbar-dark .nav-link,
+.navbar.navbar-dark .navbar-nav .nav-link,
+.navbar.navbar-dark .dropdown-toggle {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.navbar.navbar-dark .navbar-brand:hover,
+.navbar.navbar-dark .nav-link:hover,
+.navbar.navbar-dark .navbar-nav .nav-link:hover,
+.navbar.navbar-dark .dropdown-toggle:hover {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .navbar-brand:hover,
@@ -275,6 +307,29 @@
         background: #0056b3 !important;
         color: #ffffff !important;
     }
+}
+
+/* Bootstrap override - ensure navbar-dark always has white text */
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link.show,
+.navbar-dark .navbar-nav .show > .nav-link {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Ensure icons in navbar are also white */
+.navbar-dark .nav-link i,
+.navbar-dark .navbar-brand i {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 /* Reduced motion support */
