@@ -74,6 +74,19 @@ $recent_tracks = $db->query("
     <?php include('../header.php'); ?>
 
     <div class="container py-4">
+        <!-- DEMO MODE NOTICE -->
+        <div class="alert alert-warning text-center mb-4">
+            <i class="fa-solid fa-triangle-exclamation fa-2x mb-2"></i>
+            <h4>🚧 Demo Mode - Standalone Version</h4>
+            <p class="mb-2">This is the standalone demo version of the application.</p>
+            <p class="mb-0">
+                <strong>For production use, please use the MVC version:</strong><br>
+                <a href="/projects/ip-tools/public/" class="btn btn-primary mt-2">
+                    <i class="fa-solid fa-external-link-alt"></i> Go to Production App
+                </a>
+            </p>
+        </div>
+
         <h2 class="mb-4 text-center">
             <i class="fa-solid fa-mobile-screen-button text-primary"></i> Phone Tracker
         </h2>
