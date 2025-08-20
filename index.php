@@ -1,6 +1,19 @@
-<?php require_once('config.php'); ?>
+<?php 
+require_once('config.php');
+
+// Language setting - English by default, Portuguese only in dev mode
+$current_lang = 'en';
+if ($DEV_MODE && $DEV_LANGUAGE === 'pt') {
+    $current_lang = 'pt';
+}
+
+// Allow language switching in dev mode via URL parameter
+if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) {
+    $current_lang = $_GET['lang'];
+}
+?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="<?= $current_lang ?>">
 <head>
   <meta charset="UTF-8">
   <title>IP Tools Suite - Professional IP Intelligence Tools</title>
@@ -71,6 +84,21 @@
 </head>
 <body>
   <?php include('header.php'); ?>
+
+  <!-- Developer Language Switcher (only visible in dev mode) -->
+  <?php if ($DEV_MODE): ?>
+  <div class="container mt-3">
+    <div class="alert alert-info text-center">
+      <i class="fa-solid fa-code me-2"></i>
+      <strong>Developer Mode Active</strong> - Current Language: <span class="badge bg-primary"><?= strtoupper($current_lang) ?></span>
+      <?php if ($current_lang === 'en'): ?>
+        <a href="?lang=pt" class="btn btn-sm btn-outline-primary ms-2">Switch to Portuguese</a>
+      <?php else: ?>
+        <a href="?lang=en" class="btn btn-sm btn-outline-primary ms-2">Switch to English</a>
+      <?php endif; ?>
+    </div>
+  </div>
+  <?php endif; ?>
 
   <!-- Hero Section -->
   <section class="hero-section">

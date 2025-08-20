@@ -1,3 +1,12 @@
+<?php
+require_once('config.php');
+
+// Language setting - English by default, Portuguese only in dev mode
+$current_lang = 'en';
+if ($DEV_MODE && $DEV_LANGUAGE === 'pt') {
+    $current_lang = 'pt';
+}
+?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,11 +33,18 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
 		<ul class="navbar-nav ms-auto">
+			<?php if ($DEV_MODE): ?>
+			<li class="nav-item">
+				<span class="navbar-text me-3" style="color: #ffffff !important;">
+					<i class="fa-solid fa-code"></i> DEV: <?= strtoupper($current_lang) ?>
+				</span>
+			</li>
+			<?php endif; ?>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/geologger/create.php" style="color: #ffffff !important;"><i class="fa-solid fa-map-pin"></i> <span data-translate="nav_geologger">Geolocation Tracker</span></a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/network-tools/logs.php" style="color: #ffffff !important;"><i class="fa-solid fa-chart-line"></i> <span data-translate="nav_logs">Logs Dashboard</span></a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker/send_sms.php" style="color: #ffffff !important;"><i class="fa-solid fa-mobile-screen-button"></i> <span data-translate="nav_phone_tracker">Phone Tracker</span></a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/utils/speedtest.php" style="color: #ffffff !important;"><i class="fa-solid fa-gauge-high"></i> <span data-translate="nav_speed_test">Speed Test</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/settings.php" style="color: #ffffff !important;"><i class="fa-solid fa-cog"></i> <span data-translate="settings">Configurações</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/settings.php" style="color: #ffffff !important;"><i class="fa-solid fa-cog"></i> <span data-translate="settings">Settings</span></a></li>
       </ul>
     </div>
   </div>
