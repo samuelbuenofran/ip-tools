@@ -23,6 +23,12 @@ spl_autoload_register(function ($class) {
         error_log("Autoloader failed to find: $class");
         error_log("Tried paths: $appFile, $vendorFile");
     }
+    
+    // Additional debug information
+    error_log("Autoloader failed to find: $class");
+    error_log("Tried paths: $appFile, $vendorFile");
+    error_log("Current directory: " . __DIR__);
+    error_log("Class namespace: " . $class);
 });
 
 // Load configuration

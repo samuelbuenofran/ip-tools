@@ -8,9 +8,12 @@ require_once __DIR__ . '/../app/Config/Database.php';
 require_once __DIR__ . '/../app/Core/Router.php';
 require_once __DIR__ . '/../app/Core/Controller.php';
 require_once __DIR__ . '/../app/Core/View.php';
+
+// Load models after core classes
 require_once __DIR__ . '/../app/Models/GeoLink.php';
 require_once __DIR__ . '/../app/Models/GeoLog.php';
 require_once __DIR__ . '/../app/Models/User.php';
+require_once __DIR__ . '/../app/Models/SpeedTest.php';
 
 // Include all controllers
 require_once __DIR__ . '/../app/Controllers/HomeController.php';
@@ -52,9 +55,10 @@ $router->add('phone-tracker/track', ['controller' => 'PhoneTrackerController', '
 $router->add('phone-tracker/tracking_logs', ['controller' => 'PhoneTrackerController', 'action' => 'trackingLogs']);
 
 // Speed test routes
-$router->add('utils/speedtest', ['controller' => 'SpeedTestController', 'action' => 'index']);
-$router->add('utils/save_speed_test', ['controller' => 'SpeedTestController', 'action' => 'save']);
-$router->add('utils/speed_analytics', ['controller' => 'SpeedTestController', 'action' => 'analytics']);
+$router->add('speed-test', ['controller' => 'SpeedTestController', 'action' => 'index']);
+$router->add('speed-test/save', ['controller' => 'SpeedTestController', 'action' => 'save']);
+$router->add('speed-test/analytics', ['controller' => 'SpeedTestController', 'action' => 'analytics']);
+$router->add('speed-test/export', ['controller' => 'SpeedTestController', 'action' => 'export']);
 
 // Admin routes
 $router->add('admin', ['controller' => 'AdminController', 'action' => 'index']);
