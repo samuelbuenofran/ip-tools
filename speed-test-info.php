@@ -23,14 +23,13 @@ require_once('config.php');
         .feature-card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s ease;
             height: 100%;
         }
         
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         .feature-icon {
@@ -53,14 +52,15 @@ require_once('config.php');
         .step-number {
             background: #20bf6b;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             margin-right: 1rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>

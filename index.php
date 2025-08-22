@@ -32,19 +32,17 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
     }
     
     .feature-card {
-      transition: all 0.3s ease;
+      transition: box-shadow 0.2s ease;
       border: none;
       border-radius: 15px;
     }
     
     .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       border-color: #007bff;
     }
     
     .feature-card:hover .icon-large {
-      transform: scale(1.1);
       color: #007bff;
     }
     
@@ -52,7 +50,7 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
       font-size: 3rem;
       color: #007bff;
       margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
+      transition: color 0.2s ease;
     }
     
     .cta-section {
