@@ -98,6 +98,19 @@ class GeologgerController extends Controller {
         $stats = $this->geoLog->getStats();
         $heatmapData = $this->geoLog->getHeatmapData();
         
+        // Ensure all required stats are available with defaults
+        $stats = array_merge([
+            'total_clicks' => 0,
+            'unique_visitors' => 0,
+            'gps_clicks' => 0,
+            'ip_clicks' => 0,
+            'active_links' => 0
+        ], $stats);
+        
+        // Calculate pagination
+        $total = $stats['total_clicks'] ?? 0;
+        $total_pages = ceil($total / $limit);
+        
         $data = [
             'title' => 'Visitor Logs - ' . App::APP_NAME,
             'logs' => $logs,
@@ -106,7 +119,9 @@ class GeologgerController extends Controller {
             'pagination' => [
                 'page' => $page,
                 'limit' => $limit,
-                'total' => $stats['total_clicks']
+                'total' => $total,
+                'total_pages' => $total_pages,
+                'current_page' => $page
             ]
         ];
         

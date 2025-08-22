@@ -1,10 +1,10 @@
 <?php 
 require_once('config.php');
 
-// Language setting - English by default, Portuguese only in dev mode
-$current_lang = 'en';
-if ($DEV_MODE && $DEV_LANGUAGE === 'pt') {
-    $current_lang = 'pt';
+// Language setting - Portuguese by default, English only in dev mode
+$current_lang = 'pt';
+if ($DEV_MODE && $DEV_LANGUAGE === 'en') {
+    $current_lang = 'en';
 }
 
 // Allow language switching in dev mode via URL parameter
@@ -13,7 +13,7 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?= $current_lang ?>">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>IP Tools Suite - Professional IP Intelligence Tools</title>
@@ -39,13 +39,20 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
     
     .feature-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #007bff;
+    }
+    
+    .feature-card:hover .icon-large {
+      transform: scale(1.1);
+      color: #007bff;
     }
     
     .icon-large {
       font-size: 3rem;
       color: #007bff;
       margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
     }
     
     .cta-section {
@@ -90,11 +97,11 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
   <div class="container mt-3">
     <div class="alert alert-info text-center">
       <i class="fa-solid fa-code me-2"></i>
-      <strong>Developer Mode Active</strong> - Current Language: <span class="badge bg-primary"><?= strtoupper($current_lang) ?></span>
-      <?php if ($current_lang === 'en'): ?>
-        <a href="?lang=pt" class="btn btn-sm btn-outline-primary ms-2">Switch to Portuguese</a>
+      <strong>Modo Desenvolvedor Ativo</strong> - Idioma Atual: <span class="badge bg-primary"><?= strtoupper($current_lang) ?></span>
+      <?php if ($current_lang === 'pt'): ?>
+        <a href="?lang=en" class="btn btn-sm btn-outline-primary ms-2">Mudar para Inglês</a>
       <?php else: ?>
-        <a href="?lang=en" class="btn btn-sm btn-outline-primary ms-2">Switch to English</a>
+        <a href="?btn btn-sm btn-outline-primary ms-2">Mudar para Português</a>
       <?php endif; ?>
     </div>
   </div>
@@ -109,15 +116,15 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
             <i class="fa-solid fa-toolbox me-3"></i>IP Tools Suite
           </h1>
           <p class="lead mb-4 fs-5">
-            Professional-grade tools for geolocation tracking, network analysis, and digital forensics. 
-            Built for developers, security professionals, and businesses who need reliable IP intelligence.
+            Ferramentas profissionais para rastreamento de geolocalização, análise de rede e forense digital. 
+            Construído para desenvolvedores, profissionais de segurança e empresas que precisam de inteligência IP confiável.
           </p>
           <div class="d-grid gap-3 d-md-flex">
             <a href="/projects/ip-tools/public/auth/login" class="btn btn-light btn-custom btn-lg px-5 me-md-3">
-              <i class="fa-solid fa-sign-in-alt me-2"></i>Login to Dashboard
+              <i class="fa-solid fa-sign-in-alt me-2"></i>Entrar no Painel
             </a>
             <a href="#features" class="btn btn-outline-light btn-custom btn-lg px-5">
-              <i class="fa-solid fa-info-circle me-2"></i>Learn More
+              <i class="fa-solid fa-info-circle me-2"></i>Saiba Mais
             </a>
           </div>
         </div>
@@ -134,53 +141,62 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
       <div class="text-center mb-5">
         <h2 class="display-5 fw-bold text-primary mb-3">
           <i class="fa-solid fa-star text-warning me-3"></i>
-          Powerful Features for Modern Businesses
+          Recursos Poderosos para Empresas Modernas
         </h2>
-        <p class="lead text-muted">Everything you need for comprehensive IP intelligence and network analysis</p>
+        <p class="lead text-muted">Tudo que você precisa para inteligência IP abrangente e análise de rede</p>
       </div>
       
       <div class="row g-4">
         <div class="col-md-6 col-lg-4">
-          <div class="card feature-card h-100 shadow-sm">
+          <div class="card feature-card h-100 shadow-sm" style="cursor: pointer;" onclick="window.location.href='/projects/ip-tools/geolocation-tracker-info.php'">
             <div class="card-body text-center p-4">
               <div class="icon-large">
                 <i class="fa-solid fa-map-pin"></i>
               </div>
-              <h5 class="card-title fw-bold">Geolocation Tracker</h5>
+              <h5 class="card-title fw-bold">Rastreador de Geolocalização</h5>
               <p class="card-text text-muted">
-                Create location-aware tracking links that capture visitor IP addresses, 
-                geographic locations, and device information with pinpoint accuracy.
+                Crie links de rastreamento com consciência de localização que capturam endereços IP dos visitantes, 
+                localizações geográficas e informações do dispositivo com precisão milimétrica.
               </p>
+              <div class="mt-3">
+                <span class="badge bg-primary">Clique para saber mais</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-          <div class="card feature-card h-100 shadow-sm">
+          <div class="card feature-card h-100 shadow-sm" style="cursor: pointer;" onclick="window.location.href='/projects/ip-tools/logs-dashboard-info.php'">
             <div class="card-body text-center p-4">
               <div class="icon-large">
                 <i class="fa-solid fa-chart-line"></i>
               </div>
-              <h5 class="card-title fw-bold">Advanced Analytics</h5>
+              <h5 class="card-title fw-bold">Análises Avançadas</h5>
               <p class="card-text text-muted">
-                Visualize your data with interactive heatmaps, detailed logs, 
-                and comprehensive reports to understand your audience better.
+                Visualize seus dados com mapas de calor interativos, logs detalhados 
+                e relatórios abrangentes para entender melhor seu público.
               </p>
+              <div class="mt-3">
+                <span class="badge bg-primary">Clique para saber mais</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-          <div class="card feature-card h-100 shadow-sm">
+          <div class="card feature-card h-100 shadow-sm" style="cursor: pointer;" onclick="window.location.href='/projects/ip-tools/phone-tracker-info.php'">
             <div class="card-body text-center p-4">
               <div class="icon-large">
                 <i class="fa-solid fa-mobile-screen-button"></i>
               </div>
-              <h5 class="card-title fw-bold">SMS Tracking</h5>
+              <h5 class="card-title fw-bold">Rastreamento SMS</h5>
               <p class="card-text text-muted">
-                Send trackable SMS links and monitor engagement across mobile devices 
-                with detailed click analytics and location data.
+                Envie links SMS rastreáveis e monitore o engajamento em dispositivos móveis 
+                com análises detalhadas de cliques e dados de localização.
               </p>
+              <div class="mt-3">
+                <span class="badge bg-primary">Clique para saber mais</span>
+              </div>
             </div>
           </div>
         </div>
@@ -191,26 +207,29 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
               <div class="icon-large">
                 <i class="fa-solid fa-globe"></i>
               </div>
-              <h5 class="card-title fw-bold">IP Intelligence</h5>
+              <h5 class="card-title fw-bold">Inteligência IP</h5>
               <p class="card-text text-muted">
-                Get instant insights into any IP address including location, 
-                ISP details, and network information for security analysis.
+                Obtenha insights instantâneos sobre qualquer endereço IP, incluindo localização, 
+                detalhes do ISP e informações de rede para análise de segurança.
               </p>
             </div>
           </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-          <div class="card feature-card h-100 shadow-sm">
+          <div class="card feature-card h-100 shadow-sm" style="cursor: pointer;" onclick="window.location.href='/projects/ip-tools/speed-test-info.php'">
             <div class="card-body text-center p-4">
               <div class="icon-large">
                 <i class="fa-solid fa-gauge-high"></i>
               </div>
-              <h5 class="card-title fw-bold">Network Diagnostics</h5>
+              <h5 class="card-title fw-bold">Diagnósticos de Rede</h5>
               <p class="card-text text-muted">
-                Comprehensive speed testing, ping analysis, and network 
-                performance monitoring tools for IT professionals.
+                Ferramentas abrangentes de teste de velocidade, análise de ping 
+                e monitoramento de desempenho de rede para profissionais de TI.
               </p>
+              <div class="mt-3">
+                <span class="badge bg-primary">Clique para saber mais</span>
+              </div>
             </div>
           </div>
         </div>
@@ -221,10 +240,10 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
               <div class="icon-large">
                 <i class="fa-solid fa-shield-halved"></i>
               </div>
-              <h5 class="card-title fw-bold">Security Tools</h5>
+              <h5 class="card-title fw-bold">Ferramentas de Segurança</h5>
               <p class="card-text text-muted">
-                Professional-grade security utilities including mock data generators 
-                and testing tools for development and security research.
+                Utilitários de segurança de nível profissional, incluindo geradores de dados simulados 
+                e ferramentas de teste para desenvolvimento e pesquisa de segurança.
               </p>
             </div>
           </div>
@@ -237,13 +256,13 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
   <section class="py-5">
     <div class="container">
       <div class="cta-section text-center p-5">
-        <h3 class="display-6 fw-bold mb-3">Ready to Get Started?</h3>
+        <h3 class="display-6 fw-bold mb-3">Pronto para Começar?</h3>
         <p class="lead mb-4">
-          Join thousands of professionals who trust IP Tools Suite for their 
-          geolocation tracking and network analysis needs.
+          Junte-se a milhares de profissionais que confiam no IP Tools Suite para suas 
+          necessidades de rastreamento de geolocalização e análise de rede.
         </p>
         <a href="/projects/ip-tools/public/auth/login" class="btn btn-light btn-custom btn-lg px-5">
-          <i class="fa-solid fa-rocket me-2"></i>Access Dashboard Now
+          <i class="fa-solid fa-rocket me-2"></i>Acessar Painel Agora
         </a>
       </div>
     </div>

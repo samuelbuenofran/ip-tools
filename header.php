@@ -1,10 +1,10 @@
 <?php
 require_once('config.php');
 
-// Language setting - English by default, Portuguese only in dev mode
-$current_lang = 'en';
-if ($DEV_MODE && $DEV_LANGUAGE === 'pt') {
-    $current_lang = 'pt';
+// Language setting - Portuguese by default, English only in dev mode
+$current_lang = 'pt';
+if ($DEV_MODE && $DEV_LANGUAGE === 'en') {
+    $current_lang = 'en';
 }
 ?>
 <meta charset="UTF-8">
@@ -40,10 +40,10 @@ if ($DEV_MODE && $DEV_LANGUAGE === 'pt') {
 				</span>
 			</li>
 			<?php endif; ?>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/geologger/create.php" style="color: #ffffff !important;"><i class="fa-solid fa-map-pin"></i> <span data-translate="nav_geologger">Geolocation Tracker</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/network-tools/logs.php" style="color: #ffffff !important;"><i class="fa-solid fa-chart-line"></i> <span data-translate="nav_logs">Logs Dashboard</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker/send_sms.php" style="color: #ffffff !important;"><i class="fa-solid fa-mobile-screen-button"></i> <span data-translate="nav_phone_tracker">Phone Tracker</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/utils/speedtest.php" style="color: #ffffff !important;"><i class="fa-solid fa-gauge-high"></i> <span data-translate="nav_speed_test">Speed Test</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/geolocation-tracker-info.php" style="color: #ffffff !important;"><i class="fa-solid fa-map-pin"></i> <span data-translate="nav_geologger">Geolocation Tracker</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/logs-dashboard-info.php" style="color: #ffffff !important;"><i class="fa-solid fa-chart-line"></i> <span data-translate="nav_logs">Logs Dashboard</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/phone-tracker-info.php" style="color: #ffffff !important;"><i class="fa-solid fa-mobile-screen-button"></i> <span data-translate="nav_phone_tracker">Phone Tracker</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/speed-test-info.php" style="color: #ffffff !important;"><i class="fa-solid fa-gauge-high"></i> <span data-translate="nav_speed_test">Speed Test</span></a></li>
         <li class="nav-item"><a class="nav-link" href="/projects/ip-tools/settings.php" style="color: #ffffff !important;"><i class="fa-solid fa-cog"></i> <span data-translate="settings">Settings</span></a></li>
       </ul>
     </div>

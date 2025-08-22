@@ -116,7 +116,17 @@ class GeoLog {
                 FROM geo_logs";
         
         $stmt = $this->db->query($sql);
-        return $stmt->fetch();
+        $stats = $stmt->fetch();
+        
+        // Get active links count
+        $activeLinksSql = "SELECT COUNT(*) as active_links FROM geo_links WHERE expires_at IS NULL OR expires_at > NOW()";
+        $activeLinksStmt = $this->db->query($activeLinksSql);
+        $activeLinks = $activeLinksStmt->fetch();
+        
+        // Merge the stats
+        $stats['active_links'] = $activeLinks['active_links'] ?? 0;
+        
+        return $stats;
     }
     
     public function getHeatmapData() {

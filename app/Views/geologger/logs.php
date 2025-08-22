@@ -1,3 +1,18 @@
+<?php
+// Ensure all required variables are set with defaults
+$stats = $stats ?? [];
+$logs = $logs ?? [];
+$heatmapData = $heatmapData ?? [];
+$pagination = $pagination ?? [];
+
+// Set default values for stats
+$stats = array_merge([
+    'total_clicks' => 0,
+    'active_links' => 0,
+    'unique_visitors' => 0,
+    'gps_clicks' => 0
+], $stats);
+?>
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -29,7 +44,7 @@
                         <div class="col-md-3">
                             <div class="card p-3 border-warning">
                                 <h5><i class="fa-solid fa-map-marker-alt text-warning"></i> GPS Tracking</h5>
-                                <h3><?= $stats['gps_tracking'] ?? 0 ?></h3>
+                                <h3><?= $stats['gps_clicks'] ?? 0 ?></h3>
                             </div>
                         </div>
                     </div>
@@ -135,7 +150,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <?php if (isset($pagination) && $pagination['total_pages'] > 1): ?>
+                    <?php if (isset($pagination) && isset($pagination['total_pages']) && $pagination['total_pages'] > 1): ?>
                     <nav aria-label="Logs pagination">
                         <ul class="pagination justify-content-center">
                             <?php for ($i = 1; $i <= $pagination['total_pages']; $i++): ?>
