@@ -4,91 +4,69 @@ require_once('config.php');
 // Language setting - Portuguese by default, English only in dev mode
 $current_lang = 'pt';
 if ($DEV_MODE && $DEV_LANGUAGE === 'en') {
-    $current_lang = 'en';
+    $current_lang = $_GET['lang'];
 }
 
 // Allow language switching in dev mode via URL parameter
 if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) {
     $current_lang = $_GET['lang'];
 }
+
+// Page-specific variables for the layout
+$page_title = 'IP Tools Suite - Professional IP Intelligence Tools';
+$page_description = 'Professional-grade tools for geolocation tracking, network analysis, and digital forensics. Built for developers, security professionals, and businesses.';
+
+// Page-specific CSS
+$page_css = '
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 80px 0;
+    margin-top: -20px;
+  }
+  
+  .feature-card {
+    transition: box-shadow 0.2s ease;
+    border: none;
+    border-radius: 15px;
+  }
+  
+  .feature-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: #007bff;
+  }
+  
+  .feature-card:hover .icon-large {
+    color: #007bff;
+  }
+  
+  .icon-large {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s ease;
+  }
+  
+  .cta-section {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border-radius: 20px;
+  }
+  
+  .btn-custom {
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+';
+
+// Start output buffering to capture content
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>IP Tools Suite - Professional IP Intelligence Tools</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Professional-grade tools for geolocation tracking, network analysis, and digital forensics. Built for developers, security professionals, and businesses.">
-  <link rel="icon" type="image/svg+xml" href="/projects/ip-tools/assets/favico.svg">
-  <link rel="alternate icon" href="/projects/ip-tools/assets/favico.svg">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 80px 0;
-      margin-top: -20px;
-    }
-    
-    .feature-card {
-      transition: box-shadow 0.2s ease;
-      border: none;
-      border-radius: 15px;
-    }
-    
-    .feature-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border-color: #007bff;
-    }
-    
-    .feature-card:hover .icon-large {
-      color: #007bff;
-    }
-    
-    .icon-large {
-      font-size: 3rem;
-      color: #007bff;
-      margin-bottom: 1.5rem;
-      transition: color 0.2s ease;
-    }
-    
-    .cta-section {
-      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-      color: white;
-      border-radius: 20px;
-    }
-    
-    .btn-custom {
-      border-radius: 50px;
-      padding: 12px 30px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .navbar {
-      background: rgba(255, 255, 255, 0.95) !important;
-      backdrop-filter: blur(10px);
-    }
-    
-    .navbar-brand {
-      color: #007bff !important;
-      font-weight: 700;
-    }
-    
-    .nav-link {
-      color: #333 !important;
-      font-weight: 500;
-    }
-    
-    .nav-link:hover {
-      color: #007bff !important;
-    }
-  </style>
-</head>
-<body>
-  <?php include('header.php'); ?>
 
   <!-- Developer Language Switcher (only visible in dev mode) -->
   <?php if ($DEV_MODE): ?>
@@ -279,5 +257,11 @@ if ($DEV_MODE && isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt'])) 
       });
     });
   </script>
-</body>
-</html>
+
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the unified layout
+include('app/Views/layouts/main.php');
+?>

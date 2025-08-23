@@ -7,16 +7,8 @@ if ($DEV_MODE && $DEV_LANGUAGE === 'en') {
     $current_lang = 'en';
 }
 ?>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="/projects/ip-tools/assets/themes.css" rel="stylesheet">
-<link href="/projects/ip-tools/assets/navbar-fixes.css" rel="stylesheet">
-<link href="/projects/ip-tools/assets/dropdown-simple-fix.css" rel="stylesheet">
-<script src="/projects/ip-tools/assets/theme-switcher.js" defer></script>
-<script src="/projects/ip-tools/assets/dropdown-simple-fix.js" defer></script>
-<script src="/projects/ip-tools/assets/translations.js" defer></script>
+<!-- Unified styles for consistent layout across all pages -->
+<link href="/projects/ip-tools/assets/unified-styles.css" rel="stylesheet">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4" style="color: #ffffff !important;">
   <div class="container-fluid">

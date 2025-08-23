@@ -1,71 +1,67 @@
 <?php
 require_once('config.php');
+
+// Page-specific variables for the layout
+$page_title = 'Phone Tracker - IP Tools Suite';
+$page_description = 'Envie links SMS rastreáveis e monitore o engajamento em dispositivos móveis com análises detalhadas de cliques e dados de localização.';
+
+// Page-specific CSS
+$page_css = '
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 80px 0;
+    }
+    
+    .feature-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: box-shadow 0.2s ease;
+        height: 100%;
+    }
+    
+    .feature-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #ff6b6b;
+    }
+    
+    .demo-section {
+        background-color: #f8f9fa;
+        padding: 60px 0;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 60px 0;
+    }
+    
+    .step-number {
+        background: #ff6b6b;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+        font-size: 0.9rem;
+    }
+</style>
+';
+
+// Start output buffering to capture content
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Phone Tracker - IP Tools Suite</title>
-    <link rel="icon" type="image/svg+xml" href="/projects/ip-tools/assets/favico.svg">
-    <link rel="alternate icon" href="/projects/ip-tools/assets/favico.svg">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="assets/style.css" rel="stylesheet">
-    <link href="assets/themes.css" rel="stylesheet">
-    <style>
-        .hero-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 80px 0;
-        }
-        
-        .feature-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: box-shadow 0.2s ease;
-            height: 100%;
-        }
-        
-        .feature-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #ff6b6b;
-        }
-        
-        .demo-section {
-            background-color: #f8f9fa;
-            padding: 60px 0;
-        }
-        
-        .cta-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 60px 0;
-        }
-        
-        .step-number {
-            background: #ff6b6b;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 1rem;
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
-    <?php include('header.php'); ?>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -316,7 +312,10 @@ require_once('config.php');
 
     <?php include('footer.php'); ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/theme-switcher.js"></script>
-</body>
-</html>
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the unified layout
+include('app/Views/layouts/main.php');
+?>
