@@ -49,8 +49,8 @@ $geo = @json_decode(@file_get_contents("https://ipwho.is/{$ip}"), true);
 
 // Insert log
 $insertStmt = $db->prepare("
-  INSERT INTO geo_logs (ip_address, user_agent, referrer, country, city, latitude, longitude, link_id, device_type, timestamp)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+  INSERT INTO geo_logs (ip_address, user_agent, referrer, country, city, latitude, longitude, accuracy, location_type, link_id, device_type, timestamp)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
 ");
 
 $insertStmt->execute([
@@ -61,6 +61,8 @@ $insertStmt->execute([
   $geo['city'] ?? null,
   $geo['latitude'] ?? null,
   $geo['longitude'] ?? null,
+  $geo['accuracy'] ?? null,
+  'IP', // Default to IP-based location
   $link['id'],
   preg_match('/mobile/i', $_SERVER['HTTP_USER_AGENT']) ? 'Mobile' : 'Desktop'
 ]);
