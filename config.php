@@ -5,7 +5,7 @@
 $db_host = 'localhost';
 $db_name = 'techeletric_ip_tools';
 $db_user = 'techeletric_ip_tools';
-$db_pass = 'your_password_here';
+$db_pass = 'zsP2rDZDaTea2YEhegmH';
 
 // Developer settings
 $DEV_MODE = false; // Set to true for development features

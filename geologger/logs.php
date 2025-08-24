@@ -7,9 +7,10 @@ $stmt = $db->query("
   SELECT g.id, g.ip_address, g.user_agent, g.referrer, g.country, g.city,
          g.device_type, g.timestamp, g.latitude, g.longitude, 
          COALESCE(g.accuracy, 0) as accuracy,
-         l.short_code, l.original_url
+         COALESCE(l.short_code, 'Unknown') as short_code, 
+         COALESCE(l.original_url, 'N/A') as original_url
   FROM geo_logs g
-  JOIN geo_links l ON g.link_id = l.id
+  LEFT JOIN geo_links l ON g.link_id = l.id
   ORDER BY g.timestamp DESC
 ");
 $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);

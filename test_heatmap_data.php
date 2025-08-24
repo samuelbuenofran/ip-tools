@@ -45,6 +45,11 @@ try {
     $withLocationType = $stmt->fetch()['total'];
     echo "<p><strong>Records with location_type:</strong> {$withLocationType}</p>";
     
+    // Check records with link_id
+    $stmt = $db->query("SELECT COUNT(*) as total FROM geo_logs WHERE link_id IS NOT NULL");
+    $withLinkId = $stmt->fetch()['total'];
+    echo "<p><strong>Records with link_id:</strong> {$withLinkId}</p>";
+    
     // Show sample data
     if ($total > 0) {
         echo "<h3>🔍 Sample Data:</h3>";
@@ -101,14 +106,61 @@ try {
         echo "</table>";
     }
     
+    // Test the JOIN query that's failing
+    echo "<h3>🔗 JOIN Query Test:</h3>";
+    try {
+        $stmt = $db->query("
+            SELECT COUNT(*) as total 
+            FROM geo_logs g 
+            JOIN geo_links l ON g.link_id = l.id
+        ");
+        $joinCount = $stmt->fetch()['total'];
+        echo "<p><strong>JOIN query result:</strong> {$joinCount} records</p>";
+        
+        if ($joinCount == 0) {
+            echo "<p style='color: red;'><strong>🚨 PROBLEM FOUND!</strong> The JOIN query returns 0 records!</p>";
+            echo "<p>This means either:</p>";
+            echo "<ul>";
+            echo "<li>geo_logs.link_id values don't match geo_links.id values</li>";
+            echo "<li>geo_links table is empty</li>";
+            echo "<li>geo_logs.link_id values are NULL</li>";
+            echo "</ul>";
+        }
+    } catch (Exception $e) {
+        echo "<p style='color: red;'><strong>🚨 JOIN Query Error:</strong> " . $e->getMessage() . "</p>";
+    }
+    
+    // Test LEFT JOIN to see all geo_logs
+    echo "<h3>🔍 LEFT JOIN Test (Shows All geo_logs):</h3>";
+    try {
+        $stmt = $db->query("
+            SELECT g.id, g.latitude, g.longitude, g.link_id, l.short_code
+            FROM geo_logs g 
+            LEFT JOIN geo_links l ON g.link_id = l.id
+            ORDER BY g.timestamp DESC 
+            LIMIT 10
+        ");
+        $leftJoinResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo "<table border='1' style='border-collapse: collapse; margin: 10px 0; font-size: 12px;'>";
+        echo "<tr><th>ID</th><th>Latitude</th><th>Longitude</th><th>Link ID</th><th>Short Code</th></tr>";
+        foreach ($leftJoinResults as $row) {
+            echo "<tr>";
+            echo "<td>{$row['id']}</td>";
+            echo "<td>" . ($row['latitude'] ?? '<em>NULL</em>') . "</td>";
+            echo "<td>" . ($row['longitude'] ?? '<em>NULL</em>') . "</td>";
+            echo "<td>" . ($row['link_id'] ?? '<em>NULL</em>') . "</td>";
+            echo "<td>" . ($row['short_code'] ?? '<em>NULL</em>') . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    } catch (Exception $e) {
+        echo "<p style='color: red;'><strong>🚨 LEFT JOIN Query Error:</strong> " . $e->getMessage() . "</p>";
+    }
+    
 } catch (Exception $e) {
-    echo "<p style='color: red;'><strong>Error:</strong> " . $e->getMessage() . "</p>";
+    echo "<p style='color: red;'><strong>❌ Error:</strong> " . $e->getMessage() . "</p>";
 }
 
-echo "<hr>";
-echo "<h3>🧪 Next Steps:</h3>";
-echo "<p>1. <strong>If you see coordinates in the sample data:</strong> The issue is in the heatmap display code</p>";
-echo "<p>2. <strong>If you see NO coordinates:</strong> The issue is in the tracking/insertion code</p>";
-echo "<p>3. <strong>If you see errors:</strong> There's a database connection or permission issue</p>";
-echo "<p><strong>Run this script and tell me what you see!</strong></p>";
+echo "<p><strong>Run this script and tell me exactly what you see!</strong></p>";
 ?>
