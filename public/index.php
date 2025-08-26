@@ -46,6 +46,7 @@ $router->add('support', ['controller' => 'HomeController', 'action' => 'support'
 // Geologger routes
 $router->add('geologger/create', ['controller' => 'GeologgerController', 'action' => 'create']);
 $router->add('geologger/logs', ['controller' => 'GeologgerController', 'action' => 'logs']);
+$router->add('geologger/my-links', ['controller' => 'GeologgerController', 'action' => 'myLinks']);
 $router->add('geologger/precise_track', ['controller' => 'GeologgerController', 'action' => 'preciseTrack']);
 $router->add('geologger/save_precise_location', ['controller' => 'GeologgerController', 'action' => 'savePreciseLocation']);
 

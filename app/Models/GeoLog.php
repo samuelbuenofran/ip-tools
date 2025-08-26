@@ -256,13 +256,18 @@ class GeoLog {
         return $stmt->rowCount();
     }
     
+    /**
+     * Get total number of logs
+     */
     public function getTotalLogs() {
-        $sql = "SELECT COUNT(*) as total FROM geo_logs";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->query("SELECT COUNT(*) as total FROM geo_logs");
         $result = $stmt->fetch();
-        return $result ? $result['total'] : 0;
+        return (int)$result['total'];
     }
     
+    /**
+     * Get unique visitors
+     */
     public function getUniqueVisitors() {
         $sql = "SELECT COUNT(DISTINCT ip_address) as total FROM geo_logs";
         $stmt = $this->db->query($sql);

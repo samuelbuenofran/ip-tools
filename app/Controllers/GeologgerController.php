@@ -22,6 +22,8 @@ class GeologgerController extends Controller {
             
             $originalUrl = $this->sanitizeInput($this->getPost('original_url'));
             $expiresAt = $this->getPost('expires_at');
+            $noExpiration = $this->getPost('no_expiration') === '1';
+            $clickLimit = $this->getPost('click_limit');
             
             $errors = $this->validateRequired(['original_url' => $originalUrl], ['original_url']);
             
@@ -30,11 +32,24 @@ class GeologgerController extends Controller {
                     // Generate short code
                     $shortCode = $this->geoLink->generateShortCode();
                     
+                    // Handle expiration settings
+                    $finalExpiresAt = null;
+                    if (!$noExpiration && !empty($expiresAt)) {
+                        $finalExpiresAt = date('Y-m-d H:i:s', strtotime($expiresAt));
+                    }
+                    
+                    // Handle click limit
+                    $finalClickLimit = null;
+                    if (!empty($clickLimit) && is_numeric($clickLimit)) {
+                        $finalClickLimit = (int)$clickLimit;
+                    }
+                    
                     // Create tracking link
                     $linkData = [
                         'original_url' => $originalUrl,
                         'short_code' => $shortCode,
-                        'expires_at' => $expiresAt ? date('Y-m-d H:i:s', strtotime($expiresAt)) : null
+                        'expires_at' => $finalExpiresAt,
+                        'click_limit' => $finalClickLimit
                     ];
                     
                     $linkId = $this->geoLink->create($linkData);
@@ -51,7 +66,9 @@ class GeologgerController extends Controller {
                             'short_code' => $shortCode,
                             'original_url' => $originalUrl,
                             'tracking_url' => $trackingUrl,
-                            'qr_code_url' => $qrCodeUrl
+                            'qr_code_url' => $qrCodeUrl,
+                            'expires_at' => $finalExpiresAt,
+                            'click_limit' => $finalClickLimit
                         ],
                         'csrf_token' => $this->generateCSRFToken()
                     ];
@@ -73,7 +90,9 @@ class GeologgerController extends Controller {
                 'errors' => $errors,
                 'form_data' => [
                     'original_url' => $originalUrl,
-                    'expires_at' => $expiresAt
+                    'expires_at' => $expiresAt,
+                    'no_expiration' => $noExpiration,
+                    'click_limit' => $clickLimit
                 ],
                 'csrf_token' => $this->generateCSRFToken()
             ];
@@ -98,34 +117,44 @@ class GeologgerController extends Controller {
         $stats = $this->geoLog->getStats();
         $heatmapData = $this->geoLog->getHeatmapData();
         
-        // Ensure all required stats are available with defaults
-        $stats = array_merge([
-            'total_clicks' => 0,
-            'unique_visitors' => 0,
-            'gps_clicks' => 0,
-            'ip_clicks' => 0,
-            'active_links' => 0
-        ], $stats);
-        
-        // Calculate pagination
-        $total = $stats['total_clicks'] ?? 0;
-        $total_pages = ceil($total / $limit);
-        
         $data = [
-            'title' => 'Visitor Logs - ' . App::APP_NAME,
+            'title' => 'Tracking Logs - ' . App::APP_NAME,
             'logs' => $logs,
             'stats' => $stats,
             'heatmapData' => $heatmapData,
             'pagination' => [
                 'page' => $page,
                 'limit' => $limit,
-                'total' => $total,
-                'total_pages' => $total_pages,
-                'current_page' => $page
-            ]
+                'total' => $this->geoLog->getTotalLogs()
+            ],
+            'csrf_token' => $this->generateCSRFToken()
         ];
         
         return $this->render('geologger/logs', $data);
+    }
+    
+    public function myLinks() {
+        $page = (int)($this->getGet('page', 1));
+        $limit = 50;
+        $offset = ($page - 1) * $limit;
+        
+        // Get all links with statistics
+        $links = $this->geoLink->getAllWithStats($limit, $offset);
+        $stats = $this->geoLink->getStats();
+        
+        $data = [
+            'title' => 'My Tracking Links - ' . App::APP_NAME,
+            'links' => $links,
+            'stats' => $stats,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $this->geoLink->getTotalLinks()
+            ],
+            'csrf_token' => $this->generateCSRFToken()
+        ];
+        
+        return $this->render('geologger/my_links', $data);
     }
     
     public function preciseTrack() {

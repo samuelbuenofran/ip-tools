@@ -57,8 +57,48 @@ class GeoLink {
     public function getAll($limit = null, $offset = 0) {
         $sql = "SELECT * FROM geo_links ORDER BY created_at DESC";
         if ($limit) {
-            $sql .= " LIMIT $limit OFFSET $offset";
+            $sql .= " LIMIT " . $limit;
+            if ($offset > 0) {
+                $sql .= " OFFSET " . $offset;
+            }
         }
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * Get total number of links
+     */
+    public function getTotalLinks() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total FROM geo_links");
+        $result = $stmt->fetch();
+        return (int)$result['total'];
+    }
+    
+    /**
+     * Get all links with statistics (for MVC dashboard)
+     */
+    public function getAllWithStats($limit = null, $offset = 0) {
+        $sql = "SELECT l.*, 
+                       COUNT(g.id) as total_clicks,
+                       MAX(g.timestamp) as last_click,
+                       CASE 
+                         WHEN l.expires_at IS NULL THEN 'Never'
+                         WHEN l.expires_at < NOW() THEN 'Expired'
+                         ELSE 'Active'
+                       END as status
+                FROM geo_links l
+                LEFT JOIN geo_logs g ON l.id = g.link_id
+                GROUP BY l.id
+                ORDER BY l.created_at DESC";
+        
+        if ($limit) {
+            $sql .= " LIMIT " . $limit;
+            if ($offset > 0) {
+                $sql .= " OFFSET " . $offset;
+            }
+        }
+        
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
@@ -107,13 +147,6 @@ class GeoLink {
     
     public function getTotalClicks() {
         $sql = "SELECT SUM(click_count) as total FROM geo_links";
-        $stmt = $this->db->query($sql);
-        $result = $stmt->fetch();
-        return $result ? $result['total'] : 0;
-    }
-    
-    public function getTotalLinks() {
-        $sql = "SELECT COUNT(*) as total FROM geo_links";
         $stmt = $this->db->query($sql);
         $result = $stmt->fetch();
         return $result ? $result['total'] : 0;

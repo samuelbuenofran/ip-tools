@@ -99,6 +99,9 @@ $stats = array_merge([
                             <a href="<?= $view->url('geologger/create') ?>" class="btn btn-primary">
                                 <i class="fa-solid fa-plus"></i> Create New Link
                             </a>
+                            <a href="<?= $view->url('geologger/my-links') ?>" class="btn btn-info ms-2">
+                                <i class="fa-solid fa-link"></i> Ver Meus Links
+                            </a>
                         </div>
                     </div>
 

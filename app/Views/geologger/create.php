@@ -38,6 +38,9 @@
                             <a href="<?= $view->url('geologger/logs') ?>" class="btn btn-primary">
                                 <i class="fa-solid fa-chart-line"></i> View Logs
                             </a>
+                            <a href="<?= $view->url('geologger/my-links') ?>" class="btn btn-info">
+                                <i class="fa-solid fa-link"></i> Ver Meus Links
+                            </a>
                             <a href="<?= $view->url('geologger/create') ?>" class="btn btn-outline-primary">
                                 <i class="fa-solid fa-plus"></i> Create Another Link
                             </a>
@@ -61,11 +64,43 @@
                                 <div class="form-text">Enter the URL you want to track visits to.</div>
                             </div>
                             
-                            <div class="mb-3">
-                                <label for="expires_at" class="form-label">Expiration Date (Optional)</label>
-                                <input type="datetime-local" class="form-control" id="expires_at" name="expires_at"
-                                       value="<?= $form_data['expires_at'] ?? '' ?>">
-                                <div class="form-text">Leave empty for no expiration.</div>
+                            <!-- Expiration Settings -->
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fa-solid fa-clock"></i> Expiration Settings</h6>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Checkbox for no expiration -->
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="noExpiration" name="no_expiration" value="1"
+                                               <?= ($form_data['no_expiration'] ?? false) ? 'checked' : '' ?>>
+                                        <label class="form-check-label" for="noExpiration">
+                                            <strong>Meu link não expira</strong> (My link doesn't expire)
+                                        </label>
+                                    </div>
+                                    
+                                    <!-- Date picker (hidden when no expiration is checked) -->
+                                    <div id="expirationDateGroup" class="mb-3">
+                                        <label for="expires_at" class="form-label">
+                                            <i class="fa-solid fa-calendar"></i> Expira em (Expires on):
+                                        </label>
+                                        <input type="datetime-local" class="form-control" id="expires_at" name="expires_at"
+                                               value="<?= $form_data['expires_at'] ?? date('Y-m-d\TH:i', strtotime('+30 days')) ?>"
+                                               min="<?= date('Y-m-d\TH:i') ?>">
+                                        <div class="form-text">Deixe em branco para não expirar (Leave blank to never expire)</div>
+                                    </div>
+                                    
+                                    <!-- Click limit -->
+                                    <div class="mb-3">
+                                        <label for="click_limit" class="form-label">
+                                            <i class="fa-solid fa-mouse-pointer"></i> Limite de cliques (Click limit):
+                                        </label>
+                                        <input type="number" class="form-control" id="click_limit" name="click_limit" 
+                                               min="1" max="10000" placeholder="Sem limite (No limit)"
+                                               value="<?= $form_data['click_limit'] ?? '' ?>">
+                                        <div class="form-text">Deixe em branco para sem limite (Leave blank for no limit)</div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">
@@ -80,6 +115,36 @@
 </div>
 
 <script>
+// Handle expiration checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    const noExpirationCheckbox = document.getElementById('noExpiration');
+    const expirationDateGroup = document.getElementById('expirationDateGroup');
+    
+    if (noExpirationCheckbox && expirationDateGroup) {
+        // Initial state
+        updateExpirationVisibility();
+        
+        // Listen for changes
+        noExpirationCheckbox.addEventListener('change', updateExpirationVisibility);
+    }
+    
+    function updateExpirationVisibility() {
+        if (noExpirationCheckbox.checked) {
+            expirationDateGroup.style.display = 'none';
+            // Clear the date value when hidden
+            document.getElementById('expires_at').value = '';
+        } else {
+            expirationDateGroup.style.display = 'block';
+            // Set default date if empty
+            if (!document.getElementById('expires_at').value) {
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 30);
+                document.getElementById('expires_at').value = defaultDate.toISOString().slice(0, 16);
+            }
+        }
+    }
+});
+
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
         // Show success message
