@@ -140,7 +140,7 @@ class GeoLog {
             return 0;
         }
         
-        $sql = "SELECT COUNT(DISTINCT ip_address) as unique FROM geo_logs";
+        $sql = "SELECT COUNT(DISTINCT ip_address) as unique_visitors FROM geo_logs";
         $stmt = $this->db->query($sql);
         return $stmt->fetchColumn();
     }
