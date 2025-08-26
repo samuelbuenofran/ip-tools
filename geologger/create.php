@@ -25,8 +25,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $short_code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
 
-            $stmt = $db->prepare("INSERT INTO geo_links (original_url, short_code) VALUES (?, ?)");
-            $stmt->execute([$original_url, $short_code]);
+            // Handle expiration settings
+            $expires_at = null;
+            if (!isset($_POST['no_expiration']) || $_POST['no_expiration'] != '1') {
+                if (!empty($_POST['expires_at'])) {
+                    $expires_at = $_POST['expires_at'];
+                }
+            }
+            
+            // Handle click limit
+            $click_limit = null;
+            if (!empty($_POST['click_limit']) && is_numeric($_POST['click_limit'])) {
+                $click_limit = (int)$_POST['click_limit'];
+            }
+
+            $stmt = $db->prepare("INSERT INTO geo_links (original_url, short_code, expires_at, click_limit) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$original_url, $short_code, $expires_at, $click_limit]);
 
             $tracking_link = "https://keizai-tech.com/projects/ip-tools/geologger/precise_track.php?code=" . $short_code;
         } catch (Exception $e) {
@@ -101,6 +115,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="original_url" class="form-control w-50" data-translate-placeholder="enter_url_placeholder" placeholder="e.g. https://example.com" required>
         <button type="submit" class="btn btn-success" data-translate="generate_link">Generate Link</button>
       </div>
+      
+      <!-- New expiration options -->
+      <div class="row justify-content-center mb-3">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fa-solid fa-clock"></i> Expiration Settings</h6>
+              
+              <!-- Checkbox for no expiration -->
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="noExpiration" name="no_expiration" value="1">
+                <label class="form-check-label" for="noExpiration">
+                  <strong>Meu link não expira</strong> (My link doesn't expire)
+                </label>
+              </div>
+              
+              <!-- Date picker (hidden when no expiration is checked) -->
+              <div id="expirationDateGroup" class="mb-3">
+                <label for="expires_at" class="form-label">
+                  <i class="fa-solid fa-calendar"></i> Expira em (Expires on):
+                </label>
+                <input type="datetime-local" class="form-control" id="expires_at" name="expires_at" 
+                       min="<?= date('Y-m-d\TH:i') ?>" 
+                       value="<?= date('Y-m-d\TH:i', strtotime('+30 days')) ?>">
+                <div class="form-text">Deixe em branco para não expirar (Leave blank to never expire)</div>
+              </div>
+              
+              <!-- Click limit -->
+              <div class="mb-3">
+                <label for="click_limit" class="form-label">
+                  <i class="fa-solid fa-mouse-pointer"></i> Limite de cliques (Click limit):
+                </label>
+                <input type="number" class="form-control" id="click_limit" name="click_limit" 
+                       min="1" max="10000" placeholder="Sem limite (No limit)">
+                <div class="form-text">Deixe em branco para sem limite (Leave blank for no limit)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </form>
 
     <?php if ($error): ?>
@@ -125,11 +179,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="/projects/ip-tools/network-tools/logs.php" class="btn btn-outline-primary mt-4" data-translate="tracking_logs">
       <i class="fa-solid fa-chart-bar"></i> View Tracking Logs
     </a>
+    
+    <a href="my_links.php" class="btn btn-outline-info mt-4 ms-2">
+      <i class="fa-solid fa-link"></i> Ver Meus Links
+    </a>
   </div>
 
   <?php include('../footer.php'); ?>
 
   <script>
+    // Handle expiration checkbox
+    document.addEventListener('DOMContentLoaded', function() {
+        const noExpirationCheckbox = document.getElementById('noExpiration');
+        const expirationDateGroup = document.getElementById('expirationDateGroup');
+        
+        if (noExpirationCheckbox && expirationDateGroup) {
+            // Initial state
+            updateExpirationVisibility();
+            
+            // Listen for changes
+            noExpirationCheckbox.addEventListener('change', updateExpirationVisibility);
+        }
+        
+        function updateExpirationVisibility() {
+            if (noExpirationCheckbox.checked) {
+                expirationDateGroup.style.display = 'none';
+                // Clear the date value when hidden
+                document.getElementById('expires_at').value = '';
+            } else {
+                expirationDateGroup.style.display = 'block';
+                // Set default date if empty
+                if (!document.getElementById('expires_at').value) {
+                    const defaultDate = new Date();
+                    defaultDate.setDate(defaultDate.getDate() + 30);
+                    document.getElementById('expires_at').value = defaultDate.toISOString().slice(0, 16);
+                }
+            }
+        }
+    });
+    
     function copyLink() {
       const link = document.querySelector('.fw-bold').textContent;
       navigator.clipboard.writeText(link);

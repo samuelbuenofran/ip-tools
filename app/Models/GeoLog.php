@@ -212,12 +212,15 @@ class GeoLog {
     }
     
     public function getRecentActivity($limit = 10) {
+        // Ensure limit is a positive integer
+        $limit = max(1, (int)$limit);
+        
         $sql = "SELECT g.*, l.original_url, l.short_code 
                 FROM geo_logs g 
                 LEFT JOIN geo_links l ON g.link_id = l.id 
                 ORDER BY g.timestamp DESC 
-                LIMIT ?";
-        $stmt = $this->db->query($sql, [$limit]);
+                LIMIT " . $limit;
+        $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
     

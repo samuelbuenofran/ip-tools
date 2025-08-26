@@ -114,6 +114,10 @@ error_log("Heatmap: $validPositions valid positions out of $totalLogs total logs
             <a href="create.php" class="btn btn-primary">
               <i class="fa-solid fa-plus"></i> Create Tracking Link
             </a>
+            
+            <a href="my_links.php" class="btn btn-outline-info ms-2">
+              <i class="fa-solid fa-link"></i> Ver Meus Links
+            </a>
           </div>
         </div>
       <?php endif; ?>

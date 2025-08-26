@@ -129,8 +129,11 @@ class GeoLink {
     }
     
     public function getRecent($limit = 10) {
-        $sql = "SELECT * FROM geo_links ORDER BY created_at DESC LIMIT ?";
-        $stmt = $this->db->query($sql, [$limit]);
+        // Ensure limit is a positive integer
+        $limit = max(1, (int)$limit);
+        
+        $sql = "SELECT * FROM geo_links ORDER BY created_at DESC LIMIT " . $limit;
+        $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
     
