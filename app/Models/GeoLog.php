@@ -8,8 +8,8 @@ class GeoLog {
     private $db;
     
     public function __construct() {
-        // Use the existing working database connection
-        $this->db = connectDB();
+        // Use the existing working database connection from global namespace
+        $this->db = \connectDB();
     }
     
     /**
@@ -58,7 +58,8 @@ class GeoLog {
                 state = ?, country = ?, postcode = ?
                 WHERE id = ?";
         
-        return $this->db->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
             $data['latitude'] ?? null,
             $data['longitude'] ?? null,
             $data['accuracy'] ?? null,
@@ -79,7 +80,8 @@ class GeoLog {
                 FROM geo_logs g 
                 JOIN geo_links l ON g.link_id = l.id 
                 WHERE g.id = ?";
-        $stmt = $this->db->query($sql, [$id]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
         return $stmt->fetch();
     }
     
@@ -103,7 +105,8 @@ class GeoLog {
             $sql .= " LIMIT $limit OFFSET $offset";
         }
         
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     
@@ -112,7 +115,8 @@ class GeoLog {
         if ($limit) {
             $sql .= " LIMIT $limit";
         }
-        $stmt = $this->db->query($sql, [$linkId]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$linkId]);
         return $stmt->fetchAll();
     }
     
@@ -166,12 +170,14 @@ class GeoLog {
                 COUNT(CASE WHEN location_type = 'IP' THEN 1 END) as ip_clicks
                 FROM geo_logs";
         
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         $stats = $stmt->fetch();
         
         // Get active links count
         $activeLinksSql = "SELECT COUNT(*) as active_links FROM geo_links WHERE expires_at IS NULL OR expires_at > NOW()";
-        $activeLinksStmt = $this->db->query($activeLinksSql);
+        $activeLinksStmt = $this->db->prepare($activeLinksSql);
+        $activeLinksStmt->execute();
         $activeLinks = $activeLinksStmt->fetch();
         
         // Merge the stats
@@ -188,7 +194,8 @@ class GeoLog {
                 AND latitude BETWEEN -90 AND 90
                 AND longitude BETWEEN -180 AND 180";
         
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         $results = $stmt->fetchAll();
         
         // Transform the data to match the expected format
@@ -215,7 +222,8 @@ class GeoLog {
                 ORDER BY clicks DESC 
                 LIMIT 10";
         
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     
@@ -227,7 +235,8 @@ class GeoLog {
                 GROUP BY device_type 
                 ORDER BY clicks DESC";
         
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     

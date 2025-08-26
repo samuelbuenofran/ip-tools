@@ -8,8 +8,8 @@ class GeoLink {
     private $db;
     
     public function __construct() {
-        // Use the existing working database connection
-        $this->db = connectDB();
+        // Use the existing working database connection from global namespace
+        $this->db = \connectDB();
     }
     
     /**
