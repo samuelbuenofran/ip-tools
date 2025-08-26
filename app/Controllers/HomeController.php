@@ -12,26 +12,67 @@ class HomeController extends Controller {
     
     public function __construct($params = []) {
         parent::__construct($params);
-        // Temporarily disable models for testing
-        // $this->geoLink = new GeoLink();
-        // $this->geoLog = new GeoLog();
+        try {
+            $this->geoLink = new GeoLink();
+            $this->geoLog = new GeoLog();
+        } catch (Exception $e) {
+            // Handle database connection error gracefully
+            error_log("Database connection failed in HomeController: " . $e->getMessage());
+            $this->geoLink = null;
+            $this->geoLog = null;
+        }
     }
     
     public function index() {
-        // Use dummy data for testing
-        $linkStats = [
-            'total_links' => 0,
-            'active_links' => 0,
-            'expired_links' => 0
-        ];
-        
-        $logStats = [
-            'total_clicks' => 0,
-            'unique_visitors' => 0,
-            'gps_tracking' => 0
-        ];
-        
-        $recentActivity = [];
+        // Try to get real data from database
+        if ($this->geoLink && $this->geoLog) {
+            try {
+                $linkStats = [
+                    'total_links' => $this->geoLink->getTotalLinks(),
+                    'active_links' => $this->geoLink->getActiveLinks(),
+                    'expired_links' => $this->geoLink->getExpiredLinks()
+                ];
+                
+                $logStats = [
+                    'total_clicks' => $this->geoLog->getTotalClicks(),
+                    'unique_visitors' => $this->geoLog->getUniqueVisitors(),
+                    'gps_tracking' => $this->geoLog->getGPSTrackingCount()
+                ];
+                
+                $recentActivity = $this->geoLog->getRecentActivity(5);
+            } catch (Exception $e) {
+                error_log("Error fetching data in HomeController: " . $e->getMessage());
+                // Fall back to zero values
+                $linkStats = [
+                    'total_links' => 0,
+                    'active_links' => 0,
+                    'expired_links' => 0
+                ];
+                
+                $logStats = [
+                    'total_clicks' => 0,
+                    'unique_visitors' => 0,
+                    'gps_tracking' => 0
+                ];
+                
+                $recentActivity = [];
+            }
+        } else {
+            // Database not available, use zero values
+            $linkStats = [
+                'total_links' => 0,
+                'active_links' => 0,
+                'expired_links' => 0
+            ];
+            
+            $logStats = [
+                'total_clicks' => 0,
+                'unique_visitors' => 0,
+                'gps_tracking' => 0
+            ];
+            
+            $recentActivity = [];
+        }
         
         $data = [
             'title' => 'Dashboard - ' . App::APP_NAME,

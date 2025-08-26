@@ -8,7 +8,19 @@ class GeoLog {
     private $db;
     
     public function __construct() {
-        $this->db = Database::getInstance();
+        try {
+            $this->db = Database::getInstance();
+        } catch (\Exception $e) {
+            // Handle database connection error gracefully
+            $this->db = null;
+        }
+    }
+    
+    /**
+     * Check if database is available
+     */
+    public function isConnected() {
+        return $this->db && $this->db->isConnected();
     }
     
     public function create($data) {
@@ -107,6 +119,45 @@ class GeoLog {
         return $stmt->fetchAll();
     }
     
+    /**
+     * Get total number of clicks
+     */
+    public function getTotalClicks() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(*) as total FROM geo_logs";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
+    }
+    
+    /**
+     * Get number of unique visitors
+     */
+    public function getUniqueVisitors() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(DISTINCT ip_address) as unique FROM geo_logs";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
+    }
+    
+    /**
+     * Get GPS tracking count
+     */
+    public function getGPSTrackingCount() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(*) as gps FROM geo_logs WHERE location_type = 'GPS'";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
+    }
+    
     public function getStats() {
         $sql = "SELECT 
                 COUNT(*) as total_clicks,
@@ -181,6 +232,10 @@ class GeoLog {
     }
     
     public function getRecentActivity($limit = 10) {
+        if (!$this->isConnected()) {
+            return [];
+        }
+        
         $sql = "SELECT g.*, l.original_url, l.short_code
                 FROM geo_logs g
                 JOIN geo_links l ON g.link_id = l.id

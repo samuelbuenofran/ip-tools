@@ -8,10 +8,26 @@ class GeoLink {
     private $db;
     
     public function __construct() {
-        $this->db = Database::getInstance();
+        try {
+            $this->db = Database::getInstance();
+        } catch (\Exception $e) {
+            // Handle database connection error gracefully
+            $this->db = null;
+        }
+    }
+    
+    /**
+     * Check if database is available
+     */
+    public function isConnected() {
+        return $this->db && $this->db->isConnected();
     }
     
     public function create($data) {
+        if (!$this->isConnected()) {
+            return false;
+        }
+        
         $sql = "INSERT INTO geo_links (original_url, short_code, expires_at, created_at) 
                 VALUES (?, ?, ?, NOW())";
         
@@ -101,6 +117,45 @@ class GeoLink {
         
         $stmt = $this->db->query($sql);
         return $stmt->fetch();
+    }
+    
+    /**
+     * Get total number of links
+     */
+    public function getTotalLinks() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(*) as total FROM geo_links";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
+    }
+    
+    /**
+     * Get number of active links
+     */
+    public function getActiveLinks() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(*) as active FROM geo_links WHERE expires_at IS NULL OR expires_at > NOW()";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
+    }
+    
+    /**
+     * Get number of expired links
+     */
+    public function getExpiredLinks() {
+        if (!$this->isConnected()) {
+            return 0;
+        }
+        
+        $sql = "SELECT COUNT(*) as expired FROM geo_links WHERE expires_at IS NOT NULL AND expires_at <= NOW()";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchColumn();
     }
     
     public function getTrackingUrl($code) {
