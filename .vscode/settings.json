@@ -1,0 +1,6 @@
+{
+    "editor.experimental.asyncTokenizationVerification": true,
+    "editor.experimental.asyncTokenizationLogging": true,
+    "git.followTagsWhenSync": true,
+    "git.rebaseWhenSync": true
+}
