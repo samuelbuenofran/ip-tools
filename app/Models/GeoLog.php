@@ -8,19 +8,15 @@ class GeoLog {
     private $db;
     
     public function __construct() {
-        try {
-            $this->db = Database::getInstance();
-        } catch (\Exception $e) {
-            // Handle database connection error gracefully
-            $this->db = null;
-        }
+        // Use the existing working database connection
+        $this->db = connectDB();
     }
     
     /**
      * Check if database is available
      */
     public function isConnected() {
-        return $this->db && $this->db->isConnected();
+        return $this->db !== null;
     }
     
     public function create($data) {
@@ -31,7 +27,8 @@ class GeoLog {
                     device_type, timestamp, location_type
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        $stmt = $this->db->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
             $data['link_id'],
             $data['ip_address'],
             $data['user_agent'],
@@ -128,7 +125,8 @@ class GeoLog {
         }
         
         $sql = "SELECT COUNT(*) as total FROM geo_logs";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
@@ -141,7 +139,8 @@ class GeoLog {
         }
         
         $sql = "SELECT COUNT(DISTINCT ip_address) as unique_visitors FROM geo_logs";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
@@ -154,7 +153,8 @@ class GeoLog {
         }
         
         $sql = "SELECT COUNT(*) as gps FROM geo_logs WHERE location_type = 'GPS'";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
@@ -240,9 +240,10 @@ class GeoLog {
                 FROM geo_logs g
                 JOIN geo_links l ON g.link_id = l.id
                 ORDER BY g.timestamp DESC
-                LIMIT ?";
+                LIMIT " . (int)$limit;
         
-        $stmt = $this->db->query($sql, [$limit]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     

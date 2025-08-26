@@ -8,19 +8,15 @@ class GeoLink {
     private $db;
     
     public function __construct() {
-        try {
-            $this->db = Database::getInstance();
-        } catch (\Exception $e) {
-            // Handle database connection error gracefully
-            $this->db = null;
-        }
+        // Use the existing working database connection
+        $this->db = connectDB();
     }
     
     /**
      * Check if database is available
      */
     public function isConnected() {
-        return $this->db && $this->db->isConnected();
+        return $this->db !== null;
     }
     
     public function create($data) {
@@ -31,7 +27,8 @@ class GeoLink {
         $sql = "INSERT INTO geo_links (original_url, short_code, expires_at, created_at) 
                 VALUES (?, ?, ?, NOW())";
         
-        $stmt = $this->db->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
             $data['original_url'],
             $data['short_code'],
             $data['expires_at'] ?? null
@@ -42,19 +39,22 @@ class GeoLink {
     
     public function findByCode($code) {
         $sql = "SELECT * FROM geo_links WHERE short_code = ?";
-        $stmt = $this->db->query($sql, [$code]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$code]);
         return $stmt->fetch();
     }
     
     public function findByShortCode($shortCode) {
         $sql = "SELECT * FROM geo_links WHERE short_code = ?";
-        $stmt = $this->db->query($sql, [$shortCode]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$shortCode]);
         return $stmt->fetch();
     }
     
     public function findById($id) {
         $sql = "SELECT * FROM geo_links WHERE id = ?";
-        $stmt = $this->db->query($sql, [$id]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
         return $stmt->fetch();
     }
     
@@ -63,7 +63,8 @@ class GeoLink {
         if ($limit) {
             $sql .= " LIMIT $limit OFFSET $offset";
         }
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     
@@ -71,7 +72,8 @@ class GeoLink {
         $sql = "SELECT * FROM geo_links 
                 WHERE expires_at IS NULL OR expires_at > NOW() 
                 ORDER BY created_at DESC";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
     
@@ -82,7 +84,8 @@ class GeoLink {
                 updated_at = NOW() 
                 WHERE id = ?";
         
-        return $this->db->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
             $data['original_url'],
             $data['expires_at'] ?? null,
             $id
@@ -91,7 +94,8 @@ class GeoLink {
     
     public function delete($id) {
         $sql = "DELETE FROM geo_links WHERE id = ?";
-        return $this->db->query($sql, [$id]);
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$id]);
     }
     
     public function generateShortCode($length = 8) {
@@ -128,7 +132,8 @@ class GeoLink {
         }
         
         $sql = "SELECT COUNT(*) as total FROM geo_links";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
@@ -141,7 +146,8 @@ class GeoLink {
         }
         
         $sql = "SELECT COUNT(*) as active FROM geo_links WHERE expires_at IS NULL OR expires_at > NOW()";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
@@ -154,7 +160,8 @@ class GeoLink {
         }
         
         $sql = "SELECT COUNT(*) as expired FROM geo_links WHERE expires_at IS NOT NULL AND expires_at <= NOW()";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     
