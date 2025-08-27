@@ -10,9 +10,9 @@
   
   <!-- Footer Navigation Links -->
   <div class="mt-3">
-    <a href="index.php?page=about" class="text-decoration-none me-3" data-translate="about">Sobre</a> |
-    <a href="index.php?page=contact" class="text-decoration-none mx-3" data-translate="contact">Contato</a> |
-    <a href="index.php?page=privacy" class="text-decoration-none mx-3" data-translate="privacy_policy">Privacidade</a> |
-    <a href="index.php?page=support" class="text-decoration-none ms-3" data-translate="support">Suporte</a>
+    <a href="/projects/ip-tools/public/about" class="text-decoration-none me-3" data-translate="about">Sobre</a> |
+    <a href="/projects/ip-tools/public/contact" class="text-decoration-none mx-3" data-translate="contact">Contato</a> |
+    <a href="/projects/ip-tools/public/privacy" class="text-decoration-none mx-3" data-translate="privacy_policy">Privacidade</a> |
+    <a href="/projects/ip-tools/public/support" class="text-decoration-none ms-3" data-translate="support">Suporte</a>
   </div>
 </footer>
