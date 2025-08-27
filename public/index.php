@@ -23,6 +23,7 @@ require_once __DIR__ . '/../app/Controllers/PhoneTrackerController.php';
 require_once __DIR__ . '/../app/Controllers/SpeedTestController.php';
 require_once __DIR__ . '/../app/Controllers/AdminController.php';
 require_once __DIR__ . '/../app/Controllers/AuthController.php';
+require_once __DIR__ . '/../app/Controllers/DebugController.php';
 
 // Initialize application
 use App\Config\App;
@@ -65,6 +66,12 @@ $router->add('speed-test/export', ['controller' => 'SpeedTestController', 'actio
 $router->add('admin', ['controller' => 'AdminController', 'action' => 'index']);
 $router->add('admin/privacy_settings', ['controller' => 'AdminController', 'action' => 'privacySettings']);
 $router->add('admin/test_dashboard', ['controller' => 'AdminController', 'action' => 'testDashboard']);
+
+// Debug routes (admin only)
+$router->add('debug', ['controller' => 'DebugController', 'action' => 'index']);
+$router->add('debug/database', ['controller' => 'DebugController', 'action' => 'database']);
+$router->add('debug/scripts', ['controller' => 'DebugController', 'action' => 'scripts']);
+$router->add('debug/system', ['controller' => 'DebugController', 'action' => 'system']);
 
 // Authentication routes
 $router->add('auth/login', ['controller' => 'AuthController', 'action' => 'login']);

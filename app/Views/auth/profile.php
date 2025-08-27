@@ -8,6 +8,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="<?= $view->url('auth/updateProfile') ?>">
+                        <?= $view->csrf() ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -53,6 +54,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="<?= $view->url('auth/changePassword') ?>">
+                        <?= $view->csrf() ?>
                         <div class="mb-3">
                             <label for="current_password" class="form-label">
                                 <i class="fa-solid fa-lock"></i> <span data-translate="current_password">Senha Atual</span>

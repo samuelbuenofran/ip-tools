@@ -93,6 +93,24 @@
                 </div>
             </div>
 
+            <!-- Debug Tools -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card admin-card system h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-bug fa-3x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">Debug Tools</h5>
+                        <p class="card-text text-muted">
+                            Advanced debugging tools for database operations, script testing, and system diagnostics.
+                        </p>
+                        <a href="<?= $view->url('debug') ?>" class="btn btn-warning">
+                            <i class="fa-solid fa-tools"></i> Open Debug Tools
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- System Monitoring -->
             <div class="col-md-6 col-lg-4">
                 <div class="card admin-card system h-100">
