@@ -2,7 +2,10 @@
 class ThemeSwitcher {
     constructor() {
         this.themes = [
-            { id: 'macos-aqua', name: 'macOS Aqua', icon: 'fa-solid fa-apple-whole' }
+            { id: 'macos-aqua', name: 'macOS Aqua', icon: 'fa-solid fa-apple-whole', description: 'Classic macOS X Leopard Aqua theme' },
+            { id: 'dim', name: 'Dim', icon: 'fa-solid fa-moon', description: 'Soft, dimmed palette for reduced eye strain' },
+            { id: 'dark-dim', name: 'Dark Dim', icon: 'fa-solid fa-moon', description: 'Dark theme with dimmed colors' },
+            { id: 'liquid-glass', name: 'Liquid Glass', icon: 'fa-solid fa-droplet', description: 'Modern glassmorphism with frosted glass effects and translucent UI elements' }
         ];
         
         this.currentTheme = 'macos-aqua';
@@ -10,14 +13,68 @@ class ThemeSwitcher {
     }
     
     init() {
+        // Load saved theme from localStorage
+        const savedTheme = localStorage.getItem('selected-theme');
+        if (savedTheme && this.themes.find(t => t.id === savedTheme)) {
+            this.currentTheme = savedTheme;
+        }
+        
         // Apply saved theme
         this.applyTheme(this.currentTheme);
+        
+        // Create theme switcher UI
+        this.createThemeSwitcher();
         
         // Add fade-in animation to main content
         this.addFadeInAnimation();
     }
     
-
+    createThemeSwitcher() {
+        // Create theme switcher container
+        const themeSwitcher = document.createElement('div');
+        themeSwitcher.className = 'theme-switcher';
+        themeSwitcher.innerHTML = `
+            <div class="theme-switcher-header">
+                <span class="theme-switcher-title">
+                    <i class="fa-solid fa-palette me-2"></i>
+                    Themes
+                </span>
+                <button class="theme-control-btn" onclick="themeSwitcher.toggleThemeSwitcher()">
+                    <i class="fa-solid fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="theme-switcher-content">
+                ${this.themes.map(theme => `
+                    <button class="theme-option ${theme.id === this.currentTheme ? 'active' : ''}" 
+                            data-theme="${theme.id}" 
+                            onclick="themeSwitcher.switchTheme('${theme.id}')"
+                            title="${theme.description}">
+                        <i class="${theme.icon} theme-option-icon"></i>
+                        <span>${theme.name}</span>
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        
+        // Add to body
+        document.body.appendChild(themeSwitcher);
+        
+        // Add toggle functionality
+        this.themeSwitcherElement = themeSwitcher;
+    }
+    
+    toggleThemeSwitcher() {
+        const content = this.themeSwitcherElement.querySelector('.theme-switcher-content');
+        const toggleBtn = this.themeSwitcherElement.querySelector('.theme-control-btn i');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggleBtn.className = 'fa-solid fa-chevron-up';
+        } else {
+            content.style.display = 'none';
+            toggleBtn.className = 'fa-solid fa-chevron-down';
+        }
+    }
     
     switchTheme(themeId) {
         // Remove active class from all options
@@ -56,6 +113,22 @@ class ThemeSwitcher {
         
         // Update page title with theme info
         this.updatePageTitle(themeId);
+        
+        // Update theme switcher active state
+        this.updateThemeSwitcherActiveState(themeId);
+    }
+    
+    updateThemeSwitcherActiveState(themeId) {
+        if (this.themeSwitcherElement) {
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            const activeOption = this.themeSwitcherElement.querySelector(`[data-theme="${themeId}"]`);
+            if (activeOption) {
+                activeOption.classList.add('active');
+            }
+        }
     }
     
     updatePageTitle(themeId) {
@@ -91,9 +164,8 @@ class ThemeSwitcher {
             font-size: 0.9rem;
             color: var(--text-primary);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         `;
-        
-        
         
         document.body.appendChild(notification);
         
@@ -133,8 +205,6 @@ class ThemeSwitcher {
     getThemes() {
         return this.themes;
     }
-    
-
 }
 
 // ===== INITIALIZATION =====
@@ -154,7 +224,29 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: all 0.3s ease;
         }
         
+        .theme-switcher-content {
+            display: block;
+        }
         
+        .theme-control-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 3px;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+        
+        .theme-control-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="liquid-glass"] .theme-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     `;
     document.head.appendChild(style);
 });
