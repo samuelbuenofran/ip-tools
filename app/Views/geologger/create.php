@@ -58,10 +58,10 @@
                             
                             <div class="mb-3">
                                 <label for="original_url" class="form-label">Original URL *</label>
-                                <input type="url" class="form-control" id="original_url" name="original_url" 
+                                <input type="text" class="form-control" id="original_url" name="original_url" 
                                        value="<?= $form_data['original_url'] ?? '' ?>" required 
-                                       placeholder="https://example.com">
-                                <div class="form-text">Enter the URL you want to track visits to.</div>
+                                       placeholder="youtube.com or https://example.com">
+                                <div class="form-text">Enter the domain (e.g., youtube.com) or full URL you want to track visits to.</div>
                             </div>
                             
                             <!-- Expiration Settings -->
@@ -113,6 +113,70 @@
         </div>
     </div>
 </div>
+
+<script>
+// Auto-format URLs before form submission
+document.querySelector('form').addEventListener('submit', function(e) {
+    const urlInput = document.getElementById('original_url');
+    const originalValue = urlInput.value.trim();
+    
+    if (originalValue) {
+        // If it's already a valid URL with protocol, keep as-is
+        if (originalValue.match(/^https?:\/\//)) {
+            return; // URL is already properly formatted
+        }
+        
+        // If it starts with www., add https://
+        if (originalValue.startsWith('www.')) {
+            urlInput.value = 'https://' + originalValue;
+            return;
+        }
+        
+        // If it's just a domain (contains a dot), add https://
+        if (originalValue.includes('.') && !originalValue.includes(' ')) {
+            urlInput.value = 'https://' + originalValue;
+            return;
+        }
+    }
+});
+
+// Real-time URL validation feedback
+document.getElementById('original_url').addEventListener('blur', function() {
+    const value = this.value.trim();
+    const feedback = this.parentNode.querySelector('.url-feedback') || 
+                    this.parentNode.appendChild(document.createElement('div'));
+    
+    if (!value) {
+        feedback.innerHTML = '';
+        return;
+    }
+    
+    let normalizedUrl = value;
+    if (!value.match(/^https?:\/\//)) {
+        if (value.startsWith('www.')) {
+            normalizedUrl = 'https://' + value;
+        } else if (value.includes('.') && !value.includes(' ')) {
+            normalizedUrl = 'https://' + value;
+        }
+    }
+    
+    if (normalizedUrl !== value) {
+        feedback.innerHTML = `
+            <div class="alert alert-info alert-sm mt-2">
+                <i class="fa-solid fa-info-circle me-2"></i>
+                Will be converted to: <strong>${normalizedUrl}</strong>
+            </div>
+        `;
+    } else {
+        feedback.innerHTML = `
+            <div class="alert alert-success alert-sm mt-2">
+                <i class="fa-solid fa-check-circle me-2"></i>
+                Valid URL format
+            </div>
+        `;
+    }
+});
+</script>
 
 <script>
 // Handle expiration checkbox
