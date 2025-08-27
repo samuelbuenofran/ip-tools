@@ -5,7 +5,7 @@ class ThemeSwitcher {
             { id: 'macos-aqua', name: 'macOS Aqua', icon: 'fa-solid fa-apple-whole', description: 'Classic macOS X Leopard Aqua theme' },
             { id: 'dim', name: 'Dim', icon: 'fa-solid fa-moon', description: 'Soft, dimmed palette for reduced eye strain' },
             { id: 'dark-dim', name: 'Dark Dim', icon: 'fa-solid fa-moon', description: 'Dark theme with dimmed colors' },
-            { id: 'liquid-glass', name: 'Liquid Glass', icon: 'fa-solid fa-droplet', description: 'Modern glassmorphism with frosted glass effects and translucent UI elements' }
+            { id: 'liquid-glass', name: 'Liquid Glass', icon: 'fa-solid fa-droplet', description: 'Dark glassmorphism with frosted glass effects and easy-on-the-eyes design' }
         ];
         
         this.currentTheme = 'macos-aqua';
@@ -22,14 +22,19 @@ class ThemeSwitcher {
         // Apply saved theme
         this.applyTheme(this.currentTheme);
         
-        // Create theme switcher UI
-        this.createThemeSwitcher();
+        // Don't create floating theme switcher by default
+        // Only create it when explicitly requested from settings
         
         // Add fade-in animation to main content
         this.addFadeInAnimation();
     }
     
     createThemeSwitcher() {
+        // Only create theme switcher if user is logged in
+        if (!this.isUserLoggedIn()) {
+            return;
+        }
+        
         // Create theme switcher container
         const themeSwitcher = document.createElement('div');
         themeSwitcher.className = 'theme-switcher';
@@ -61,6 +66,18 @@ class ThemeSwitcher {
         
         // Add toggle functionality
         this.themeSwitcherElement = themeSwitcher;
+    }
+    
+    isUserLoggedIn() {
+        // Check if user is logged in by looking for common indicators
+        // You can customize this logic based on your authentication system
+        return document.querySelector('.user-profile') !== null || 
+               document.querySelector('.logout-btn') !== null ||
+               document.querySelector('[data-user-id]') !== null ||
+               document.querySelector('.user-menu') !== null ||
+               window.location.pathname.includes('/dashboard') ||
+               window.location.pathname.includes('/profile') ||
+               window.location.pathname.includes('/admin');
     }
     
     toggleThemeSwitcher() {
@@ -205,6 +222,86 @@ class ThemeSwitcher {
     getThemes() {
         return this.themes;
     }
+    
+    // Create settings page theme selector
+    createSettingsThemeSelector(containerId) {
+        if (!this.isUserLoggedIn()) {
+            return;
+        }
+        
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.warn('Settings theme selector container not found:', containerId);
+            return;
+        }
+        
+        const settingsThemeSelector = document.createElement('div');
+        settingsThemeSelector.className = 'settings-theme-selector';
+        settingsThemeSelector.innerHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-palette me-2"></i>
+                        Theme Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">Choose your preferred theme for the application.</p>
+                    <div class="theme-grid">
+                        ${this.themes.map(theme => `
+                            <div class="theme-option-card ${theme.id === this.currentTheme ? 'active' : ''}" 
+                                 data-theme="${theme.id}">
+                                <div class="theme-preview-box" style="background: var(--bg-primary); border: 1px solid var(--border-color);">
+                                    <div class="theme-preview-header" style="background: var(--bg-secondary); height: 20px; margin-bottom: 10px;"></div>
+                                    <div class="theme-preview-content">
+                                        <div class="theme-preview-bar" style="background: var(--primary-color); height: 8px; margin-bottom: 8px;"></div>
+                                        <div class="theme-preview-bar" style="background: var(--bg-tertiary); height: 8px; margin-bottom: 8px; width: 70%;"></div>
+                                        <div class="theme-preview-bar" style="background: var(--bg-tertiary); height: 8px; width: 50%;"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h6 class="theme-name">${theme.name}</h6>
+                                    <p class="theme-description">${theme.description}</p>
+                                    <button class="btn btn-sm ${theme.id === this.currentTheme ? 'btn-primary' : 'btn-outline-primary'}" 
+                                            onclick="themeSwitcher.switchTheme('${theme.id}')">
+                                        ${theme.id === this.currentTheme ? 'Active' : 'Apply'}
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(settingsThemeSelector);
+        
+        // Add event listeners for theme option cards
+        settingsThemeSelector.querySelectorAll('.theme-option-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('btn')) {
+                    const themeId = card.dataset.theme;
+                    this.switchTheme(themeId);
+                }
+            });
+        });
+    }
+    
+    // Method to manually show floating theme switcher (for debugging or special cases)
+    showFloatingThemeSwitcher() {
+        if (this.themeSwitcherElement) {
+            this.themeSwitcherElement.style.display = 'block';
+        } else {
+            this.createThemeSwitcher();
+        }
+    }
+    
+    // Method to hide floating theme switcher
+    hideFloatingThemeSwitcher() {
+        if (this.themeSwitcherElement) {
+            this.themeSwitcherElement.style.display = 'none';
+        }
+    }
 }
 
 // ===== INITIALIZATION =====
@@ -260,7 +357,28 @@ function getAllThemes() {
     return themeSwitcher ? themeSwitcher.getThemes() : [];
 }
 
+function createSettingsThemeSelector(containerId) {
+    if (themeSwitcher) {
+        themeSwitcher.createSettingsThemeSelector(containerId);
+    }
+}
+
+function showFloatingThemeSwitcher() {
+    if (themeSwitcher) {
+        themeSwitcher.showFloatingThemeSwitcher();
+    }
+}
+
+function hideFloatingThemeSwitcher() {
+    if (themeSwitcher) {
+        themeSwitcher.hideFloatingThemeSwitcher();
+    }
+}
+
 // ===== EXPORT FOR GLOBAL ACCESS =====
 window.themeSwitcher = themeSwitcher;
 window.getThemeInfo = getThemeInfo;
-window.getAllThemes = getAllThemes; 
+window.getAllThemes = getAllThemes;
+window.createSettingsThemeSelector = createSettingsThemeSelector;
+window.showFloatingThemeSwitcher = showFloatingThemeSwitcher;
+window.hideFloatingThemeSwitcher = hideFloatingThemeSwitcher; 
