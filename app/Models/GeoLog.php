@@ -160,7 +160,12 @@ class GeoLog {
     }
     
     public function getHeatmapData() {
-        $sql = "SELECT latitude, longitude, accuracy, city, country 
+        $sql = "SELECT 
+                    latitude as lat, 
+                    longitude as lng, 
+                    accuracy, 
+                    city, 
+                    country 
                 FROM geo_logs 
                 WHERE latitude IS NOT NULL AND longitude IS NOT NULL 
                 AND latitude != 0 AND longitude != 0";

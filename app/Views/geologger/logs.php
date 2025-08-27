@@ -183,6 +183,12 @@ function initMap() {
         console.log('Heatmap data length:', heatmapData ? heatmapData.length : 'null');
         console.log('Map container element:', document.getElementById("map"));
         
+        // Debug: Show the structure of the first few items
+        if (heatmapData && heatmapData.length > 0) {
+            console.log('First 3 heatmap items:', heatmapData.slice(0, 3));
+            console.log('Sample item structure:', Object.keys(heatmapData[0]));
+        }
+        
         // Set initial map center based on data
         let center = { lat: -15.78, lng: -47.93 }; // Default to Brazil
         let zoom = 4;
@@ -197,23 +203,43 @@ function initMap() {
         });
         
         if (heatmapData && heatmapData.length > 0) {
-            // Calculate center based on data
+            // Validate heatmap data structure
+            const validData = heatmapData.filter(loc => {
+                return loc && typeof loc.lat === 'number' && typeof loc.lng === 'number' && 
+                       !isNaN(loc.lat) && !isNaN(loc.lng) && 
+                       loc.lat !== 0 && loc.lng !== 0;
+            });
+            
+            if (validData.length === 0) {
+                console.warn('No valid coordinate data found in heatmap data');
+                document.getElementById('map').innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center text-muted">
+                            <i class="fa-solid fa-map-marked-alt fa-3x mb-3"></i>
+                            <h5>No valid location data available</h5>
+                            <p>All coordinates in the database are invalid or missing.</p>
+                            <a href="<?= $view->url('geologger/create') ?>" class="btn btn-primary">
+                                <i class="fa-solid fa-plus"></i> Create Tracking Link
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calculate center based on valid data
             const bounds = new google.maps.LatLngBounds();
-            heatmapData.forEach(loc => {
+            validData.forEach(loc => {
                 bounds.extend(new google.maps.LatLng(loc.lat, loc.lng));
             });
             
             center = bounds.getCenter();
             map.fitBounds(bounds);
             zoom = 3; // Adjust zoom based on data spread
-        }
-        
-        console.log('Map created successfully');
-
-        if (heatmapData && heatmapData.length > 0) {
-            // Create heatmap
+            
+            // Create heatmap with valid data
             const heatmap = new google.maps.visualization.HeatmapLayer({
-                data: heatmapData.map(loc => new google.maps.LatLng(loc.lat, loc.lng)),
+                data: validData.map(loc => new google.maps.LatLng(loc.lat, loc.lng)),
                 radius: 25,
                 opacity: 0.8,
                 dissipating: true
@@ -224,7 +250,7 @@ function initMap() {
             heatmapLayer = heatmap;
             
             // Add markers for individual points with info windows
-            heatmapData.forEach((loc, index) => {
+            validData.forEach((loc, index) => {
                 const marker = new google.maps.Marker({
                     position: new google.maps.LatLng(loc.lat, loc.lng),
                     map: map,
@@ -257,12 +283,12 @@ function initMap() {
                 });
             });
             
-            console.log('Heatmap created successfully with', heatmapData.length, 'points');
+            console.log('Heatmap created successfully with', validData.length, 'valid points');
             
             // Update the count badge
             const countBadge = document.getElementById('heatmapCount');
             if (countBadge) {
-                countBadge.textContent = `${heatmapData.length} locations`;
+                countBadge.textContent = `${validData.length} locations`;
                 countBadge.className = 'badge bg-success ms-2';
             }
             
