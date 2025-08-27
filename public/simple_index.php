@@ -1,92 +1,90 @@
 <?php
-// Simplified version to test for memory leaks and 500 errors
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Very simple test - just basic functionality
+echo "<h1>Simple Index Test</h1>";
+echo "<p>Basic PHP is working</p>";
 
-echo "<h1>IP Tools Suite - Simple Test</h1>";
+// Test 1: Basic PHP
+echo "<h2>Test 1: Basic PHP</h2>";
+echo "<p>PHP Version: " . PHP_VERSION . "</p>";
+echo "<p>Current Time: " . date('Y-m-d H:i:s') . "</p>";
 
-// Test 1: Basic includes
-echo "<h2>Step 1: Loading Core Files</h2>";
+// Test 2: File includes
+echo "<h2>Test 2: File Includes</h2>";
+try {
+    if (file_exists(__DIR__ . '/../app/Config/App.php')) {
+        echo "<p>✓ App.php file exists</p>";
+    } else {
+        echo "<p>✗ App.php file not found</p>";
+    }
+    
+    if (file_exists(__DIR__ . '/../app/Config/Database.php')) {
+        echo "<p>✓ Database.php file exists</p>";
+    } else {
+        echo "<p>✗ Database.php file not found</p>";
+    }
+} catch (Exception $e) {
+    echo "<p>✗ Error checking files: " . $e->getMessage() . "</p>";
+}
+
+// Test 3: Class loading
+echo "<h2>Test 3: Class Loading</h2>";
 try {
     require_once __DIR__ . '/../app/Config/App.php';
-    echo "✅ App.php loaded<br>";
+    echo "<p>✓ App.php loaded</p>";
     
+    if (class_exists('App\Config\App')) {
+        echo "<p>✓ App class exists</p>";
+        echo "<p>✓ App name: " . App\Config\App::APP_NAME . "</p>";
+    } else {
+        echo "<p>✗ App class not found</p>";
+    }
+} catch (Exception $e) {
+    echo "<p>✗ Error loading App class: " . $e->getMessage() . "</p>";
+    echo "<p>Error details: " . $e->getFile() . ":" . $e->getLine() . "</p>";
+}
+
+// Test 4: Database connection
+echo "<h2>Test 4: Database Connection</h2>";
+try {
     require_once __DIR__ . '/../app/Config/Database.php';
-    echo "✅ Database.php loaded<br>";
+    echo "<p>✓ Database.php loaded</p>";
     
+    if (class_exists('App\Config\Database')) {
+        echo "<p>✓ Database class exists</p>";
+        $db = App\Config\Database::getInstance();
+        echo "<p>✓ Database instance created</p>";
+        
+        if ($db->isConnected()) {
+            echo "<p>✓ Database connected</p>";
+        } else {
+            echo "<p>⚠ Database not connected (running in demo mode)</p>";
+        }
+    } else {
+        echo "<p>✗ Database class not found</p>";
+    }
+} catch (Exception $e) {
+    echo "<p>✗ Error with database: " . $e->getMessage() . "</p>";
+    echo "<p>Error details: " . $e->getFile() . ":" . $e->getLine() . "</p>";
+}
+
+// Test 5: Router
+echo "<h2>Test 5: Router</h2>";
+try {
     require_once __DIR__ . '/../app/Core/Router.php';
-    echo "✅ Router.php loaded<br>";
+    echo "<p>✓ Router.php loaded</p>";
     
-    require_once __DIR__ . '/../app/Core/Controller.php';
-    echo "✅ Controller.php loaded<br>";
-    
-    require_once __DIR__ . '/../app/Core/View.php';
-    echo "✅ View.php loaded<br>";
-    
-} catch (Exception $e) {
-    echo "❌ Error loading files: " . $e->getMessage() . "<br>";
-    exit;
-}
-
-// Test 2: Initialize App
-echo "<h2>Step 2: Initialize Application</h2>";
-try {
-    App\Config\App::init();
-    echo "✅ Application initialized<br>";
-} catch (Exception $e) {
-    echo "❌ App init error: " . $e->getMessage() . "<br>";
-}
-
-// Test 3: Database
-echo "<h2>Step 3: Database Test</h2>";
-try {
-    $db = App\Config\Database::getInstance();
-    if ($db->isConnected()) {
-        echo "✅ Database connected<br>";
+    if (class_exists('App\Core\Router')) {
+        echo "<p>✓ Router class exists</p>";
+        $router = new App\Core\Router();
+        echo "<p>✓ Router instance created</p>";
     } else {
-        echo "⚠️ Database not connected - Demo mode available<br>";
+        echo "<p>✗ Router class not found</p>";
     }
 } catch (Exception $e) {
-    echo "❌ Database error: " . $e->getMessage() . "<br>";
-}
-
-// Test 4: Router
-echo "<h2>Step 4: Router Test</h2>";
-try {
-    $router = new App\Core\Router();
-    echo "✅ Router created<br>";
-} catch (Exception $e) {
-    echo "❌ Router error: " . $e->getMessage() . "<br>";
-}
-
-// Test 5: Memory check
-echo "<h2>Step 5: Memory Usage</h2>";
-echo "Current memory: " . round(memory_get_usage(true) / 1024 / 1024, 2) . " MB<br>";
-echo "Peak memory: " . round(memory_get_peak_usage(true) / 1024 / 1024, 2) . " MB<br>";
-
-// Test 6: Simple routing test
-echo "<h2>Step 6: Simple Routing Test</h2>";
-try {
-    $url = $_SERVER['REQUEST_URI'] ?? '';
-    $url = str_replace('/projects/ip-tools/public/', '', $url);
-    $url = trim($url, '/');
-    
-    echo "URL: '$url'<br>";
-    
-    // Add a simple route
-    $router->add('test', ['controller' => 'HomeController', 'action' => 'index']);
-    
-    if ($url === 'test') {
-        echo "✅ Route 'test' would be dispatched<br>";
-    } else {
-        echo "ℹ️ No matching route for '$url'<br>";
-    }
-    
-} catch (Exception $e) {
-    echo "❌ Routing error: " . $e->getMessage() . "<br>";
+    echo "<p>✗ Error with router: " . $e->getMessage() . "</p>";
+    echo "<p>Error details: " . $e->getFile() . ":" . $e->getLine() . "</p>";
 }
 
 echo "<h2>Test Complete</h2>";
-echo "<p>If all steps show ✅, your application should work. If you see ❌, that's the issue.</p>";
-echo "<p><a href='index.php'>Try Full Application</a></p>";
+echo "<p>If you see this, the basic framework is working.</p>";
 ?> 

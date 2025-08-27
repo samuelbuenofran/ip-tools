@@ -13,6 +13,41 @@ $stats = array_merge([
     'gps_clicks' => 0
 ], $stats);
 ?>
+<style>
+    .device-icon {
+        vertical-align: middle;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        transition: transform 0.2s ease;
+    }
+    
+    .device-icon:hover {
+        transform: scale(1.1);
+    }
+    
+    .device-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-left: 0.5rem;
+    }
+    
+    .device-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .device-stats-card .d-flex > div {
+        text-align: center;
+        min-width: 60px;
+    }
+    
+    .device-stats-card .d-flex > div small {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+</style>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -23,28 +58,61 @@ $stats = array_merge([
                 <div class="card-body">
                     <!-- Statistics Cards -->
                     <div class="row g-4 text-center mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="card p-3 border-primary">
                                 <h5><i class="fa-solid fa-mouse-pointer text-primary"></i> Total Clicks</h5>
                                 <h3><?= $stats['total_clicks'] ?? 0 ?></h3>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="card p-3 border-success">
                                 <h5><i class="fa-solid fa-link text-success"></i> Active Links</h5>
                                 <h3><?= $stats['active_links'] ?? 0 ?></h3>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="card p-3 border-info">
                                 <h5><i class="fa-solid fa-user-check text-info"></i> Unique Visitors</h5>
                                 <h3><?= $stats['unique_visitors'] ?? 0 ?></h3>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="card p-3 border-warning">
                                 <h5><i class="fa-solid fa-map-marker-alt text-warning"></i> GPS Tracking</h5>
                                 <h3><?= $stats['gps_clicks'] ?? 0 ?></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card p-3 border-info device-stats-card">
+                                <h5><i class="fa-solid fa-mobile-alt text-info"></i> Device Types</h5>
+                                <?php 
+                                // Simple device counting without DeviceHelper for now
+                                $deviceStats = ['mobile' => 0, 'desktop' => 0, 'tablet' => 0];
+                                foreach ($logs as $log) {
+                                    $userAgent = strtolower($log['user_agent'] ?? '');
+                                    if (stripos($userAgent, 'mobile') !== false || stripos($userAgent, 'android') !== false || stripos($userAgent, 'iphone') !== false) {
+                                        $deviceStats['mobile']++;
+                                    } elseif (stripos($userAgent, 'windows') !== false || stripos($userAgent, 'macintosh') !== false || stripos($userAgent, 'linux') !== false) {
+                                        $deviceStats['desktop']++;
+                                    } else {
+                                        $deviceStats['tablet']++;
+                                    }
+                                }
+                                ?>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div class="me-3">
+                                        <i class="fa-solid fa-mobile-alt text-primary" style="font-size: 24px;"></i>
+                                        <small class="d-block"><?= $deviceStats['mobile'] ?></small>
+                                    </div>
+                                    <div class="me-3">
+                                        <i class="fa-solid fa-desktop text-success" style="font-size: 24px;"></i>
+                                        <small class="d-block"><?= $deviceStats['desktop'] ?></small>
+                                    </div>
+                                    <div>
+                                        <i class="fa-solid fa-tablet-alt text-info" style="font-size: 24px;"></i>
+                                        <small class="d-block"><?= $deviceStats['tablet'] ?></small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -138,7 +206,19 @@ $stats = array_merge([
                                     <td><?= htmlspecialchars($log['precise_address'] ?? '-') ?></td>
                                     <td><?= $log['city'] ?? '-' ?></td>
                                     <td><?= $log['country'] ?? '-' ?></td>
-                                    <td><?= $log['device_type'] ?? '-' ?></td>
+                                    <td>
+                                        <?php 
+                                        // Simple device display without DeviceHelper for now
+                                        $userAgent = $log['user_agent'] ?? '';
+                                        if (stripos($userAgent, 'mobile') !== false || stripos($userAgent, 'android') !== false || stripos($userAgent, 'iphone') !== false) {
+                                            echo '<i class="fa-solid fa-mobile-alt text-primary me-2"></i> Mobile';
+                                        } elseif (stripos($userAgent, 'windows') !== false || stripos($userAgent, 'macintosh') !== false || stripos($userAgent, 'linux') !== false) {
+                                            echo '<i class="fa-solid fa-desktop text-success me-2"></i> Desktop';
+                                        } else {
+                                            echo '<i class="fa-solid fa-question-circle text-muted me-2"></i> Unknown';
+                                        }
+                                        ?>
+                                    </td>
                                     <td><?= date('d/m/Y H:i', strtotime($log['timestamp'])) ?></td>
                                     <td>
                                         <a href="<?= htmlspecialchars($log['original_url']) ?>" target="_blank" 

@@ -30,7 +30,21 @@ use App\Config\App;
 use App\Core\Router;
 
 // Initialize the application
-App::init();
+try {
+    App::init();
+} catch (Exception $initException) {
+    // If initialization fails, show error and exit
+    http_response_code(500);
+    echo '<h1>500 - Application Initialization Error</h1>';
+    echo '<p>Failed to initialize the application.</p>';
+    if (class_exists('App\Config\App') && App::DEBUG_MODE) {
+        echo '<h3>Initialization Error:</h3>';
+        echo '<p><strong>Error:</strong> ' . htmlspecialchars($initException->getMessage()) . '</p>';
+        echo '<p><strong>File:</strong> ' . htmlspecialchars($initException->getFile()) . '</p>';
+        echo '<p><strong>Line:</strong> ' . htmlspecialchars($initException->getLine()) . '</p>';
+    }
+    exit();
+}
 
 // Create router instance
 $router = new Router();
@@ -113,17 +127,25 @@ if ($basePath !== '/' && $basePath !== '.') {
 $url = trim($url, '/');
 
 // Debug information (remove this in production)
-if (App::DEBUG_MODE) {
-    error_log("Original REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'NOT SET'));
-    error_log("Script Name: " . ($_SERVER['SCRIPT_NAME'] ?? 'NOT SET'));
-    error_log("Base Path: " . $basePath);
-    error_log("Processed URL: " . $url);
+try {
+    if (class_exists('App\Config\App') && App::DEBUG_MODE) {
+        error_log("Original REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'NOT SET'));
+        error_log("Script Name: " . ($_SERVER['SCRIPT_NAME'] ?? 'NOT SET'));
+        error_log("Base Path: " . $basePath);
+        error_log("Processed URL: " . $url);
+    }
+} catch (Exception $debugException) {
+    // Silently ignore debug logging errors
 }
 
 try {
     // Debug: Log the final URL being processed
-    if (App::DEBUG_MODE) {
-        error_log("Final URL to dispatch: " . $url);
+    try {
+        if (class_exists('App\Config\App') && App::DEBUG_MODE) {
+            error_log("Final URL to dispatch: " . $url);
+        }
+    } catch (Exception $debugException) {
+        // Silently ignore debug logging errors
     }
     
     // Dispatch the request
@@ -137,13 +159,19 @@ try {
         echo '<a href="/projects/ip-tools/public/">Go Home</a>';
     } else {
         http_response_code(500);
-        if (App::DEBUG_MODE) {
-            echo '<h1>500 - Internal Server Error</h1>';
-            echo '<p>' . $e->getMessage() . '</p>';
-            echo '<pre>' . $e->getTraceAsString() . '</pre>';
-        } else {
-            echo '<h1>500 - Internal Server Error</h1>';
-            echo '<p>An error occurred. Please try again later.</p>';
+        echo '<h1>500 - Internal Server Error</h1>';
+        echo '<p>An error occurred. Please try again later.</p>';
+        // Try to show debug info if App class is available
+        try {
+            if (class_exists('App\Config\App') && App::DEBUG_MODE) {
+                echo '<h3>Debug Information:</h3>';
+                echo '<p><strong>Error:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
+                echo '<p><strong>File:</strong> ' . htmlspecialchars($e->getFile()) . '</p>';
+                echo '<p><strong>Line:</strong> ' . htmlspecialchars($e->getLine()) . '</p>';
+            }
+        } catch (Exception $debugException) {
+            // If even debug info fails, just show basic error
+            echo '<p><strong>Error:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
         }
     }
 }
