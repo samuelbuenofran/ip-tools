@@ -32,13 +32,13 @@
       display: inline-block;
       margin-top: 1rem;
       padding: 0.75rem 1.5rem;
-      background-color: #0066cc;
+      background-color: #293f99;
       color: white;
       text-decoration: none;
       border-radius: 6px;
     }
     a.button:hover {
-      background-color: #004999;
+      background-color: #1e2f7a;
     }
     @media (max-width: 600px) {
       .card {

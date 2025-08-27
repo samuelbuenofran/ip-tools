@@ -134,8 +134,8 @@ section {
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: var(--primary-color, #007aff);
-    box-shadow: 0 0 0 0.2rem rgba(0, 122, 255, 0.25);
+    border-color: var(--primary-color, #293f99);
+    box-shadow: 0 0 0 0.2rem rgba(41, 63, 153, 0.25);
 }
 
 /* Table consistency */
@@ -208,7 +208,7 @@ section {
 }
 
 .nav-tabs .nav-link.active {
-    border-color: var(--primary-color, #007aff);
+    border-color: var(--primary-color, #293f99);
     background: var(--bg-primary, #ffffff);
 }
 

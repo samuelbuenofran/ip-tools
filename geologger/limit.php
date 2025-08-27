@@ -34,7 +34,7 @@
     }
     .button {
       display: inline-block;
-      background-color: #0066cc;
+      background-color: #293f99;
       color: white;
       padding: 0.7rem 1.2rem;
       text-decoration: none;
@@ -42,7 +42,7 @@
       font-weight: bold;
     }
     .button:hover {
-      background-color: #004a99;
+      background-color: #1e2f7a;
     }
     @media (max-width: 600px) {
       body { padding: 1rem; }
@@ -55,7 +55,7 @@
   <div class="card">
     <h1>?? Link usage limit reached</h1>
     <p>This tracking link has already been clicked the maximum number of times allowed.</p>
-    <p>You’ll be redirected in <span id="countdown">6</span> seconds.</p>
+    <p>Youï¿½ll be redirected in <span id="countdown">6</span> seconds.</p>
     <a class="button" href="../create.php">?? Generate a new link</a>
   </div>
 
