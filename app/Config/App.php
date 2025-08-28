@@ -48,7 +48,7 @@ class App {
         }
         
         // Start session only if headers haven't been sent
-        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+        if (session_status() === 0 && !headers_sent()) { // 0 = PHP_SESSION_NONE
             session_name(self::SESSION_NAME);
             session_set_cookie_params(self::SESSION_LIFETIME);
             session_start();
