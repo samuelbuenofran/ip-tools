@@ -8,7 +8,7 @@ use PDO;
 use PDOException;
 
 class DebugController extends Controller {
-    private $db;
+    // $db is already inherited from parent Controller class as protected
     
     public function __construct($params = []) {
         parent::__construct($params);
@@ -19,11 +19,9 @@ class DebugController extends Controller {
             die('Access denied. Admin privileges required.');
         }
         
-        try {
-            $this->db = Database::getInstance()->getConnection();
-        } catch (PDOException $e) {
-            $this->db = null;
-        }
+        // $this->db is already set by parent constructor
+        // Parent sets it to Database::getInstance() (the Database object)
+        // If you need the PDO connection, use $this->db->getConnection()
     }
     
     public function index() {

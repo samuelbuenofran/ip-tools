@@ -38,6 +38,11 @@ class App {
     const DEBUG_MODE = true;
     
     public static function init() {
+        // Force error display for debugging (temporary)
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('log_errors', 1);
+        
         // Set error reporting
         if (self::DEBUG_MODE) {
             error_reporting(E_ALL);
