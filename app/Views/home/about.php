@@ -11,9 +11,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Professional IP Tracking & Network Analysis Tools</h2>
+                            <h2>Ferramentas Profissionais de Rastreamento de IP e Análise de Rede</h2>
                             <p class="lead">
-                                IP Tools Suite é uma plataforma abrangente projetada para profissionais que precisam de rastreamento avançado de IP, análise de geolocalização e capacidades de monitoramento de rede.
+                                O IP Tools Suite é uma plataforma abrangente projetada para profissionais que precisam de rastreamento avançado de IP, análise de geolocalização e capacidades de monitoramento de rede.
                             </p>
                             
                             <h3>Nossa missão</h3>
@@ -33,7 +33,7 @@
                                 </li>
                                 <li class="mb-2">
                                     <i class="fa-solid fa-chart-line text-primary me-2"></i>
-                                    <strong>Comprehensive Analytics</strong> - Detailed insights into user behavior and traffic patterns
+                                    <strong>Análise Abrangente</strong> - Detailed insights into user behavior and traffic patterns
                                 </li>
                                 <li class="mb-2">
                                     <i class="fa-solid fa-shield-alt text-primary me-2"></i>
