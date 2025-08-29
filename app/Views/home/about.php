@@ -5,7 +5,7 @@
                 <div class="card-header">
                     <h1 class="mb-0">
                         <i class="fa-solid fa-info-circle me-3"></i>
-                        About IP Tools Suite
+                        Sobre o IP Tools Suite
                     </h1>
                 </div>
                 <div class="card-body">
@@ -13,18 +13,15 @@
                         <div class="col-md-8">
                             <h2>Professional IP Tracking & Network Analysis Tools</h2>
                             <p class="lead">
-                                IP Tools Suite is a comprehensive platform designed for professionals who need advanced IP tracking, 
-                                geolocation analysis, and network monitoring capabilities.
+                                IP Tools Suite é uma plataforma abrangente projetada para profissionais que precisam de rastreamento avançado de IP, análise de geolocalização e capacidades de monitoramento de rede.
                             </p>
                             
-                            <h3>Our Mission</h3>
+                            <h3>Nossa missão</h3>
                             <p>
-                                We provide enterprise-grade tools that help businesses, developers, and IT professionals 
-                                understand their network traffic, track user interactions, and analyze geographic data 
-                                with precision and reliability.
+                                Oferecemos soluções robustas de nível empresarial que capacitam empresas, desenvolvedores e profissionais de TI a compreender o tráfego de rede, monitorar interações de usuários e analisar dados geográficos com alta precisão e confiabilidade.
                             </p>
                             
-                            <h3>Key Features</h3>
+                            <h3>Principais Recursors</h3>
                             <ul class="list-unstyled">
                                 <li class="mb-2">
                                     <i class="fa-solid fa-map-marker-alt text-primary me-2"></i>
