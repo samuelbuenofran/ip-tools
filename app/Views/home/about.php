@@ -21,7 +21,7 @@
                                 Oferecemos soluções robustas de nível empresarial que capacitam empresas, desenvolvedores e profissionais de TI a compreender o tráfego de rede, monitorar interações de usuários e analisar dados geográficos com alta precisão e confiabilidade.
                             </p>
                             
-                            <h3>Principais Recursors</h3>
+                            <h3>Recursos Principais</h3>
                             <ul class="list-unstyled">
                                 <li class="mb-2">
                                     <i class="fa-solid fa-map-marker-alt text-primary me-2"></i>
