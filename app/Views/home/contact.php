@@ -5,16 +5,15 @@
                 <div class="card-header">
                     <h1 class="mb-0">
                         <i class="fa-solid fa-envelope me-3"></i>
-                        Contact Us
+                        Contato
                     </h1>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Get in Touch</h2>
+                            <h2>Entre em contato</h2>
                             <p class="lead">
-                                Have questions about IP Tools Suite? Need technical support? 
-                                We're here to help you get the most out of our platform.
+                                Tem dúvidas sobre o IP Tools Suite? Precisa de suporte técnico? Estamos aqui para ajudá-lo a aproveitar ao máximo nossa plataforma.
                             </p>
                             
                             <?php if (isset($error_message)): ?>

@@ -4,8 +4,8 @@ namespace App\Config;
 class App {
     // Application settings
     const APP_NAME = 'IP Tools Suite';
-    const APP_VERSION = '2.0.0';
-    const BASE_URL = 'https://keizai-tech.com/projects/ip-tools';
+    const APP_VERSION = 'Beta 1.0';
+    const BASE_URL = 'https://keizai-tech.com/projects/ip-tools/public';
     
     // Privacy and Security Settings
     const SHOW_LOCATION_MESSAGES = false;

@@ -47,6 +47,15 @@ $translations = [
     'dev_mode_active' => 'Developer Mode Active',
     'current_language' => 'Current Language',
     'switch_to_portuguese' => 'Switch to Portuguese',
-    'switch_to_english' => 'Switch to English'
+    'switch_to_english' => 'Switch to English',
+
+    // About Us
+    'about_us_title' => 'About Us',
+    'about_us_subtitle' => 'We are a team of professionals who are dedicated to providing the best tools for geolocation tracking and network analysis.',
+    'about_us_button' => 'Learn More',
+
+    // Contact
+    'contact_title' => 'Contact Us',
+    'contact_subtitle' => 'We are here to help you get the most out of our platform.',
 ];
 ?>
