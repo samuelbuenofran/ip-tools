@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\User;
 use App\Config\App;
+use Exception;
 
 class AuthController extends Controller {
     private $userModel;
@@ -28,8 +29,11 @@ class AuthController extends Controller {
             $this->redirect('dashboard');
         }
         
+        // Generate CSRF token for the form
+        $this->generateCSRFToken();
+        
         $this->view->render('auth/login', [
-            'title' => 'Entrar - IP Tools Suite'
+            'title' => 'Login - IP Tools Suite'
         ]);
     }
     
@@ -40,6 +44,9 @@ class AuthController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('auth/login');
         }
+        
+        // Validate CSRF token
+        $this->validateCSRF();
         
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';

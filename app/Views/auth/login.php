@@ -5,16 +5,27 @@
                 <div class="card-header text-center">
                     <h4>
                         <i class="fas fa-sign-in-alt"></i>
-                        Entrar
+                        Login
                     </h4>
                 </div>
                 <div class="card-body">
+                    <!-- Debug info (remove in production) -->
+                    <?php if (isset($_SESSION['csrf_token'])): ?>
+                        <div class="alert alert-info">
+                            <strong>CSRF Token:</strong> <?= $_SESSION['csrf_token'] ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-warning">
+                            <strong>Warning:</strong> No CSRF token found in session
+                        </div>
+                    <?php endif; ?>
+                    
                     <form method="POST" action="<?= $view->url('auth/loginPost') ?>">
                         <?= $view->csrf() ?>
                         <div class="mb-3">
                             <label for="username" class="form-label">
                                 <i class="fas fa-user"></i>
-                                Nome de Usuário ou Email
+                                Username or Email
                             </label>
                             <input type="text"
                                    id="username"
@@ -25,7 +36,7 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">
                                 <i class="fas fa-lock"></i>
-                                Senha
+                                Password
                             </label>
                             <input type="password"
                                    id="password"
@@ -35,14 +46,14 @@
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt"></i> Entrar
+                                <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </div>
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    Não tem uma conta?
-                    <a href="<?= $view->url('auth/register') ?>">Registrar</a>
+                    Don't have an account?
+                    <a href="<?= $view->url('auth/register') ?>">Register</a>
                 </div>
             </div>
         </div>
