@@ -10,15 +10,13 @@
                 </div>
                 <div class="card-body">
                     <!-- Debug info (remove in production) -->
-                    <?php if (isset($_SESSION['csrf_token'])): ?>
-                        <div class="alert alert-info">
-                            <strong>CSRF Token:</strong> <?= $_SESSION['csrf_token'] ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="alert alert-warning">
-                            <strong>Warning:</strong> No CSRF token found in session
-                        </div>
-                    <?php endif; ?>
+                    <div class="alert alert-info">
+                        <strong>Session Status:</strong> <?= session_status() ?><br>
+                        <strong>Session Name:</strong> <?= session_name() ?><br>
+                        <strong>Session ID:</strong> <?= session_id() ?><br>
+                        <strong>CSRF Token:</strong> <?= $_SESSION['csrf_token'] ?? 'NOT SET' ?><br>
+                        <strong>Session Data:</strong> <?= print_r($_SESSION, true) ?>
+                    </div>
                     
                     <form method="POST" action="<?= $view->url('auth/loginPost') ?>">
                         <?= $view->csrf() ?>

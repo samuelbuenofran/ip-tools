@@ -1,6 +1,14 @@
 <?php
 namespace App\Config;
 
+// Define session constants if they don't exist (for older PHP versions)
+if (!defined('PHP_SESSION_NONE')) {
+    define('PHP_SESSION_NONE', 0);
+}
+if (!defined('PHP_SESSION_ACTIVE')) {
+    define('PHP_SESSION_ACTIVE', 2);
+}
+
 class App {
     // Application settings
     const APP_NAME = 'IP Tools Suite';
@@ -52,11 +60,18 @@ class App {
             ini_set('display_errors', 0);
         }
         
-        // Start session only if headers haven't been sent
-        if (session_status() === 0 && !headers_sent()) { // 0 = PHP_SESSION_NONE
+        // Start session - force session start for all requests
+        if (session_status() === PHP_SESSION_NONE) {
             session_name(self::SESSION_NAME);
             session_set_cookie_params(self::SESSION_LIFETIME);
             session_start();
+        } elseif (session_status() === PHP_SESSION_ACTIVE) {
+            // Session is already active, just ensure it's our named session
+            if (session_name() !== self::SESSION_NAME) {
+                session_write_close();
+                session_name(self::SESSION_NAME);
+                session_start();
+            }
         }
         
         // Set timezone
