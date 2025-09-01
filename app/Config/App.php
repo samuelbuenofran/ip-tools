@@ -16,8 +16,8 @@ class App {
     const BASE_URL = 'https://keizai-tech.com/projects/ip-tools';
     
     // Privacy and Security Settings
-    const SHOW_LOCATION_MESSAGES = false;
-    const SHOW_TRACKING_UI = false;
+    const SHOW_LOCATION_MESSAGES = true;
+    const SHOW_TRACKING_UI = true;
     
     // Google Maps API Key
     const GOOGLE_MAPS_API_KEY = 'AIzaSyC5gMYj7gqRiwNlE6BxyLAdG9IMCCJZsrs';
