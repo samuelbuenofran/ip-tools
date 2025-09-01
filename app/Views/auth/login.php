@@ -9,14 +9,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <!-- Debug info (remove in production) -->
-                    <div class="alert alert-info">
-                        <strong>Session Status:</strong> <?= session_status() ?><br>
-                        <strong>Session Name:</strong> <?= session_name() ?><br>
-                        <strong>Session ID:</strong> <?= session_id() ?><br>
-                        <strong>CSRF Token:</strong> <?= $_SESSION['csrf_token'] ?? 'NOT SET' ?><br>
-                        <strong>Session Data:</strong> <?= print_r($_SESSION, true) ?>
-                    </div>
+                    <!-- Debug info removed for production -->
                     
                     <form method="POST" action="<?= $view->url('auth/loginPost') ?>">
                         <?= $view->csrf() ?>
