@@ -10,15 +10,12 @@ class GeoLog {
     public function __construct() {
         // Use the MVC Database class instead of the old connectDB function
         $this->db = Database::getInstance();
-        // Use the MVC Database class instead of the old connectDB function
-        $this->db = Database::getInstance();
     }
     
     /**
      * Check if database is available
      */
     public function isConnected() {
-        return $this->db->isConnected();
         return $this->db->isConnected();
     }
     
@@ -30,7 +27,6 @@ class GeoLog {
                     device_type, timestamp, location_type
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        $stmt = $this->db->query($sql, [
         $stmt = $this->db->query($sql, [
             $data['link_id'],
             $data['ip_address'],
@@ -62,7 +58,6 @@ class GeoLog {
                 WHERE id = ?";
         
         $stmt = $this->db->query($sql, [
-        $stmt = $this->db->query($sql, [
             $data['latitude'] ?? null,
             $data['longitude'] ?? null,
             $data['accuracy'] ?? null,
@@ -77,7 +72,6 @@ class GeoLog {
             $id
         ]);
         return $stmt->rowCount() > 0;
-        return $stmt->rowCount() > 0;
     }
     
     public function findById($id) {
@@ -85,7 +79,6 @@ class GeoLog {
                 FROM geo_logs g 
                 JOIN geo_links l ON g.link_id = l.id 
                 WHERE g.id = ?";
-        $stmt = $this->db->query($sql, [$id]);
         $stmt = $this->db->query($sql, [$id]);
         return $stmt->fetch();
     }
@@ -104,7 +97,6 @@ class GeoLog {
                        END as precise_address
                 FROM geo_logs g
                 LEFT JOIN geo_links l ON g.link_id = l.id
-                LEFT JOIN geo_links l ON g.link_id = l.id
                 ORDER BY g.timestamp DESC";
         
         if ($limit) {
@@ -112,11 +104,9 @@ class GeoLog {
         }
         
         $stmt = $this->db->query($sql);
-        $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
     
-    public function getByLinkId($linkId) {
     public function getByLinkId($linkId) {
         $sql = "SELECT * FROM geo_logs WHERE link_id = ? ORDER BY timestamp DESC";
         $stmt = $this->db->query($sql, [$linkId]);
