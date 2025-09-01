@@ -66,7 +66,10 @@ class AuthController extends Controller {
             // $_SESSION['demo_mode'] = true; // Disabled demo mode
             
             $_SESSION['success_message'] = 'Login realizado com sucesso!';
-            $this->redirect('dashboard');
+            
+            // Redirect to intended destination or dashboard
+            $redirectUrl = \App\Core\AuthMiddleware::getRedirectAfterLogin();
+            $this->redirect($redirectUrl);
             return;
         }
         
@@ -100,7 +103,10 @@ class AuthController extends Controller {
             $_SESSION['user_role'] = $user['role'];
             
             $_SESSION['success_message'] = 'Login realizado com sucesso!';
-            $this->redirect('dashboard');
+            
+            // Redirect to intended destination or dashboard
+            $redirectUrl = \App\Core\AuthMiddleware::getRedirectAfterLogin();
+            $this->redirect($redirectUrl);
         } catch (Exception $e) {
             $_SESSION['error_message'] = 'Erro de conexão com o banco de dados. Tente novamente mais tarde.';
             $this->redirect('auth/login');

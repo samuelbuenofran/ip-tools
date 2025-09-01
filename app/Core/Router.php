@@ -33,6 +33,9 @@ class Router {
     public function dispatch($url) {
         $url = $this->removeQueryStringVariables($url);
         
+        // Check authentication before dispatching
+        $this->checkAuthentication($url);
+        
         if ($this->match($url)) {
             $controller = $this->params['controller'];
             $controller = $this->getNamespace() . $controller;
@@ -64,6 +67,18 @@ class Router {
             }
         } else {
             throw new \Exception('No route matched.', 404);
+        }
+    }
+    
+    /**
+     * Check if the current route requires authentication
+     */
+    private function checkAuthentication($url) {
+        // Only check if AuthMiddleware is available
+        if (class_exists('App\Core\AuthMiddleware')) {
+            if (\App\Core\AuthMiddleware::requiresAuth($url)) {
+                \App\Core\AuthMiddleware::requireAuth();
+            }
         }
     }
     

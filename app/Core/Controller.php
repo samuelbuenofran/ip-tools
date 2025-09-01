@@ -106,20 +106,15 @@ abstract class Controller {
     
     // Authentication methods
     protected function isLoggedIn() {
-        return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+        return \App\Core\AuthMiddleware::isAuthenticated();
     }
     
     protected function requireLogin() {
-        if (!$this->isLoggedIn()) {
-            $this->redirect('auth/login');
-        }
+        \App\Core\AuthMiddleware::requireAuth();
     }
     
     protected function requireAdmin() {
-        $this->requireLogin();
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            $this->redirect('/dashboard');
-        }
+        \App\Core\AuthMiddleware::requireAdmin();
     }
     
     protected function getCurrentUser() {

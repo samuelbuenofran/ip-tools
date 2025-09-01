@@ -8,6 +8,7 @@ require_once __DIR__ . '/../app/Config/Database.php';
 require_once __DIR__ . '/../app/Core/Router.php';
 require_once __DIR__ . '/../app/Core/Controller.php';
 require_once __DIR__ . '/../app/Core/View.php';
+require_once __DIR__ . '/../app/Core/AuthMiddleware.php';
 
 // Load models after core classes
 require_once __DIR__ . '/../app/Models/GeoLink.php';
