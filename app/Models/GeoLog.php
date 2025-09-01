@@ -257,43 +257,7 @@ class GeoLog {
     
     public function cleanupOldLogs($daysOld = 30) {
         $sql = "DELETE FROM geo_logs WHERE timestamp < DATE_SUB(NOW(), INTERVAL ? DAY)";
-        $stmt = $this->db->query($sql, [$daysOld]);
-        return $stmt->rowCount();
-    }
-    
-    /**
-     * Get total number of logs
-     */
-    public function getTotalLogs() {
-        $stmt = $this->db->query("SELECT COUNT(*) as total FROM geo_logs");
-        $result = $stmt->fetch();
-        return (int)$result['total'];
-    }
-    
-    /**
-     * Get unique visitors
-     */
-    public function getUniqueVisitors() {
-        $sql = "SELECT COUNT(DISTINCT ip_address) as total FROM geo_logs";
-        $stmt = $this->db->query($sql);
-        $result = $stmt->fetch();
-        return $result ? $result['total'] : 0;
-    }
-    
-    /**
-     * Get total number of clicks (alias for getTotalLogs)
-     */
-    public function getTotalClicks() {
-        return $this->getTotalLogs();
-    }
-    
-    /**
-     * Get GPS tracking count
-     */
-    public function getGPSTrackingCount() {
-        $sql = "SELECT COUNT(*) as gps FROM geo_logs WHERE location_type = 'GPS'";
-        $stmt = $this->db->query($sql);
-        $result = $stmt->fetch();
-        return $result ? $result['gps'] : 0;
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$days]);
     }
 } 
