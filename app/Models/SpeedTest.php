@@ -21,21 +21,8 @@ class SpeedTest
     private function getConnection()
     {
         try {
-            // Use the same database connection as the main application
-            // Since this is called from public/index.php, we need to find the right path
-            $configPath = __DIR__ . '/../../config.php';
-            
-            if (!file_exists($configPath)) {
-                // Try alternative path
-                $configPath = __DIR__ . '/../../../config.php';
-            }
-            
-            if (!file_exists($configPath)) {
-                throw new \Exception("Could not find config.php at expected paths");
-            }
-            
-            require_once $configPath;
-            return connectDB();
+            // Use the new MVC database system
+            return \App\Config\Database::getInstance()->getConnection();
         } catch (Exception $e) {
             error_log("Database connection failed: " . $e->getMessage());
             throw new \Exception("Database connection failed: " . $e->getMessage());

@@ -1,9 +1,9 @@
-<?php $this->layout('layouts/default', ['title' => $title]) ?>
+<?php /* Layout is handled automatically by the View class */ ?>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fa-solid fa-link text-primary"></i> Meus Links de Rastreamento</h2>
-        <a href="<?= App::getBaseUrl() ?>/geologger/create" class="btn btn-success">
+        <a href="<?= $view->url('geologger/create') ?>" class="btn btn-success">
             <i class="fa-solid fa-plus"></i> Criar Novo Link
         </a>
     </div>
@@ -71,7 +71,7 @@
             <i class="fa-solid fa-link fa-3x text-muted mb-3"></i>
             <h5>Nenhum link criado ainda</h5>
             <p class="text-muted">Crie seu primeiro link de rastreamento para começar!</p>
-            <a href="<?= App::getBaseUrl() ?>/geologger/create" class="btn btn-primary">
+            <a href="<?= $view->url('geologger/create') ?>" class="btn btn-primary">
                 <i class="fa-solid fa-plus"></i> Criar Primeiro Link
             </a>
         </div>
@@ -132,11 +132,11 @@
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a href="<?= App::getBaseUrl() ?>/geologger/precise_track?code=<?= $link['short_code'] ?>" 
+                                    <a href="<?= $view->url('geologger/precise_track') ?>?code=<?= $link['short_code'] ?>" 
                                        target="_blank" class="btn btn-outline-primary" title="Testar Link">
                                         <i class="fa-solid fa-play"></i>
                                     </a>
-                                    <a href="<?= App::getBaseUrl() ?>/geologger/logs?filter=<?= $link['short_code'] ?>" 
+                                    <a href="<?= $view->url('geologger/logs') ?>?filter=<?= $link['short_code'] ?>" 
                                        class="btn btn-outline-info" title="Ver Logs">
                                         <i class="fa-solid fa-chart-bar"></i>
                                     </a>
@@ -186,13 +186,13 @@
 
     <!-- Navigation -->
     <div class="text-center mt-4">
-        <a href="<?= App::getBaseUrl() ?>/geologger/create" class="btn btn-success me-2">
+        <a href="<?= $view->url('geologger/create') ?>" class="btn btn-success me-2">
             <i class="fa-solid fa-plus"></i> Criar Novo Link
         </a>
-        <a href="<?= App::getBaseUrl() ?>/geologger/logs" class="btn btn-info me-2">
+        <a href="<?= $view->url('geologger/logs') ?>" class="btn btn-info me-2">
             <i class="fa-solid fa-chart-bar"></i> Ver Todos os Logs
         </a>
-        <a href="<?= App::getBaseUrl() ?>/" class="btn btn-outline-secondary">
+        <a href="<?= $view->url('') ?>" class="btn btn-outline-secondary">
             <i class="fa-solid fa-home"></i> Voltar ao Início
         </a>
     </div>
@@ -225,7 +225,7 @@
         
         // Copy to clipboard function
         window.copyToClipboard = function(code) {
-            const trackingUrl = `<?= App::getBaseUrl() ?>/geologger/precise_track?code=${code}`;
+            const trackingUrl = `<?= $view->url('geologger/precise_track') ?>?code=${code}`;
             navigator.clipboard.writeText(trackingUrl).then(() => {
                 // Show success message
                 const btn = event.target.closest('button');

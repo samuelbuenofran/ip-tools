@@ -239,7 +239,7 @@ class GeoLink {
      * Get tracking URL for a code
      */
     public function getTrackingUrl($code) {
-        return App::getBaseUrl() . '/geologger/precise_track.php?code=' . $code;
+        return App::getBaseUrl() . '/geologger/precise_track?code=' . $code;
     }
     
     /**
