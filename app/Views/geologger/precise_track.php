@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header text-center">
-                    <h4><i class="fa-solid fa-map-pin text-primary"></i> Location Tracking</h4>
+                    <h4><i class="fa-solid fa-map-pin text-primary"></i>Location Tracking</h4>
                 </div>
                 <div class="card-body text-center">
                     <div class="mb-4">
